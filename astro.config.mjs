@@ -3,7 +3,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
-  site: 'https://moocorp.kr',
+  site: 'https://moocorp-blog.vercel.app',
   trailingSlash: 'never',
   integrations: [
     sitemap({

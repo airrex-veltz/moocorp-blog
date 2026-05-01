@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://moocorp.kr/sitemap-index.xml
+Sitemap: https://moocorp-blog.vercel.app/sitemap-index.xml
