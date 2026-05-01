@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('posts', ({ data }) => !data.draft);
+const tagCounts = new Map<string, number>();
+for (const post of posts) {
+  for (const tag of post.data.tags) {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  }
+}
+const tags = Array.from(tagCounts.entries()).sort((a, b) => b[1] - a[1]);
+---
+<Base title="태그">
+  <h1 class="text-3xl font-bold tracking-tight mb-6">태그</h1>
+  {tags.length === 0 ? (
+    <p class="text-gray-500">아직 태그가 없습니다.</p>
+  ) : (
+    <ul class="flex flex-wrap gap-2">
+      {tags.map(([tag, count]) => (
+        <li>
+          <a href={`/tags/${tag}`} class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200 text-sm">
+            <span>#{tag}</span>
+            <span class="text-gray-500">{count}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+</Base>

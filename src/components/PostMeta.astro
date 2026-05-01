@@ -1,0 +1,29 @@
+---
+interface Props {
+  market: 'US' | 'KR' | 'GLOBAL';
+  tickers?: string[];
+  publishedAt: Date;
+  language?: 'ko' | 'en';
+}
+
+const { market, tickers = [], publishedAt, language = 'ko' } = Astro.props;
+
+const marketLabel = { US: '미국', KR: '한국', GLOBAL: '글로벌' }[market];
+const marketClass = {
+  US: 'market-pill-us',
+  KR: 'market-pill-kr',
+  GLOBAL: 'market-pill-global',
+}[market];
+
+const dateString = publishedAt.toLocaleDateString(language === 'ko' ? 'ko-KR' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+<div class="flex flex-wrap items-center gap-2 text-sm text-gray-500">
+  <span class={marketClass}>{marketLabel}</span>
+  {tickers.map((t) => <span class="ticker-pill">{t}</span>)}
+  <span>·</span>
+  <time datetime={publishedAt.toISOString()}>{dateString}</time>
+</div>

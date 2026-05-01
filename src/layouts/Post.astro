@@ -1,0 +1,49 @@
+---
+import Base from './Base.astro';
+import PostMeta from '../components/PostMeta.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+}
+
+const { post } = Astro.props;
+const { data } = post;
+---
+<Base
+  title={data.title}
+  description={data.description}
+  language={data.language}
+  publishedAt={data.publishedAt}
+>
+  <article>
+    <header class="mb-8">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-3">
+        {data.title}
+      </h1>
+      <p class="text-lg text-gray-600 mb-4">{data.description}</p>
+      <PostMeta
+        market={data.market}
+        tickers={data.tickers}
+        publishedAt={data.publishedAt}
+        language={data.language}
+      />
+    </header>
+
+    <div class="prose prose-slate max-w-none">
+      <slot />
+    </div>
+
+    {data.tags.length > 0 && (
+      <footer class="mt-12 pt-6 border-t border-gray-100">
+        <div class="flex flex-wrap gap-2">
+          {data.tags.map((tag) => (
+            <a href={`/tags/${tag}`} class="text-sm text-gray-500 hover:text-gray-900">
+              #{tag}
+            </a>
+          ))}
+        </div>
+      </footer>
+    )}
+  </article>
+</Base>

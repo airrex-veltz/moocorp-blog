@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    @apply bg-white text-gray-900 font-sans;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+  h1, h2, h3, h4 {
+    word-break: keep-all;
+  }
+  a {
+    text-underline-offset: 2px;
+  }
+}
+
+@layer components {
+  .container-narrow {
+    @apply max-w-3xl mx-auto px-4 sm:px-6;
+  }
+  .ticker-pill {
+    @apply inline-flex items-center px-2 py-0.5 text-xs font-mono rounded bg-gray-100 text-gray-700;
+  }
+  .market-pill-us {
+    @apply inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-blue-50 text-blue-700;
+  }
+  .market-pill-kr {
+    @apply inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-rose-50 text-rose-700;
+  }
+  .market-pill-global {
+    @apply inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-amber-50 text-amber-700;
+  }
+}

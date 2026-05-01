@@ -1,0 +1,83 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  language?: 'ko' | 'en';
+  publishedAt?: Date;
+}
+
+const SITE_NAME = 'Moo Corp';
+const DEFAULT_TITLE = 'Moo Corp — 미국·한국 상장사 분석';
+const DEFAULT_DESC = '미국과 한국 상장사 동향을 매일 분석합니다. 펀더멘털·카탈리스트·리스크를 한 곳에.';
+
+const {
+  title,
+  description = DEFAULT_DESC,
+  image,
+  language = 'ko',
+  publishedAt,
+} = Astro.props;
+
+const fullTitle = title ? `${title} · ${SITE_NAME}` : DEFAULT_TITLE;
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const ogImage = image ? new URL(image, Astro.site).toString() : new URL('/og-default.png', Astro.site).toString();
+---
+<!doctype html>
+<html lang={language}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" type="application/rss+xml" title={SITE_NAME} href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+
+    <meta property="og:type" content={publishedAt ? 'article' : 'website'} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content={language === 'ko' ? 'ko_KR' : 'en_US'} />
+    {publishedAt && <meta property="article:published_time" content={publishedAt.toISOString()} />}
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="stylesheet" as="style" crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  </head>
+  <body>
+    <header class="border-b border-gray-100">
+      <div class="container-narrow flex items-center justify-between py-4">
+        <a href="/" class="text-xl font-semibold tracking-tight">Moo Corp</a>
+        <nav class="text-sm text-gray-600 flex gap-5">
+          <a href="/" class="hover:text-gray-900">분석</a>
+          <a href="/tags" class="hover:text-gray-900">태그</a>
+          <a href="/about" class="hover:text-gray-900">소개</a>
+          <a href="/rss.xml" class="hover:text-gray-900">RSS</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container-narrow py-10">
+      <slot />
+    </main>
+
+    <footer class="border-t border-gray-100 mt-20">
+      <div class="container-narrow py-8 text-sm text-gray-500 flex flex-col sm:flex-row sm:justify-between gap-2">
+        <span>© {new Date().getFullYear()} Moo Corp Research</span>
+        <span>본 사이트의 분석은 정보 제공 목적이며, 투자 권유가 아닙니다.</span>
+      </div>
+    </footer>
+  </body>
+</html>
