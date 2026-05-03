@@ -2,10 +2,12 @@
 import Base from '../layouts/Base.astro';
 ---
 <Base title="소개">
-  <h1 class="text-3xl font-bold tracking-tight mb-6">Moo Corp 소개</h1>
+  <header class="mb-10 pb-8 border-b border-ink">
+    <h1 class="text-4xl font-extrabold tracking-tight">Moo Corp 소개</h1>
+  </header>
 
-  <div class="prose prose-slate max-w-none">
-    <p>
+  <div class="prose prose-ink max-w-none">
+    <p class="text-lg">
       <strong>Moo Corp</strong>은 미국과 한국에 상장된 회사들의 동향을 분석하여 매일 블로그 형태로 공개하는
       리서치 프로젝트입니다.
     </p>
@@ -13,19 +15,22 @@ import Base from '../layouts/Base.astro';
     <h2>분석 방식</h2>
     <ul>
       <li><strong>전 종목 스크리닝</strong> — 매주 일요일, NYSE / NASDAQ / KOSPI / KOSDAQ 약 8,500개 종목을 자동 스크리닝합니다.</li>
-      <li><strong>심층 분석</strong> — 가격·거래량·어닝·뉴스 이벤트로 도출된 후보 중 매일 1종목을 펀더멘털과 카탈리스트, 리스크 요인까지 검토합니다.</li>
-      <li><strong>블로그 발행</strong> — 매일 1편의 분석을 공개합니다.</li>
+      <li><strong>심층 분석</strong> — 가격, 거래량, 어닝, 뉴스 이벤트로 도출된 후보 중 매일 1종목을 펀더멘털과 카탈리스트, 리스크 요인까지 검토합니다.</li>
+      <li><strong>블로그 발행</strong> — 매일 분석을 공개합니다.</li>
     </ul>
 
     <h2>면책</h2>
     <p>
-      본 사이트의 모든 콘텐츠는 <strong>정보 제공 목적</strong>이며, 매수·매도 추천이 아닙니다.
+      본 사이트의 모든 콘텐츠는 <strong>정보 제공 목적</strong>이며, 매수, 매도 추천이 아닙니다.
       투자 판단과 그에 따른 결과는 전적으로 본인에게 귀속됩니다.
     </p>
 
     <h2>데이터 출처</h2>
     <p>
-      가격·거래량: Polygon.io, FinanceDataReader · 펀더멘털: SEC EDGAR, FMP · 한국 공시: OpenDART · 뉴스: Finnhub
+      가격, 거래량: Polygon.io, FinanceDataReader · 펀더멘털: SEC EDGAR, FMP · 한국 공시: OpenDART · 뉴스: Finnhub
     </p>
+
+    <h2>연락</h2>
+    <p>제보, 협업, 광고 문의는 GitHub Issue 또는 RSS를 통해 접수합니다.</p>
   </div>
 </Base>

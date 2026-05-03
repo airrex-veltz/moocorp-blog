@@ -7,33 +7,51 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft))
   .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 ---
 <Base>
-  <section class="mb-10">
-    <h1 class="text-3xl font-bold tracking-tight mb-2">미국·한국 상장사 분석</h1>
-    <p class="text-gray-600">
-      매일 한 종목, 매주 시장 전체 — 데이터 기반 분석을 무료로 공개합니다.
+  <section class="mb-14 pb-10 border-b border-ink">
+    <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight leading-[1.1] mb-4">
+      미국·한국 상장사 분석
+    </h1>
+    <p class="text-lg text-ink-subtle leading-relaxed max-w-2xl">
+      매일 한 종목, 매주 시장 전체. 펀더멘털, 카탈리스트, 리스크를 데이터로 풀어냅니다.
     </p>
+    <div class="mt-6 flex gap-4 text-xs uppercase tracking-widest text-ink-muted">
+      <span class="inline-flex items-center gap-1">
+        <span class="ms" style="font-size:16px" aria-hidden="true">trending_up</span>
+        <span>매일 발행</span>
+      </span>
+      <span>·</span>
+      <span class="inline-flex items-center gap-1">
+        <span class="ms" style="font-size:16px" aria-hidden="true">verified</span>
+        <span>데이터 기반</span>
+      </span>
+      <span>·</span>
+      <span class="inline-flex items-center gap-1">
+        <span class="ms" style="font-size:16px" aria-hidden="true">block</span>
+        <span>투자 권유 아님</span>
+      </span>
+    </div>
   </section>
 
-  <ul class="divide-y divide-gray-100">
-    {posts.map((post) => (
-      <li class="py-6">
-        <a href={`/posts/${post.slug}`} class="block group">
-          <h2 class="text-xl font-semibold group-hover:text-accent transition-colors mb-1">
-            {post.data.title}
-          </h2>
-          <p class="text-gray-600 mb-2 line-clamp-2">{post.data.description}</p>
-          <PostMeta
-            market={post.data.market}
-            tickers={post.data.tickers}
-            publishedAt={post.data.publishedAt}
-            language={post.data.language}
-          />
-        </a>
-      </li>
-    ))}
-  </ul>
-
-  {posts.length === 0 && (
-    <p class="text-gray-500 py-12 text-center">아직 발행된 분석이 없습니다.</p>
+  {posts.length > 0 ? (
+    <ul class="divide-y divide-ink-line">
+      {posts.map((post) => (
+        <li class="py-8 first:pt-0">
+          <a href={`/posts/${post.slug}`} class="block group">
+            <h2 class="text-2xl font-bold tracking-tight leading-tight mb-2 group-hover:underline underline-offset-4">
+              {post.data.title}
+            </h2>
+            <p class="text-ink-subtle mb-3 line-clamp-2 leading-relaxed">{post.data.description}</p>
+            <PostMeta
+              market={post.data.market}
+              tickers={post.data.tickers}
+              publishedAt={post.data.publishedAt}
+              language={post.data.language}
+            />
+          </a>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="text-ink-muted py-16 text-center">아직 발행된 분석이 없습니다.</p>
   )}
 </Base>

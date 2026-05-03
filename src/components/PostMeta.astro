@@ -4,16 +4,13 @@ interface Props {
   tickers?: string[];
   publishedAt: Date;
   language?: 'ko' | 'en';
+  readingTime?: number;
 }
 
-const { market, tickers = [], publishedAt, language = 'ko' } = Astro.props;
+const { market, tickers = [], publishedAt, language = 'ko', readingTime } = Astro.props;
 
-const marketLabel = { US: '미국', KR: '한국', GLOBAL: '글로벌' }[market];
-const marketClass = {
-  US: 'market-pill-us',
-  KR: 'market-pill-kr',
-  GLOBAL: 'market-pill-global',
-}[market];
+const marketLabel = { US: 'US', KR: 'KR', GLOBAL: 'GLOBAL' }[market];
+const marketIcon = { US: 'public', KR: 'south_korea', GLOBAL: 'language' }[market];
 
 const dateString = publishedAt.toLocaleDateString(language === 'ko' ? 'ko-KR' : 'en-US', {
   year: 'numeric',
@@ -21,9 +18,21 @@ const dateString = publishedAt.toLocaleDateString(language === 'ko' ? 'ko-KR' : 
   day: 'numeric',
 });
 ---
-<div class="flex flex-wrap items-center gap-2 text-sm text-gray-500">
-  <span class={marketClass}>{marketLabel}</span>
+<div class="flex flex-wrap items-center gap-2 text-xs text-ink-subtle">
+  <span class="pill">
+    <span class="ms" style="font-size:14px" aria-hidden="true">{marketIcon}</span>
+    <span>{marketLabel}</span>
+  </span>
   {tickers.map((t) => <span class="ticker-pill">{t}</span>)}
-  <span>·</span>
-  <time datetime={publishedAt.toISOString()}>{dateString}</time>
+  <span class="text-ink-muted">·</span>
+  <time datetime={publishedAt.toISOString()} class="tabular-nums">{dateString}</time>
+  {readingTime && (
+    <>
+      <span class="text-ink-muted">·</span>
+      <span class="inline-flex items-center gap-1">
+        <span class="ms" style="font-size:14px" aria-hidden="true">schedule</span>
+        <span>{readingTime}분 읽기</span>
+      </span>
+    </>
+  )}
 </div>

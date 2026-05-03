@@ -12,16 +12,20 @@ for (const post of posts) {
 const tags = Array.from(tagCounts.entries()).sort((a, b) => b[1] - a[1]);
 ---
 <Base title="태그">
-  <h1 class="text-3xl font-bold tracking-tight mb-6">태그</h1>
+  <header class="mb-10 pb-8 border-b border-ink">
+    <h1 class="text-4xl font-extrabold tracking-tight">태그</h1>
+    <p class="text-ink-muted mt-2">{tags.length}개 태그, {posts.length}개 글</p>
+  </header>
+
   {tags.length === 0 ? (
-    <p class="text-gray-500">아직 태그가 없습니다.</p>
+    <p class="text-ink-muted">아직 태그가 없습니다.</p>
   ) : (
     <ul class="flex flex-wrap gap-2">
       {tags.map(([tag, count]) => (
         <li>
-          <a href={`/tags/${tag}`} class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200 text-sm">
+          <a href={`/tags/${tag}`} class="pill-subtle hover:border-ink hover:text-ink transition-colors">
             <span>#{tag}</span>
-            <span class="text-gray-500">{count}</span>
+            <span class="ml-1 text-ink-muted">{count}</span>
           </a>
         </li>
       ))}

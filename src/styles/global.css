@@ -8,32 +8,69 @@
     -moz-osx-font-smoothing: grayscale;
   }
   body {
-    @apply bg-white text-gray-900 font-sans;
+    @apply bg-white text-ink font-sans;
     word-break: keep-all;
     overflow-wrap: break-word;
+    font-feature-settings: 'tnum' on, 'cv11' on;
   }
   h1, h2, h3, h4 {
     word-break: keep-all;
   }
-  a {
-    text-underline-offset: 2px;
+  ::selection {
+    background: #0a0a0a;
+    color: #ffffff;
   }
 }
 
 @layer components {
   .container-narrow {
-    @apply max-w-3xl mx-auto px-4 sm:px-6;
+    @apply max-w-3xl mx-auto px-5 sm:px-6;
+  }
+
+  /* Material Symbols icon */
+  .ms {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 1em;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    vertical-align: -3px;
+  }
+  .ms-fill {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+
+  /* Pills (monochrome bordered) */
+  .pill {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium border border-ink rounded-none uppercase tracking-wider;
+  }
+  .pill-subtle {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium border border-ink-line text-ink-subtle rounded-none;
   }
   .ticker-pill {
-    @apply inline-flex items-center px-2 py-0.5 text-xs font-mono rounded bg-gray-100 text-gray-700;
+    @apply inline-flex items-center px-2 py-0.5 text-xs font-mono border border-ink-line text-ink rounded-none tabular-nums;
   }
-  .market-pill-us {
-    @apply inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-blue-50 text-blue-700;
+
+  /* Drop cap for first paragraph in articles */
+  .prose-article > p:first-of-type::first-letter {
+    @apply float-left text-6xl font-bold leading-none mr-2 mt-1;
+    font-family: 'Pretendard Variable', sans-serif;
   }
-  .market-pill-kr {
-    @apply inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-rose-50 text-rose-700;
-  }
-  .market-pill-global {
-    @apply inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-amber-50 text-amber-700;
-  }
+}
+
+/* Ad slot placeholder (will be filled when ad code is ready) */
+.ad-slot {
+  @apply my-8 py-6 text-center text-xs uppercase tracking-widest text-ink-muted border-y border-ink-line;
+}
+.ad-slot::before {
+  content: 'Advertisement';
 }
