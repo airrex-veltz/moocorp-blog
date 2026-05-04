@@ -30,10 +30,35 @@ tags: [어닝, 한국]                         # 선택, 기본 []
 language: ko                               # 선택: ko (기본) | en
 draft: false                               # 선택, 기본 false
 author: "Moo Corp Research"                # 선택
+heroImage:                                 # 선택
+  query: "semiconductor technology"        # Unsplash 검색어 (자동) 또는
+  url: "https://images.unsplash.com/..."  # 직접 URL
+  alt: "이미지 설명"                       # 접근성
+  attribution: "Photo by Name on Unsplash" # 크레딧
+  sourceUrl: "https://unsplash.com/..."   # 원본 링크
+  colorTreatment: desaturate              # grayscale | desaturate | color
 ---
 ```
 
 `draft: true`인 글은 빌드에 포함되지 않습니다.
+
+### Hero 이미지 사용하기
+
+글에 이미지를 추가하려면 frontmatter에 `heroImage` 필드를 추가하세요.
+
+**Unsplash API 키 발급 (무료)**:
+1. https://unsplash.com/developers 에서 가입
+2. "New Application" 클릭
+3. Access Key 복사
+4. 프로젝트 루트에 `.env` 파일 생성:
+   ```
+   UNSPLASH_ACCESS_KEY=your_access_key_here
+   ```
+
+**이미지 처리 옵션**:
+- `grayscale`: 완전 흑백
+- `desaturate`: 채도 40% (분석 글 기본값, 전문적 느낌)
+- `color`: 풀 컬러 (스토리 추천)
 
 ## 배포
 
