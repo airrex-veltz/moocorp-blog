@@ -1,0 +1,56 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  attribution: string;
+  sourceUrl?: string;
+  colorTreatment?: 'grayscale' | 'desaturate' | 'color';
+}
+
+const {
+  src,
+  alt,
+  attribution,
+  sourceUrl,
+  colorTreatment = 'desaturate'
+} = Astro.props;
+
+function getFilter(treatment: string): string {
+  switch (treatment) {
+    case 'grayscale':
+      return 'grayscale(100%)';
+    case 'desaturate':
+      return 'saturate(0.4) brightness(0.95)';
+    case 'color':
+      return 'none';
+    default:
+      return 'saturate(0.4) brightness(0.95)';
+  }
+}
+
+const filterStyle = getFilter(colorTreatment);
+---
+
+<figure class="hero-image my-12 max-w-[65ch] mx-auto">
+  <img
+    src={src}
+    alt={alt}
+    loading="lazy"
+    class="w-full aspect-[21/9] object-cover"
+    style={`filter: ${filterStyle};`}
+  />
+  <figcaption class="text-xs text-ink-muted text-right mt-2 px-2">
+    {sourceUrl ? (
+      <a
+        href={sourceUrl}
+        class="hover:text-accent-primary transition-colors"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {attribution}
+      </a>
+    ) : (
+      <span>{attribution}</span>
+    )}
+  </figcaption>
+</figure>
