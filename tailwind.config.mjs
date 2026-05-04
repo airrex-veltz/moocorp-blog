@@ -18,6 +18,21 @@ export default {
           line: '#e5e5e5',
           paper: '#fafafa',
         },
+        'accent-primary': {
+          DEFAULT: '#1e40af',
+          light: '#3b82f6',
+          dark: '#1e3a8a',
+        },
+        'accent-secondary': {
+          DEFAULT: '#0f766e',
+          light: '#14b8a6',
+          dark: '#115e59',
+        },
+        'accent-tertiary': {
+          DEFAULT: '#b45309',
+          light: '#f59e0b',
+          dark: '#92400e',
+        },
       },
       typography: {
         DEFAULT: {
@@ -26,8 +41,8 @@ export default {
             color: '#0a0a0a',
             fontSize: '1.0625rem',
             lineHeight: '1.85',
-            a: { color: '#0a0a0a', textDecoration: 'underline', textUnderlineOffset: '3px', textDecorationThickness: '1px' },
-            'a:hover': { textDecorationThickness: '2px' },
+            a: { color: '#1e40af', textDecoration: 'underline', textDecorationColor: 'rgba(30, 64, 175, 0.3)', textUnderlineOffset: '3px', textDecorationThickness: '1px' },
+            'a:hover': { textDecorationColor: '#1e40af', textDecorationThickness: '2px' },
             h1: { fontWeight: '900', letterSpacing: '-0.025em' },
             h2: {
               fontWeight: '800',
@@ -89,12 +104,13 @@ export default {
             },
 
             a: {
-              color: '#0a0a0a',
+              color: '#1e40af',
               textDecoration: 'underline',
+              textDecorationColor: 'rgba(30, 64, 175, 0.3)',
               textUnderlineOffset: '3px',
               textDecorationThickness: '1px'
             },
-            'a:hover': { textDecorationThickness: '2px' },
+            'a:hover': { textDecorationColor: '#1e40af', textDecorationThickness: '2px' },
             strong: { color: '#0a0a0a', fontWeight: '700' },
 
             h2: { display: 'none' },
