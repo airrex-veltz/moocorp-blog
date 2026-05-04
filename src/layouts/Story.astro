@@ -1,0 +1,92 @@
+---
+import Base from './Base.astro';
+import ReadingProgress from '../components/ReadingProgress.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  story: CollectionEntry<'stories'>;
+}
+
+const { story } = Astro.props;
+const { data, body } = story;
+
+const wordCount = body ? body.replace(/\s+/g, '').length : 0;
+const readingTime = Math.max(1, Math.round(wordCount / 600));
+
+const marketLabel = { US: 'US', KR: 'KR', GLOBAL: 'GLOBAL' }[data.market];
+const dateString = data.publishedAt.toLocaleDateString(data.language === 'ko' ? 'ko-KR' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+<Base
+  title={data.title}
+  description={data.description}
+  language={data.language}
+  publishedAt={data.publishedAt}
+  updatedAt={data.updatedAt}
+  schemaType="Article"
+  tickers={data.tickers}
+  tags={data.tags}
+>
+  <ReadingProgress />
+
+  <article>
+    <aside class="mb-10 pb-8 border-b border-ink">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-ink-subtle">
+          <span class="ms" style="font-size:18px" aria-hidden="true">auto_stories</span>
+          <span>Story · {marketLabel}</span>
+          {data.tickers.length > 0 && <span class="text-ink-line">·</span>}
+          {data.tickers.map((t) => <span class="font-mono">{t}</span>)}
+        </div>
+        <time datetime={data.publishedAt.toISOString()} class="text-xs uppercase tracking-widest text-ink-muted tabular-nums">
+          {dateString}
+        </time>
+      </div>
+    </aside>
+
+    <header class="mb-12">
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-[-0.025em] leading-[1.1] mb-6">
+        {data.title}
+      </h1>
+      <p class="text-xl text-ink-subtle leading-relaxed mb-6 max-w-[58ch]">{data.description}</p>
+      <div class="flex flex-wrap items-center gap-2 text-xs text-ink-muted">
+        <span class="inline-flex items-center gap-1">
+          <span class="ms" style="font-size:14px" aria-hidden="true">schedule</span>
+          <span>{readingTime}분 읽기</span>
+        </span>
+        {data.tags.length > 0 && (
+          <>
+            <span class="text-ink-line">·</span>
+            {data.tags.slice(0, 3).map((tag) => <span>#{tag}</span>)}
+          </>
+        )}
+      </div>
+    </header>
+
+    <div class="ad-slot ad-slot-top"></div>
+
+    <div class="prose prose-ink prose-article max-w-none">
+      <slot />
+    </div>
+
+    <div class="ad-slot ad-slot-bottom"></div>
+
+    <footer class="mt-16 pt-8 border-t border-ink-line">
+      <p class="text-sm text-ink-muted leading-relaxed">
+        본 스토리는 공개된 회사 역사 자료를 바탕으로 한 창작 서사이며, 사실과 다를 수 있습니다.
+        투자 권유나 기업 평가가 아닙니다.
+      </p>
+    </footer>
+
+    <nav class="mt-12 pt-6 border-t border-ink-line flex justify-between text-sm">
+      <a href="/stories" class="inline-flex items-center gap-2 hover:underline underline-offset-4 hover:-translate-x-1 transition-transform duration-150">
+        <span class="ms" aria-hidden="true">arrow_back</span>
+        <span>다른 스토리</span>
+      </a>
+      <a href="/" class="hover:underline underline-offset-4">홈</a>
+    </nav>
+  </article>
+</Base>
