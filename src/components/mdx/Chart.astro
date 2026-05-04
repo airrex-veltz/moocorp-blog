@@ -1,0 +1,44 @@
+---
+interface Props {
+  symbol: string;
+  exchange?: string;
+  height?: number;
+}
+const { symbol, exchange = 'NASDAQ', height = 400 } = Astro.props;
+const fullSymbol = symbol.includes(':') ? symbol : `${exchange}:${symbol}`;
+
+const widgetConfig = {
+  symbols: [[symbol, fullSymbol]],
+  chartOnly: false,
+  width: '100%',
+  height,
+  locale: 'kr',
+  colorTheme: 'light',
+  autosize: false,
+  showVolume: true,
+  hideDateRanges: false,
+  hideMarketStatus: false,
+  hideSymbolLogo: false,
+  fontFamily: '-apple-system, BlinkMacSystemFont, system-ui, sans-serif',
+  fontSize: '12',
+  changeMode: 'price-and-percent',
+  chartType: 'area',
+  lineColor: '#0a0a0a',
+  bottomColor: 'rgba(10,10,10,0)',
+  topColor: 'rgba(10,10,10,0.15)',
+};
+const configJson = JSON.stringify(widgetConfig);
+---
+<div class="my-8 border border-ink-line not-prose">
+  <div class="px-3 py-2 border-b border-ink-line text-xs uppercase tracking-widest text-ink-muted flex items-center justify-between">
+    <span>가격 차트</span>
+    <span class="font-mono text-ink">{fullSymbol}</span>
+  </div>
+  <div class="tradingview-widget-container" style={`height:${height}px`}>
+    <div class="tradingview-widget-container__widget" style="height:100%"></div>
+    <Fragment set:html={`<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>${configJson}</script>`} />
+    <noscript>
+      <p class="p-4 text-sm text-ink-muted">차트를 보려면 JavaScript를 활성화하세요. (출처: TradingView)</p>
+    </noscript>
+  </div>
+</div>

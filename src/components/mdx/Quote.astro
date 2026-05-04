@@ -1,0 +1,13 @@
+---
+interface Props {
+  cite?: string;
+}
+const { cite } = Astro.props;
+---
+<figure class="my-10 border-y border-ink py-8 not-prose">
+  <span class="ms text-ink-muted block mb-3" style="font-size:32px" aria-hidden="true">format_quote</span>
+  <blockquote class="text-2xl font-semibold leading-snug tracking-tight">
+    <slot />
+  </blockquote>
+  {cite && <figcaption class="mt-4 text-sm text-ink-muted">— {cite}</figcaption>}
+</figure>

@@ -1,0 +1,16 @@
+---
+interface Props {
+  caption?: string;
+  source?: string;
+}
+const { caption, source } = Astro.props;
+---
+<figure class="my-8 not-prose">
+  {caption && (
+    <figcaption class="text-xs uppercase tracking-widest text-ink-muted mb-2">{caption}</figcaption>
+  )}
+  <div class="border border-ink-line overflow-x-auto [&_table]:w-full [&_table]:m-0 [&_th]:border-b [&_th]:border-ink [&_th]:py-2 [&_th]:px-3 [&_th]:text-xs [&_th]:uppercase [&_th]:tracking-wider [&_th]:text-left [&_td]:border-b [&_td]:border-ink-line [&_td]:py-2 [&_td]:px-3 [&_tr:last-child_td]:border-b-0 [&_td]:tabular-nums">
+    <slot />
+  </div>
+  {source && <p class="mt-2 text-xs text-ink-muted">출처: {source}</p>}
+</figure>

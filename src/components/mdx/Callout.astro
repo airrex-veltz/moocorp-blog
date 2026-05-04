@@ -1,0 +1,30 @@
+---
+interface Props {
+  type?: 'note' | 'risk' | 'catalyst' | 'data';
+  title?: string;
+}
+const { type = 'note', title } = Astro.props;
+
+const icon = {
+  note: 'info',
+  risk: 'warning',
+  catalyst: 'bolt',
+  data: 'analytics',
+}[type];
+
+const defaultTitle = {
+  note: '참고',
+  risk: '리스크',
+  catalyst: '카탈리스트',
+  data: '핵심 데이터',
+}[type];
+---
+<aside class="border-l-2 border-ink pl-4 py-1 my-8 not-prose">
+  <div class="flex items-center gap-2 text-xs uppercase tracking-widest text-ink-subtle mb-2">
+    <span class="ms" style="font-size:16px" aria-hidden="true">{icon}</span>
+    <span>{title ?? defaultTitle}</span>
+  </div>
+  <div class="text-base leading-relaxed text-ink">
+    <slot />
+  </div>
+</aside>

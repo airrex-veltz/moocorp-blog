@@ -2,6 +2,7 @@ import { defineCollection, z } from 'astro:content';
 
 const posts = defineCollection({
   type: 'content',
+  // Allows both .md and .mdx
   schema: z.object({
     title: z.string().max(120),
     description: z.string().max(200),

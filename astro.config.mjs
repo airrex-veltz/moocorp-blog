@@ -1,11 +1,13 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
+import mdx from '@astrojs/mdx';
 
 export default defineConfig({
   site: 'https://moocorp-blog.vercel.app',
   trailingSlash: 'never',
   integrations: [
+    mdx(),
     sitemap({
       i18n: {
         defaultLocale: 'ko',

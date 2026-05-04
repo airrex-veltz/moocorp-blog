@@ -1,0 +1,85 @@
+---
+title: "디자인 시스템 — 흑백 + Material Symbols + MDX 컴포넌트"
+description: "Moo Corp 블로그의 시각 디자인 가이드. 차트, 통계 카드, 콜아웃 박스 사용 예시."
+publishedAt: 2026-05-04
+market: GLOBAL
+tickers: []
+sectors: []
+tags: [메타, 디자인]
+language: ko
+---
+
+이 글은 Moo Corp 블로그가 제공하는 시각 컴포넌트의 사용 예시입니다. 모든 분석 글은 흑백 디자인을 따르고, 강조나 시각화는 Material Symbols 아이콘과 MDX 컴포넌트로 처리합니다.
+
+## 핵심 요약 박스
+
+<KeyPoints>
+- 흑백 단색 팔레트로 시각 잡음을 줄였습니다
+- Material Symbols 아이콘으로 의미를 표시합니다
+- MDX 컴포넌트로 차트, 통계, 콜아웃을 본문에 임베드합니다
+- 광고 슬롯은 본문 상단과 하단에 자동 배치됩니다
+</KeyPoints>
+
+## 통계 카드 (StatGrid + StatCard)
+
+종목 분석 글의 첫 부분에 회사 핵심 지표를 한눈에 보여줍니다.
+
+<StatGrid cols={3}>
+  <StatCard label="시가총액" value="$4.85T" trend="up" context="전일 대비 -4.6%" />
+  <StatCard label="ROE" value="104%" context="업계 최상위" />
+  <StatCard label="순이익률" value="55.6%" trend="up" />
+</StatGrid>
+
+## 콜아웃 (Callout)
+
+리스크나 카탈리스트를 본문 흐름에서 분리해 강조합니다.
+
+<Callout type="catalyst" title="다가오는 카탈리스트">
+5월 20일 분기 실적 발표. 시장 컨센서스는 EPS $1.79, 매출 $80B.
+</Callout>
+
+<Callout type="risk">
+ROE 104%는 자사주 매입에 따른 부풀림이 일부 포함됩니다. 실제 수익성과 분리해서 봐야 합니다.
+</Callout>
+
+## 인용구 (Quote)
+
+핵심 문장을 본문에서 분리해 시각적 휴식을 줍니다.
+
+<Quote cite="Jensen Huang, NVIDIA CEO">
+AI 인프라 투자는 이제 시작입니다. 향후 4년간 1조 달러 규모의 데이터센터 업그레이드가 진행됩니다.
+</Quote>
+
+## 차트 (TradingView 임베드)
+
+종목 글에는 가격 차트를 자동 임베드합니다.
+
+<Chart symbol="NVDA" exchange="NASDAQ" height={400} />
+
+## 데이터 테이블 (DataTable)
+
+분기 실적이나 비교 분석에 활용합니다.
+
+<DataTable caption="NVIDIA 분기별 매출 (단위: 십억 달러)" source="NVIDIA IR, FMP">
+| 분기 | 매출 | 전년 동기 대비 |
+|---|---|---|
+| Q4 2025 | 39.3 | +78% |
+| Q1 2026 | 44.0 | +69% |
+| Q2 2026 (E) | 48.5 | +56% |
+</DataTable>
+
+## 일반 마크다운
+
+표준 마크다운 요소도 모두 흑백 디자인에 맞춰 렌더링됩니다.
+
+- 리스트 항목 1
+- 리스트 항목 2
+- 리스트 항목 3
+
+> 인용 블록도 흑백 보더로 표시됩니다. 본문 흐름과 자연스럽게 연결됩니다.
+
+본문은 Pretendard Variable 폰트로 한국어 가독성을 최적화했고, 줄 간격은 1.85, 단어 분리는 한국어 친화적으로 설정되어 있습니다.
+
+## 마무리
+
+이 디자인 시스템은 분석 가독성을 우선합니다. 색상이나 이모지로 강조하는 대신, 타이포그래피와 구조적 컴포넌트로 정보를 위계화합니다.

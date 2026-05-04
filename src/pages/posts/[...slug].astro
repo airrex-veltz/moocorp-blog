@@ -2,6 +2,14 @@
 import { getCollection } from 'astro:content';
 import Post from '../../layouts/Post.astro';
 
+import StatCard from '../../components/mdx/StatCard.astro';
+import StatGrid from '../../components/mdx/StatGrid.astro';
+import Callout from '../../components/mdx/Callout.astro';
+import Chart from '../../components/mdx/Chart.astro';
+import Quote from '../../components/mdx/Quote.astro';
+import KeyPoints from '../../components/mdx/KeyPoints.astro';
+import DataTable from '../../components/mdx/DataTable.astro';
+
 export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ data }) => !data.draft);
   return posts.map((post) => ({
@@ -12,7 +20,9 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await post.render();
+
+const components = { StatCard, StatGrid, Callout, Chart, Quote, KeyPoints, DataTable };
 ---
 <Post post={post}>
-  <Content />
+  <Content components={components} />
 </Post>

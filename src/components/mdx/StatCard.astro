@@ -1,0 +1,26 @@
+---
+interface Props {
+  label: string;
+  value: string;
+  trend?: 'up' | 'down' | 'flat';
+  context?: string;
+}
+
+const { label, value, trend, context } = Astro.props;
+
+const trendIcon = {
+  up: 'trending_up',
+  down: 'trending_down',
+  flat: 'trending_flat',
+}[trend ?? 'flat'];
+---
+<div class="border border-ink p-5 not-prose">
+  <div class="text-xs uppercase tracking-widest text-ink-muted mb-1.5">{label}</div>
+  <div class="flex items-baseline gap-2">
+    <div class="text-3xl font-extrabold tabular-nums tracking-tight">{value}</div>
+    {trend && (
+      <span class="ms text-ink-subtle" style="font-size:20px" aria-hidden="true">{trendIcon}</span>
+    )}
+  </div>
+  {context && <div class="text-xs text-ink-muted mt-2">{context}</div>}
+</div>
