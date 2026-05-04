@@ -1,9 +1,32 @@
 ---
 import Base from '../../layouts/Base.astro';
+import GenreBadge from '../../components/GenreBadge.astro';
 import { getCollection } from 'astro:content';
 
 const stories = (await getCollection('stories', ({ data }) => !data.draft))
   .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+
+// Helper to extract genre from tags
+function getGenreFromTags(tags: string[]): "action" | "thriller" | "romance" | "melodrama" | "humor" | null {
+  const genreMap: Record<string, "action" | "thriller" | "romance" | "melodrama" | "humor"> = {
+    '액션': 'action',
+    'action': 'action',
+    '스릴러': 'thriller',
+    'thriller': 'thriller',
+    '로맨스': 'romance',
+    'romance': 'romance',
+    '멜로': 'melodrama',
+    'melodrama': 'melodrama',
+    '유머': 'humor',
+    'humor': 'humor',
+  };
+
+  for (const tag of tags) {
+    const genre = genreMap[tag];
+    if (genre) return genre;
+  }
+  return null;
+}
 ---
 <Base title="스토리" description="미국과 한국 상장사의 역사를 소설처럼 풀어낸 이야기. 매일 5편 발행.">
   <section class="mb-16 pb-12 border-b border-ink">
@@ -34,23 +57,34 @@ const stories = (await getCollection('stories', ({ data }) => !data.draft))
 
   {stories.length > 0 ? (
     <ul class="divide-y divide-ink-line">
-      {stories.map((story) => (
-        <li>
-          <a href={`/stories/${story.slug}`} class="block py-7 group hover:bg-ink-paper -mx-2 px-2 transition-colors duration-150">
-            <h2 class="text-2xl font-bold tracking-tight leading-tight mb-2 group-hover:underline underline-offset-4">
-              {story.data.title}
-            </h2>
-            <p class="text-ink-subtle mb-3 line-clamp-2 leading-relaxed">{story.data.description}</p>
-            <div class="flex flex-wrap items-center gap-2 text-xs text-ink-muted">
-              {story.data.tickers.map((t) => <span class="ticker-pill">{t}</span>)}
-              <span class="text-ink-line">·</span>
-              <time datetime={story.data.publishedAt.toISOString()} class="tabular-nums">
-                {story.data.publishedAt.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
-              </time>
-            </div>
-          </a>
-        </li>
-      ))}
+      {stories.map((story) => {
+        const genre = getGenreFromTags(story.data.tags);
+        return (
+          <li class="relative">
+            <a href={`/stories/${story.slug}`} class="block py-7 group hover:bg-ink-paper -mx-2 px-2 transition-colors duration-150">
+              <h2 class="text-2xl font-bold tracking-tight leading-tight mb-2 group-hover:underline underline-offset-4 pr-20 sm:pr-0">
+                {story.data.title}
+              </h2>
+              <p class="text-ink-subtle mb-3 line-clamp-2 leading-relaxed">{story.data.description}</p>
+              <div class="flex flex-wrap items-center gap-2 text-xs text-ink-muted">
+                {story.data.tickers.map((t) => <span class="ticker-pill">{t}</span>)}
+                <span class="text-ink-line">·</span>
+                <time datetime={story.data.publishedAt.toISOString()} class="tabular-nums">
+                  {story.data.publishedAt.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </time>
+              </div>
+            </a>
+            {genre && (
+              <div class="absolute top-7 right-2">
+                <GenreBadge genre={genre} size="sm" showLabel={false} class="sm:hidden" />
+                <div class="hidden sm:block">
+                  <GenreBadge genre={genre} size="sm" showLabel={true} />
+                </div>
+              </div>
+            )}
+          </li>
+        );
+      })}
     </ul>
   ) : (
     <p class="text-ink-muted py-16 text-center">아직 발행된 스토리가 없습니다.</p>
