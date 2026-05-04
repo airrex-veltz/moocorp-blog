@@ -5,12 +5,13 @@ interface Props {
   tickers: string[];
   title: string;
   date: string;
+  dateISO: string;
   description: string;
   tags: string[];
   readingTime: number;
 }
 
-const { genre, market, tickers, title, date, description, tags, readingTime } = Astro.props;
+const { genre, market, tickers, title, date, dateISO, description, tags, readingTime } = Astro.props;
 
 // Genre icon mapping per spec
 const genreIcons = {
@@ -69,7 +70,7 @@ const label = genreLabels[genre];
 
   <!-- Meta (Date, Reading Time, Tags) -->
   <div class="flex flex-wrap items-center justify-center gap-2 text-xs text-ink-muted">
-    <time datetime={date} class="tabular-nums">
+    <time datetime={dateISO} class="tabular-nums">
       {date}
     </time>
     <span class="text-ink-line">·</span>

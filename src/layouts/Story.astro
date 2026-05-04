@@ -66,6 +66,7 @@ const genre = getGenreFromTags(data.tags);
         tickers={data.tickers}
         title={data.title}
         date={dateString}
+        dateISO={data.publishedAt.toISOString()}
         description={data.description}
         tags={data.tags}
         readingTime={readingTime}
