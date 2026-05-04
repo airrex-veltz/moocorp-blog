@@ -9,6 +9,7 @@ import Chart from '../../components/mdx/Chart.astro';
 import Quote from '../../components/mdx/Quote.astro';
 import KeyPoints from '../../components/mdx/KeyPoints.astro';
 import DataTable from '../../components/mdx/DataTable.astro';
+import HeroImage from '../../components/mdx/HeroImage.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ data }) => !data.draft);
@@ -21,7 +22,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content, headings } = await post.render();
 
-const components = { StatCard, StatGrid, Callout, Chart, Quote, KeyPoints, DataTable };
+const components = { StatCard, StatGrid, Callout, Chart, Quote, KeyPoints, DataTable, HeroImage };
 ---
 <Post post={post} headings={headings}>
   <Content components={components} />
