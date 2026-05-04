@@ -1,0 +1,9 @@
+/* TEAM */
+Site:        Moo Corp Research
+URL:         https://moocorp-blog.vercel.app
+
+/* SITE */
+Last update: 2026-05-04
+Standards:   HTML5, CSS3
+Components:  Astro, MDX, Tailwind CSS
+Software:    Vercel (hosting), GitHub (repository)

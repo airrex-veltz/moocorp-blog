@@ -1,4 +1,34 @@
 User-agent: *
 Allow: /
 
+# Search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Yeti
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 0
+
+User-agent: DuckDuckBot
+Allow: /
+
+# AI crawlers (allow indexing for visibility)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# Disallow admin/build paths
+Disallow: /_astro/
+Disallow: /_vercel/
+
 Sitemap: https://moocorp-blog.vercel.app/sitemap-index.xml
