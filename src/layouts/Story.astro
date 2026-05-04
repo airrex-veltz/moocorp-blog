@@ -3,6 +3,7 @@ import Base from './Base.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
 import StoryHero from '../components/mdx/StoryHero.astro';
 import StoryEnd from '../components/mdx/StoryEnd.astro';
+import HeroImage from '../components/mdx/HeroImage.astro';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -59,6 +60,16 @@ const genre = getGenreFromTags(data.tags);
   <ReadingProgress />
 
   <article>
+    {data.heroImage && data.heroImage.url && (
+      <HeroImage
+        src={data.heroImage.url}
+        alt={data.heroImage.alt || ''}
+        attribution={data.heroImage.attribution || ''}
+        sourceUrl={data.heroImage.sourceUrl}
+        colorTreatment={data.heroImage.colorTreatment || 'color'}
+      />
+    )}
+
     {genre && (
       <StoryHero
         genre={genre}
