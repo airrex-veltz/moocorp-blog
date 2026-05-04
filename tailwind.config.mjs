@@ -62,20 +62,30 @@ export default {
             maxWidth: '58ch',
             color: '#0a0a0a',
             fontSize: '1.0625rem',
-            lineHeight: '2.0',
-
-            'p:first-of-type': {
-              fontSize: '1.25rem',
-              lineHeight: '1.8',
-              fontWeight: '600',
-              fontStyle: 'italic',
-              color: '#0a0a0a',
-              marginBottom: '2em',
-            },
+            lineHeight: '2.1',
+            wordBreak: 'keep-all',
 
             p: {
               marginTop: '2em',
               marginBottom: '2em',
+            },
+
+            'p:first-of-type': {
+              fontSize: '1.0625rem',
+              fontWeight: '400',
+            },
+
+            'p:first-of-type::first-letter': {
+              float: 'left',
+              fontSize: '4.5em',
+              lineHeight: '0.85',
+              fontWeight: '900',
+              marginRight: '0.1em',
+              marginTop: '0.05em',
+              color: '#0a0a0a',
+              '@media (max-width: 640px)': {
+                fontSize: '3.5em',
+              },
             },
 
             a: {
@@ -87,8 +97,8 @@ export default {
             'a:hover': { textDecorationThickness: '2px' },
             strong: { color: '#0a0a0a', fontWeight: '700' },
 
-            h2: {},
-            h3: {},
+            h2: { display: 'none' },
+            h3: { display: 'none' },
           }
         },
       },
