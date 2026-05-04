@@ -57,6 +57,40 @@ export default {
             'ol > li::marker': { color: '#737373', fontWeight: '500' },
           },
         },
+        story: {
+          css: {
+            maxWidth: '58ch',
+            color: '#0a0a0a',
+            fontSize: '1.0625rem',
+            lineHeight: '2.0',
+
+            'p:first-of-type': {
+              fontSize: '1.25rem',
+              lineHeight: '1.8',
+              fontWeight: '600',
+              fontStyle: 'italic',
+              color: '#0a0a0a',
+              marginBottom: '2em',
+            },
+
+            p: {
+              marginTop: '2em',
+              marginBottom: '2em',
+            },
+
+            a: {
+              color: '#0a0a0a',
+              textDecoration: 'underline',
+              textUnderlineOffset: '3px',
+              textDecorationThickness: '1px'
+            },
+            'a:hover': { textDecorationThickness: '2px' },
+            strong: { color: '#0a0a0a', fontWeight: '700' },
+
+            h2: {},
+            h3: {},
+          }
+        },
       },
     },
   },

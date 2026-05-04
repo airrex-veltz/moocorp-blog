@@ -1,0 +1,87 @@
+---
+interface Props {
+  genre: "action" | "thriller" | "romance" | "melodrama" | "humor";
+  market: string;
+  tickers: string[];
+  title: string;
+  date: string;
+  description: string;
+  tags: string[];
+  readingTime: number;
+}
+
+const { genre, market, tickers, title, date, description, tags, readingTime } = Astro.props;
+
+// Genre icon mapping per spec
+const genreIcons = {
+  action: "bolt",
+  thriller: "vpn_key",
+  romance: "favorite",
+  melodrama: "sentiment_sad",
+  humor: "mood",
+} as const;
+
+const genreLabels = {
+  action: "액션",
+  thriller: "스릴러",
+  romance: "로맨스",
+  melodrama: "멜로",
+  humor: "유머",
+} as const;
+
+const icon = genreIcons[genre];
+const label = genreLabels[genre];
+---
+
+<div class="mb-12 pb-12 border-b border-ink text-center">
+  <!-- Genre Icon (120px) -->
+  <div class="flex justify-center mb-4">
+    <span class="ms text-ink" style="font-size:120px" aria-hidden="true">
+      {icon}
+    </span>
+  </div>
+
+  <!-- Genre Label -->
+  <div class="mb-6 text-xs uppercase tracking-widest text-ink-subtle">
+    {label}
+  </div>
+
+  <!-- Market & Tickers -->
+  <div class="mb-4 text-sm font-mono text-ink-muted">
+    {market}
+    {tickers.length > 0 && (
+      <>
+        <span class="mx-2">·</span>
+        {tickers.join(', ')}
+      </>
+    )}
+  </div>
+
+  <!-- Title -->
+  <h1 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight mb-6 px-4">
+    {title}
+  </h1>
+
+  <!-- Description -->
+  <p class="text-lg sm:text-xl text-ink-subtle leading-relaxed mb-6 max-w-[58ch] mx-auto px-4">
+    {description}
+  </p>
+
+  <!-- Meta (Date, Reading Time, Tags) -->
+  <div class="flex flex-wrap items-center justify-center gap-2 text-xs text-ink-muted">
+    <time datetime={date} class="tabular-nums">
+      {date}
+    </time>
+    <span class="text-ink-line">·</span>
+    <span class="inline-flex items-center gap-1">
+      <span class="ms" style="font-size:14px" aria-hidden="true">schedule</span>
+      <span>{readingTime}분 읽기</span>
+    </span>
+    {tags.length > 0 && (
+      <>
+        <span class="text-ink-line">·</span>
+        {tags.slice(0, 3).map((tag) => <span>#{tag}</span>)}
+      </>
+    )}
+  </div>
+</div>

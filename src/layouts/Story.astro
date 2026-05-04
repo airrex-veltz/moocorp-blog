@@ -1,7 +1,8 @@
 ---
 import Base from './Base.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
-import GenreBadge from '../components/GenreBadge.astro';
+import StoryHero from '../components/mdx/StoryHero.astro';
+import StoryEnd from '../components/mdx/StoryEnd.astro';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -58,48 +59,24 @@ const genre = getGenreFromTags(data.tags);
   <ReadingProgress />
 
   <article>
-    <aside class="mb-10 pb-8 border-b border-ink">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-ink-subtle">
-          <span class="ms" style="font-size:18px" aria-hidden="true">auto_stories</span>
-          <span>Story · {marketLabel}</span>
-          {data.tickers.length > 0 && <span class="text-ink-line">·</span>}
-          {data.tickers.map((t) => <span class="font-mono">{t}</span>)}
-        </div>
-        <time datetime={data.publishedAt.toISOString()} class="text-xs uppercase tracking-widest text-ink-muted tabular-nums">
-          {dateString}
-        </time>
-      </div>
-    </aside>
-
-    <header class="mb-12">
-      <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-[-0.025em] leading-[1.1] mb-6">
-        {data.title}
-      </h1>
-      {genre && (
-        <div class="mb-6">
-          <GenreBadge genre={genre} size="lg" showLabel={true} />
-        </div>
-      )}
-      <p class="text-xl text-ink-subtle leading-relaxed mb-6 max-w-[58ch]">{data.description}</p>
-      <div class="flex flex-wrap items-center gap-2 text-xs text-ink-muted">
-        <span class="inline-flex items-center gap-1">
-          <span class="ms" style="font-size:14px" aria-hidden="true">schedule</span>
-          <span>{readingTime}분 읽기</span>
-        </span>
-        {data.tags.length > 0 && (
-          <>
-            <span class="text-ink-line">·</span>
-            {data.tags.slice(0, 3).map((tag) => <span>#{tag}</span>)}
-          </>
-        )}
-      </div>
-    </header>
+    {genre && (
+      <StoryHero
+        genre={genre}
+        market={marketLabel}
+        tickers={data.tickers}
+        title={data.title}
+        date={dateString}
+        description={data.description}
+        tags={data.tags}
+        readingTime={readingTime}
+      />
+    )}
 
     <div class="ad-slot ad-slot-top"></div>
 
-    <div class="prose prose-ink prose-article max-w-none">
+    <div class="prose prose-ink prose-story max-w-none">
       <slot />
+      <StoryEnd />
     </div>
 
     <div class="ad-slot ad-slot-bottom"></div>

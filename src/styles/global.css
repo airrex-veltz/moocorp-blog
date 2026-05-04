@@ -65,6 +65,17 @@
     @apply float-left text-6xl font-bold leading-none mr-2 mt-1;
     font-family: 'Pretendard Variable', sans-serif;
   }
+
+  /* Drop cap for first paragraph in stories - larger and bolder */
+  .prose-story > p:first-of-type::first-letter {
+    float: left;
+    font-size: 4.5em;
+    font-weight: 900;
+    line-height: 0.85;
+    margin-right: 0.1em;
+    margin-top: 0.05em;
+    font-family: 'Pretendard Variable', sans-serif;
+  }
 }
 
 /* Ad slot placeholder (will be filled when ad code is ready) */

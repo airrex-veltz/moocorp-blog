@@ -1,6 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import Story from '../../layouts/Story.astro';
+import SceneBreak from '../../components/mdx/SceneBreak.astro';
+import PullQuote from '../../components/mdx/PullQuote.astro';
 
 export async function getStaticPaths() {
   const stories = await getCollection('stories', ({ data }) => !data.draft);
@@ -12,7 +14,13 @@ export async function getStaticPaths() {
 
 const { story } = Astro.props;
 const { Content } = await story.render();
+
+// Auto-provide components to MDX
+const storyComponents = {
+  SceneBreak,
+  PullQuote,
+};
 ---
 <Story story={story}>
-  <Content />
+  <Content components={storyComponents} />
 </Story>

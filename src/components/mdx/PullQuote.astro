@@ -1,0 +1,13 @@
+---
+interface Props {
+  children: string;
+}
+
+const { children } = Astro.props;
+---
+
+<div class="my-12 py-8 border-y border-ink">
+  <blockquote class="text-center text-2xl sm:text-3xl font-bold leading-tight tracking-tight text-ink">
+    {children}
+  </blockquote>
+</div>
