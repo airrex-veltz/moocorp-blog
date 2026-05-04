@@ -1,0 +1,85 @@
+---
+interface Props {
+  genre: "action" | "thriller" | "romance" | "melodrama" | "humor";
+  size?: "sm" | "md" | "lg";
+  showLabel?: boolean;
+}
+
+const { genre, size = "md", showLabel = true } = Astro.props;
+
+// Genre configuration mapping
+const genreConfig = {
+  action: {
+    icon: "bolt",
+    label: "액션",
+    borderClass: "border-2 border-solid border-ink",
+    textClass: "uppercase tracking-[-0.02em] font-bold text-ink",
+  },
+  thriller: {
+    icon: "visibility_off",
+    label: "스릴러",
+    borderClass: "border border-dashed border-ink-subtle",
+    textClass: "italic tracking-[-0.01em] font-semibold text-ink-subtle",
+  },
+  romance: {
+    icon: "favorite_border",
+    label: "로맨스",
+    borderClass: "border border-solid border-ink-line",
+    textClass: "font-normal tracking-[0.01em] leading-[1.5] text-ink-muted",
+  },
+  melodrama: {
+    icon: "water_drop",
+    label: "멜로",
+    borderClass: "border-3 border-double border-ink-subtle",
+    textClass: "tracking-[0.03em] font-medium text-ink",
+    shadow: true,
+  },
+  humor: {
+    icon: "sentiment_very_satisfied",
+    label: "유머",
+    borderClass: "border-[1.5px] border-dotted border-ink-muted rounded-lg",
+    textClass: "capitalize font-medium tracking-[0.02em] text-ink-muted",
+  },
+} as const;
+
+// Size configuration
+const sizeConfig = {
+  sm: {
+    iconSize: "20px",
+    textSize: "text-[0.875rem]",
+    padding: "px-2 py-1",
+  },
+  md: {
+    iconSize: "24px",
+    textSize: "text-base",
+    padding: "px-3 py-1.5",
+  },
+  lg: {
+    iconSize: "32px",
+    textSize: "text-lg",
+    padding: "px-4 py-2",
+  },
+} as const;
+
+const config = genreConfig[genre];
+const sizing = sizeConfig[size];
+---
+
+<div
+  class={`inline-flex items-center gap-2 ${sizing.padding} ${config.borderClass} ${config.shadow ? 'shadow-sm' : ''}`}
+  role="img"
+  aria-label={`장르: ${config.label}`}
+>
+  <span
+    class="ms flex-shrink-0"
+    style={`font-size:${sizing.iconSize}`}
+    aria-hidden="true"
+  >
+    {config.icon}
+  </span>
+  {showLabel && (
+    <span class={`${config.textClass} ${sizing.textSize} whitespace-nowrap`}>
+      {config.label}
+    </span>
+  )}
+</div>
