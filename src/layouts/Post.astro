@@ -5,6 +5,7 @@ import PostHero from '../components/PostHero.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import RelatedPosts from '../components/RelatedPosts.astro';
+import HeroImage from '../components/mdx/HeroImage.astro';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -32,6 +33,16 @@ const readingTime = Math.max(1, Math.round(wordCount / 500));
   <TableOfContents headings={headings} />
 
   <article>
+    {data.heroImage && data.heroImage.url && (
+      <HeroImage
+        src={data.heroImage.url}
+        alt={data.heroImage.alt || ''}
+        attribution={data.heroImage.attribution || ''}
+        sourceUrl={data.heroImage.sourceUrl}
+        colorTreatment={data.heroImage.colorTreatment || 'desaturate'}
+      />
+    )}
+
     <PostHero
       market={data.market}
       tickers={data.tickers}
