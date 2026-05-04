@@ -1,13 +1,19 @@
 ---
 interface Props {
   children: string;
+  attribution?: string;
 }
 
-const { children } = Astro.props;
+const { children, attribution } = Astro.props;
 ---
 
-<div class="my-12 py-8 border-y border-ink">
-  <blockquote class="text-center text-2xl sm:text-3xl font-bold leading-tight tracking-tight text-ink">
+<div class="my-12 py-12 border-y border-ink-line max-w-[40ch] mx-auto">
+  <blockquote class="text-center text-2xl font-semibold leading-relaxed text-ink">
     {children}
+    {attribution && (
+      <footer class="mt-4 text-base font-normal text-ink-subtle">
+        — {attribution}
+      </footer>
+    )}
   </blockquote>
 </div>
