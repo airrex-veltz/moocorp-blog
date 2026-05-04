@@ -1,5 +1,14 @@
 import { defineCollection, z } from 'astro:content';
 
+const heroImageSchema = z.object({
+  query: z.string().optional(),
+  url: z.string().optional(),
+  alt: z.string().optional(),
+  attribution: z.string().optional(),
+  sourceUrl: z.string().optional(),
+  colorTreatment: z.enum(['grayscale', 'desaturate', 'color']).optional(),
+}).optional();
+
 const posts = defineCollection({
   type: 'content',
   // Allows both .md and .mdx
@@ -15,6 +24,7 @@ const posts = defineCollection({
     language: z.enum(['ko', 'en']).default('ko'),
     draft: z.boolean().default(false),
     author: z.string().default('Moo Corp Research'),
+    heroImage: heroImageSchema,
   }),
 });
 
@@ -32,6 +42,7 @@ const stories = defineCollection({
     language: z.enum(['ko', 'en']).default('ko'),
     draft: z.boolean().default(false),
     author: z.string().default('Moo Corp Story Writer'),
+    heroImage: heroImageSchema,
   }),
 });
 
