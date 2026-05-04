@@ -9,18 +9,26 @@ const { market, tickers = [], sectors = [] } = Astro.props;
 const marketLabel = { US: 'US Equities', KR: 'KR Equities', GLOBAL: 'Global Markets' }[market];
 const marketIcon = { US: 'public', KR: 'south_korea', GLOBAL: 'language' }[market];
 
+const marketColorClass = {
+  US: 'bg-accent-primary-light/10 text-accent-primary border border-accent-primary-light',
+  KR: 'bg-accent-secondary-light/10 text-accent-secondary border border-accent-secondary-light',
+  GLOBAL: 'bg-accent-tertiary-light/10 text-accent-tertiary border border-accent-tertiary-light'
+}[market];
+
 const primaryTicker = tickers[0];
 ---
 <aside class="mb-10 pb-8 border-b border-ink">
   <div class="flex items-center justify-between">
-    <div class="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-ink-subtle">
-      <span class="ms" style="font-size:18px" aria-hidden="true">{marketIcon}</span>
-      <span>{marketLabel}</span>
-      {sectors.length > 0 && <span class="text-ink-line">·</span>}
+    <div class="flex items-center gap-3 text-xs uppercase tracking-[0.2em]">
+      <span class={`inline-flex items-center gap-2 px-3 py-1.5 rounded-sm ${marketColorClass}`}>
+        <span class="ms" style="font-size:16px" aria-hidden="true">{marketIcon}</span>
+        <span class="font-medium">{marketLabel}</span>
+      </span>
+      {sectors.length > 0 && <span class="text-ink-subtle">·</span>}
       {sectors.map((s, idx) => (
         <>
-          <span>{s}</span>
-          {idx < sectors.length - 1 && <span class="text-ink-line">·</span>}
+          <span class="text-ink-subtle">{s}</span>
+          {idx < sectors.length - 1 && <span class="text-ink-subtle">·</span>}
         </>
       ))}
     </div>
