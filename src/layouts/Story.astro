@@ -1,6 +1,7 @@
 ---
 import Base from './Base.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
+import GenreBadge from '../components/GenreBadge.astro';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -19,6 +20,30 @@ const dateString = data.publishedAt.toLocaleDateString(data.language === 'ko' ? 
   month: 'long',
   day: 'numeric',
 });
+
+// Helper to extract genre from tags
+function getGenreFromTags(tags: string[]): "action" | "thriller" | "romance" | "melodrama" | "humor" | null {
+  const genreMap: Record<string, "action" | "thriller" | "romance" | "melodrama" | "humor"> = {
+    '액션': 'action',
+    'action': 'action',
+    '스릴러': 'thriller',
+    'thriller': 'thriller',
+    '로맨스': 'romance',
+    'romance': 'romance',
+    '멜로': 'melodrama',
+    'melodrama': 'melodrama',
+    '유머': 'humor',
+    'humor': 'humor',
+  };
+
+  for (const tag of tags) {
+    const genre = genreMap[tag];
+    if (genre) return genre;
+  }
+  return null;
+}
+
+const genre = getGenreFromTags(data.tags);
 ---
 <Base
   title={data.title}
@@ -51,6 +76,11 @@ const dateString = data.publishedAt.toLocaleDateString(data.language === 'ko' ? 
       <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-[-0.025em] leading-[1.1] mb-6">
         {data.title}
       </h1>
+      {genre && (
+        <div class="mb-6">
+          <GenreBadge genre={genre} size="lg" showLabel={true} />
+        </div>
+      )}
       <p class="text-xl text-ink-subtle leading-relaxed mb-6 max-w-[58ch]">{data.description}</p>
       <div class="flex flex-wrap items-center gap-2 text-xs text-ink-muted">
         <span class="inline-flex items-center gap-1">
