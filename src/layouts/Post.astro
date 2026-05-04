@@ -1,13 +1,18 @@
 ---
 import Base from './Base.astro';
 import PostMeta from '../components/PostMeta.astro';
+import PostHero from '../components/PostHero.astro';
+import ReadingProgress from '../components/ReadingProgress.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import RelatedPosts from '../components/RelatedPosts.astro';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
   post: CollectionEntry<'posts'>;
+  headings?: { depth: number; slug: string; text: string }[];
 }
 
-const { post } = Astro.props;
+const { post, headings = [] } = Astro.props;
 const { data, body } = post;
 
 const wordCount = body ? body.replace(/\s+/g, '').length : 0;
@@ -23,12 +28,21 @@ const readingTime = Math.max(1, Math.round(wordCount / 500));
   tickers={data.tickers}
   tags={data.tags}
 >
+  <ReadingProgress />
+  <TableOfContents headings={headings} />
+
   <article>
-    <header class="mb-10 pb-8 border-b border-ink">
-      <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.15] mb-4">
+    <PostHero
+      market={data.market}
+      tickers={data.tickers}
+      sectors={data.sectors}
+    />
+
+    <header class="mb-12">
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-[-0.025em] leading-[1.05] mb-6">
         {data.title}
       </h1>
-      <p class="text-lg text-ink-subtle leading-relaxed mb-5">{data.description}</p>
+      <p class="text-xl text-ink-subtle leading-relaxed mb-6 max-w-[60ch]">{data.description}</p>
       <PostMeta
         market={data.market}
         tickers={data.tickers}
@@ -47,7 +61,7 @@ const readingTime = Math.max(1, Math.round(wordCount / 500));
     <div class="ad-slot ad-slot-bottom"></div>
 
     {data.tags.length > 0 && (
-      <footer class="mt-12 pt-8 border-t border-ink">
+      <footer class="mt-12 pt-8 border-t border-ink-line">
         <div class="text-xs uppercase tracking-widest text-ink-muted mb-3">관련 태그</div>
         <div class="flex flex-wrap gap-2">
           {data.tags.map((tag) => (
@@ -59,8 +73,10 @@ const readingTime = Math.max(1, Math.round(wordCount / 500));
       </footer>
     )}
 
+    <RelatedPosts current={post} />
+
     <nav class="mt-12 pt-6 border-t border-ink-line">
-      <a href="/" class="inline-flex items-center gap-2 text-sm hover:underline underline-offset-4">
+      <a href="/" class="inline-flex items-center gap-2 text-sm hover:underline underline-offset-4 hover:-translate-x-1 transition-transform duration-150">
         <span class="ms" aria-hidden="true">arrow_back</span>
         <span>다른 분석 보기</span>
       </a>

@@ -19,10 +19,10 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+const { Content, headings } = await post.render();
 
 const components = { StatCard, StatGrid, Callout, Chart, Quote, KeyPoints, DataTable };
 ---
-<Post post={post}>
+<Post post={post} headings={headings}>
   <Content components={components} />
 </Post>

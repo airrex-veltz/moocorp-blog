@@ -1,0 +1,53 @@
+---
+interface Props {
+  headings: { depth: number; slug: string; text: string }[];
+}
+const { headings } = Astro.props;
+const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+{items.length >= 2 && (
+  <aside class="not-prose hidden xl:block fixed top-32 right-6 w-56 max-h-[calc(100vh-12rem)] overflow-y-auto pr-2">
+    <div class="text-xs uppercase tracking-widest text-ink-muted mb-3 pb-2 border-b border-ink-line">목차</div>
+    <nav>
+      <ol class="space-y-2 text-sm">
+        {items.map((h) => (
+          <li class={h.depth === 3 ? 'pl-3' : ''}>
+            <a
+              href={`#${h.slug}`}
+              data-toc-link={h.slug}
+              class={`block leading-snug hover:text-ink hover:underline underline-offset-4 transition-colors ${h.depth === 3 ? 'text-ink-muted' : 'text-ink-subtle'}`}
+            >
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  </aside>
+
+  <script is:inline>
+    (function () {
+      const links = document.querySelectorAll('[data-toc-link]');
+      if (!links.length) return;
+      const linkBySlug = new Map();
+      links.forEach((a) => linkBySlug.set(a.getAttribute('data-toc-link'), a));
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const a = linkBySlug.get(entry.target.id);
+            if (!a) return;
+            if (entry.isIntersecting) {
+              links.forEach((l) => l.classList.remove('text-ink', 'font-semibold'));
+              a.classList.add('text-ink', 'font-semibold');
+            }
+          });
+        },
+        { rootMargin: '0px 0px -75% 0px', threshold: 0 }
+      );
+
+      const headings = document.querySelectorAll('article h2, article h3');
+      headings.forEach((h) => observer.observe(h));
+    })();
+  </script>
+)}

@@ -1,0 +1,61 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import PostMeta from './PostMeta.astro';
+
+interface Props {
+  current: CollectionEntry<'posts'>;
+  limit?: number;
+}
+const { current, limit = 3 } = Astro.props;
+
+const all = await getCollection('posts', ({ data }) => !data.draft);
+
+function score(post: CollectionEntry<'posts'>): number {
+  if (post.slug === current.slug) return -1;
+  let s = 0;
+  // shared tickers (strong)
+  for (const t of post.data.tickers) if (current.data.tickers.includes(t)) s += 5;
+  // shared sectors (medium)
+  for (const sec of post.data.sectors) if (current.data.sectors.includes(sec)) s += 3;
+  // shared tags (lighter)
+  for (const tag of post.data.tags) if (current.data.tags.includes(tag)) s += 1;
+  // same market (small bonus)
+  if (post.data.market === current.data.market) s += 1;
+  // recency bonus (newer first when tie)
+  const ageDays = (Date.now() - post.data.publishedAt.valueOf()) / 86400000;
+  s += Math.max(0, 10 - ageDays) * 0.1;
+  return s;
+}
+
+const related = all
+  .map((p) => ({ post: p, score: score(p) }))
+  .filter((r) => r.score > 0)
+  .sort((a, b) => b.score - a.score)
+  .slice(0, limit)
+  .map((r) => r.post);
+---
+{related.length > 0 && (
+  <section class="mt-16 pt-10 border-t border-ink">
+    <div class="text-xs uppercase tracking-widest text-ink-muted mb-6">관련 분석</div>
+    <ul class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      {related.map((post) => (
+        <li>
+          <a
+            href={`/posts/${post.slug}`}
+            class="block h-full p-5 border border-ink-line hover:border-ink hover:-translate-y-0.5 transition-all duration-150"
+          >
+            <h3 class="text-base font-bold leading-snug mb-2 line-clamp-3">{post.data.title}</h3>
+            <p class="text-sm text-ink-subtle leading-relaxed line-clamp-2 mb-3">{post.data.description}</p>
+            <PostMeta
+              market={post.data.market}
+              tickers={post.data.tickers}
+              publishedAt={post.data.publishedAt}
+              language={post.data.language}
+            />
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

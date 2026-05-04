@@ -5,53 +5,80 @@ import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('posts', ({ data }) => !data.draft))
   .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+
+const featured = posts[0];
+const rest = posts.slice(1);
 ---
 <Base>
-  <section class="mb-14 pb-10 border-b border-ink">
-    <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight leading-[1.1] mb-4">
+  <section class="mb-16 pb-12 border-b border-ink">
+    <div class="text-xs uppercase tracking-[0.25em] text-ink-muted mb-4">Moo Corp Research</div>
+    <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-[-0.03em] leading-[1.05] mb-6 max-w-3xl">
       미국·한국 상장사 분석
     </h1>
-    <p class="text-lg text-ink-subtle leading-relaxed max-w-2xl">
+    <p class="text-xl text-ink-subtle leading-relaxed max-w-2xl">
       매일 한 종목, 매주 시장 전체. 펀더멘털, 카탈리스트, 리스크를 데이터로 풀어냅니다.
     </p>
-    <div class="mt-6 flex gap-4 text-xs uppercase tracking-widest text-ink-muted">
-      <span class="inline-flex items-center gap-1">
+    <div class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-xs uppercase tracking-widest text-ink-muted">
+      <span class="inline-flex items-center gap-1.5">
         <span class="ms" style="font-size:16px" aria-hidden="true">trending_up</span>
         <span>매일 발행</span>
       </span>
-      <span>·</span>
-      <span class="inline-flex items-center gap-1">
+      <span class="text-ink-line">·</span>
+      <span class="inline-flex items-center gap-1.5">
         <span class="ms" style="font-size:16px" aria-hidden="true">verified</span>
         <span>데이터 기반</span>
       </span>
-      <span>·</span>
-      <span class="inline-flex items-center gap-1">
+      <span class="text-ink-line">·</span>
+      <span class="inline-flex items-center gap-1.5">
         <span class="ms" style="font-size:16px" aria-hidden="true">block</span>
         <span>투자 권유 아님</span>
       </span>
     </div>
   </section>
 
-  {posts.length > 0 ? (
-    <ul class="divide-y divide-ink-line">
-      {posts.map((post) => (
-        <li class="py-8 first:pt-0">
-          <a href={`/posts/${post.slug}`} class="block group">
-            <h2 class="text-2xl font-bold tracking-tight leading-tight mb-2 group-hover:underline underline-offset-4">
-              {post.data.title}
-            </h2>
-            <p class="text-ink-subtle mb-3 line-clamp-2 leading-relaxed">{post.data.description}</p>
-            <PostMeta
-              market={post.data.market}
-              tickers={post.data.tickers}
-              publishedAt={post.data.publishedAt}
-              language={post.data.language}
-            />
-          </a>
-        </li>
-      ))}
-    </ul>
-  ) : (
+  {featured && (
+    <section class="mb-12 pb-12 border-b border-ink-line">
+      <div class="text-xs uppercase tracking-[0.25em] text-ink-muted mb-4">최신</div>
+      <a href={`/posts/${featured.slug}`} class="block group">
+        <h2 class="text-3xl sm:text-4xl font-extrabold tracking-[-0.02em] leading-[1.15] mb-3 group-hover:underline underline-offset-4 decoration-1 group-hover:decoration-2">
+          {featured.data.title}
+        </h2>
+        <p class="text-lg text-ink-subtle mb-4 leading-relaxed line-clamp-2 max-w-2xl">{featured.data.description}</p>
+        <PostMeta
+          market={featured.data.market}
+          tickers={featured.data.tickers}
+          publishedAt={featured.data.publishedAt}
+          language={featured.data.language}
+        />
+      </a>
+    </section>
+  )}
+
+  {rest.length > 0 && (
+    <section>
+      <div class="text-xs uppercase tracking-[0.25em] text-ink-muted mb-6">아카이브</div>
+      <ul class="divide-y divide-ink-line">
+        {rest.map((post) => (
+          <li>
+            <a href={`/posts/${post.slug}`} class="block py-7 group hover:bg-ink-paper -mx-2 px-2 transition-colors duration-150">
+              <h2 class="text-2xl font-bold tracking-tight leading-tight mb-2 group-hover:underline underline-offset-4">
+                {post.data.title}
+              </h2>
+              <p class="text-ink-subtle mb-3 line-clamp-2 leading-relaxed">{post.data.description}</p>
+              <PostMeta
+                market={post.data.market}
+                tickers={post.data.tickers}
+                publishedAt={post.data.publishedAt}
+                language={post.data.language}
+              />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {posts.length === 0 && (
     <p class="text-ink-muted py-16 text-center">아직 발행된 분석이 없습니다.</p>
   )}
 </Base>
