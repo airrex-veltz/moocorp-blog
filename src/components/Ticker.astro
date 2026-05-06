@@ -1,28 +1,92 @@
 ---
-// Static market ticker — illustrative data, replace with API later.
-const items = [
-  { sym: 'S&P 500', px: '5,847.21', ch: '+0.62%', dir: 'pos' },
-  { sym: 'NASDAQ', px: '18,932.04', ch: '+1.14%', dir: 'pos' },
-  { sym: 'KOSPI', px: '2,684.12', ch: '−0.31%', dir: 'neg' },
-  { sym: 'NVDA', px: '1,142.55', ch: '+2.78%', dir: 'pos' },
-  { sym: 'TSLA', px: '248.40', ch: '−1.92%', dir: 'neg' },
-  { sym: '005930', px: '78,400', ch: '+0.51%', dir: 'pos' },
-  { sym: 'USD/KRW', px: '1,418.20', ch: '−0.18%', dir: 'neg' },
-  { sym: 'BTC', px: '$96,420', ch: '+0.94%', dir: 'pos' },
-  { sym: 'WTI', px: '$71.84', ch: '−0.42%', dir: 'neg' },
-  { sym: '10Y UST', px: '4.31%', ch: '+0.04', dir: 'pos' },
+// Live market ticker for the masthead.
+//
+// Server render: writes the items below as a static fallback so the masthead
+// never shows an empty bar (also good for SSR/SEO and no-JS readers).
+// Client side: on hydration, fetches /api/ticker (Vercel edge function with
+// 60s cache) and replaces the prices in place. Re-fetches every 60s while
+// the page is open and the tab is visible.
+//
+// The /api/ticker endpoint pulls live data from Yahoo Finance v8 (no auth).
+
+const fallback = [
+  { sym: 'S&P 500',  px: '5,847.21',   ch: '+0.62%',  dir: 'pos' },
+  { sym: 'NASDAQ',   px: '18,932.04',  ch: '+1.14%',  dir: 'pos' },
+  { sym: 'KOSPI',    px: '2,684.12',   ch: '−0.31%',  dir: 'neg' },
+  { sym: 'NVDA',     px: '1,142.55',   ch: '+2.78%',  dir: 'pos' },
+  { sym: 'TSLA',     px: '248.40',     ch: '−1.92%',  dir: 'neg' },
+  { sym: '005930',   px: '78,400',     ch: '+0.51%',  dir: 'pos' },
+  { sym: 'USD/KRW',  px: '1,418.20',   ch: '−0.18%',  dir: 'neg' },
+  { sym: 'BTC',      px: '$96,420',    ch: '+0.94%',  dir: 'pos' },
+  { sym: 'WTI',      px: '$71.84',     ch: '−0.42%',  dir: 'neg' },
+  { sym: '10Y UST',  px: '4.31%',      ch: '+0.04',   dir: 'pos' },
 ];
-const doubled = [...items, ...items];
+const doubled = [...fallback, ...fallback];
 ---
-<div class="ticker" aria-hidden="true">
-  <div class="ticker-track">
-    {doubled.map((t) => (
-      <span class="ticker-item">
+<div class="ticker" aria-hidden="true" data-ticker>
+  <div class="ticker-track" data-ticker-track>
+    {doubled.map((t, i) => (
+      <span class="ticker-item" data-ticker-sym={t.sym} data-idx={i % fallback.length}>
         <span class="ticker-sym">{t.sym}</span>
-        <span class="ticker-px">{t.px}</span>
-        <span class={`ticker-ch ${t.dir}`}>{t.ch}</span>
+        <span class="ticker-px" data-px>{t.px}</span>
+        <span class={`ticker-ch ${t.dir}`} data-ch>{t.ch}</span>
         <span style="color: var(--ink-4); margin-left: 4px;">·</span>
       </span>
     ))}
   </div>
 </div>
+
+<script is:inline>
+  (() => {
+    const root = document.querySelector('[data-ticker]');
+    if (!root) return;
+
+    const items = root.querySelectorAll('[data-ticker-sym]');
+    if (!items.length) return;
+
+    let inflight = false;
+
+    async function refresh() {
+      if (inflight) return;
+      inflight = true;
+      try {
+        const r = await fetch('/api/ticker', { cache: 'no-store' });
+        if (!r.ok) return;
+        const data = await r.json();
+        const bySym = {};
+        for (const it of (data.items || [])) bySym[it.sym] = it;
+
+        items.forEach((el) => {
+          const sym = el.getAttribute('data-ticker-sym');
+          const live = bySym[sym];
+          if (!live) return;
+          const pxEl = el.querySelector('[data-px]');
+          const chEl = el.querySelector('[data-ch]');
+          if (pxEl) pxEl.textContent = live.px;
+          if (chEl) {
+            chEl.textContent = live.ch;
+            chEl.classList.remove('pos', 'neg', 'flat');
+            chEl.classList.add(live.dir || 'flat');
+          }
+        });
+      } catch (e) {
+        // swallow — keep showing whatever's currently there
+      } finally {
+        inflight = false;
+      }
+    }
+
+    // Initial fetch on hydration
+    refresh();
+
+    // Refresh every 60s while page is visible
+    setInterval(() => {
+      if (!document.hidden) refresh();
+    }, 60_000);
+
+    // Refresh when tab regains focus
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) refresh();
+    });
+  })();
+</script>
