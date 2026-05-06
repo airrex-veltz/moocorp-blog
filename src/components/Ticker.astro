@@ -9,17 +9,20 @@
 //
 // The /api/ticker endpoint pulls live data from Yahoo Finance v8 (no auth).
 
+// `sym` = canonical key (matches /api/ticker response). `label` = what shows
+// on screen — Korean stock codes get the company name appended so readers
+// don't have to memorise "005930 = 삼성전자".
 const fallback = [
-  { sym: 'S&P 500',  px: '5,847.21',   ch: '+0.62%',  dir: 'pos' },
-  { sym: 'NASDAQ',   px: '18,932.04',  ch: '+1.14%',  dir: 'pos' },
-  { sym: 'KOSPI',    px: '2,684.12',   ch: '−0.31%',  dir: 'neg' },
-  { sym: 'NVDA',     px: '1,142.55',   ch: '+2.78%',  dir: 'pos' },
-  { sym: 'TSLA',     px: '248.40',     ch: '−1.92%',  dir: 'neg' },
-  { sym: '005930',   px: '78,400',     ch: '+0.51%',  dir: 'pos' },
-  { sym: 'USD/KRW',  px: '1,418.20',   ch: '−0.18%',  dir: 'neg' },
-  { sym: 'BTC',      px: '$96,420',    ch: '+0.94%',  dir: 'pos' },
-  { sym: 'WTI',      px: '$71.84',     ch: '−0.42%',  dir: 'neg' },
-  { sym: '10Y UST',  px: '4.31%',      ch: '+0.04',   dir: 'pos' },
+  { sym: 'S&P 500',  label: 'S&P 500',  px: '5,847.21',   ch: '+0.62%',  dir: 'pos' },
+  { sym: 'NASDAQ',   label: 'NASDAQ',   px: '18,932.04',  ch: '+1.14%',  dir: 'pos' },
+  { sym: 'KOSPI',    label: 'KOSPI',    px: '2,684.12',   ch: '−0.31%',  dir: 'neg' },
+  { sym: 'NVDA',     label: 'NVDA',     px: '1,142.55',   ch: '+2.78%',  dir: 'pos' },
+  { sym: 'TSLA',     label: 'TSLA',     px: '248.40',     ch: '−1.92%',  dir: 'neg' },
+  { sym: '005930',   label: '삼성전자', px: '78,400',     ch: '+0.51%',  dir: 'pos' },
+  { sym: 'USD/KRW',  label: 'USD/KRW',  px: '1,418.20',   ch: '−0.18%',  dir: 'neg' },
+  { sym: 'BTC',      label: 'BTC',      px: '$96,420',    ch: '+0.94%',  dir: 'pos' },
+  { sym: 'WTI',      label: 'WTI',      px: '$71.84',     ch: '−0.42%',  dir: 'neg' },
+  { sym: '10Y UST',  label: '10Y UST',  px: '4.31%',      ch: '+0.04',   dir: 'pos' },
 ];
 const doubled = [...fallback, ...fallback];
 ---
@@ -27,7 +30,7 @@ const doubled = [...fallback, ...fallback];
   <div class="ticker-track" data-ticker-track>
     {doubled.map((t, i) => (
       <span class="ticker-item" data-ticker-sym={t.sym} data-idx={i % fallback.length}>
-        <span class="ticker-sym">{t.sym}</span>
+        <span class="ticker-sym" data-label>{t.label}</span>
         <span class="ticker-px" data-px>{t.px}</span>
         <span class={`ticker-ch ${t.dir}`} data-ch>{t.ch}</span>
         <span style="color: var(--ink-4); margin-left: 4px;">·</span>
@@ -60,8 +63,10 @@ const doubled = [...fallback, ...fallback];
           const sym = el.getAttribute('data-ticker-sym');
           const live = bySym[sym];
           if (!live) return;
+          const labelEl = el.querySelector('[data-label]');
           const pxEl = el.querySelector('[data-px]');
           const chEl = el.querySelector('[data-ch]');
+          if (labelEl && live.label) labelEl.textContent = live.label;
           if (pxEl) pxEl.textContent = live.px;
           if (chEl) {
             chEl.textContent = live.ch;

@@ -9,26 +9,30 @@
 export const config = { runtime: 'edge' };
 
 interface SymbolSpec {
-  sym: string;
+  sym: string;     // canonical key — used for client/server matching
+  label: string;   // human-readable label rendered in the masthead
   yahoo: string;
   fmt: 'index' | 'stock' | 'currency' | 'crypto' | 'pct' | 'commodity';
 }
 
+// `label` is what the masthead shows. Korean stock codes get the company
+// name so readers don't have to memorise "005930 = 삼성전자".
 const SPECS: SymbolSpec[] = [
-  { sym: 'S&P 500',  yahoo: '^GSPC',     fmt: 'index' },
-  { sym: 'NASDAQ',   yahoo: '^IXIC',     fmt: 'index' },
-  { sym: 'KOSPI',    yahoo: '^KS11',     fmt: 'index' },
-  { sym: 'NVDA',     yahoo: 'NVDA',      fmt: 'stock' },
-  { sym: 'TSLA',     yahoo: 'TSLA',      fmt: 'stock' },
-  { sym: '005930',   yahoo: '005930.KS', fmt: 'stock' },
-  { sym: 'USD/KRW',  yahoo: 'KRW=X',     fmt: 'currency' },
-  { sym: 'BTC',      yahoo: 'BTC-USD',   fmt: 'crypto' },
-  { sym: 'WTI',      yahoo: 'CL=F',      fmt: 'commodity' },
-  { sym: '10Y UST',  yahoo: '^TNX',      fmt: 'pct' },
+  { sym: 'S&P 500',  label: 'S&P 500',  yahoo: '^GSPC',     fmt: 'index' },
+  { sym: 'NASDAQ',   label: 'NASDAQ',   yahoo: '^IXIC',     fmt: 'index' },
+  { sym: 'KOSPI',    label: 'KOSPI',    yahoo: '^KS11',     fmt: 'index' },
+  { sym: 'NVDA',     label: 'NVDA',     yahoo: 'NVDA',      fmt: 'stock' },
+  { sym: 'TSLA',     label: 'TSLA',     yahoo: 'TSLA',      fmt: 'stock' },
+  { sym: '005930',   label: '삼성전자', yahoo: '005930.KS', fmt: 'stock' },
+  { sym: 'USD/KRW',  label: 'USD/KRW',  yahoo: 'KRW=X',     fmt: 'currency' },
+  { sym: 'BTC',      label: 'BTC',      yahoo: 'BTC-USD',   fmt: 'crypto' },
+  { sym: 'WTI',      label: 'WTI',      yahoo: 'CL=F',      fmt: 'commodity' },
+  { sym: '10Y UST',  label: '10Y UST',  yahoo: '^TNX',      fmt: 'pct' },
 ];
 
 interface TickerItem {
   sym: string;
+  label: string;
   px: string;
   ch: string;
   dir: 'pos' | 'neg' | 'flat';
@@ -87,6 +91,7 @@ async function fetchOne(spec: SymbolSpec): Promise<TickerItem | null> {
 
     return {
       sym: spec.sym,
+      label: spec.label,
       px: fmtPrice(last, spec.fmt),
       ch: fmtChange(pct, spec.fmt),
       dir,
@@ -102,6 +107,7 @@ export default async function handler(_req: Request): Promise<Response> {
 
   const items: TickerItem[] = results.map((r, i) => r ?? {
     sym: SPECS[i].sym,
+    label: SPECS[i].label,
     px: '—',
     ch: '—',
     dir: 'flat' as const,
