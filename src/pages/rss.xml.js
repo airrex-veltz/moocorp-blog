@@ -3,7 +3,10 @@ import { getCollection } from 'astro:content';
 
 export async function GET(context) {
   const posts = (await getCollection('posts', ({ data }) => !data.draft))
-    .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+    .sort((a, b) => {
+      const dt = b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf();
+      return dt !== 0 ? dt : b.slug.localeCompare(a.slug);
+    });
 
   return rss({
     title: 'Moo Corp — 미국·한국 상장사 분석',

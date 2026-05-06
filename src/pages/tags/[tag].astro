@@ -13,7 +13,10 @@ export async function getStaticPaths() {
       tag,
       posts: posts
         .filter((p) => p.data.tags.includes(tag))
-        .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()),
+        .sort((a, b) => {
+          const dt = b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf();
+          return dt !== 0 ? dt : b.slug.localeCompare(a.slug);
+        }),
     },
   }));
 }
