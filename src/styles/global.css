@@ -222,7 +222,22 @@
   text-overflow: ellipsis;
   min-width: 0;
 }
-@media (max-width: 860px) { .masthead-date { visibility: hidden; } }
+@media (max-width: 860px) { .masthead-date { display: none; } }
+@media (max-width: 860px) {
+  .masthead-inner { grid-template-columns: auto 1fr; }
+  .masthead-logo { justify-self: start; }
+  .masthead-actions { justify-self: end; }
+}
+@media (max-width: 480px) {
+  .masthead-inner { gap: 12px; }
+  .masthead-actions { gap: 10px; }
+  .subscribe-btn { padding: 7px 10px; font-size: 10px; letter-spacing: 0.06em; }
+  .masthead-logo { font-size: 20px; }
+  .masthead-logo > span:last-child { display: none; }
+}
+@media (max-width: 360px) {
+  .subscribe-btn { display: none; }
+}
 .masthead-logo {
   font-family: var(--serif);
   font-weight: 500;
@@ -602,6 +617,24 @@
   letter-spacing: 0.04em;
   white-space: nowrap;
   text-align: right;
+  min-width: 0;
+}
+@media (max-width: 720px) {
+  .row {
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 16px;
+    padding: 18px 0;
+  }
+  .row:hover { padding-left: 0; padding-right: 0; }
+  .row-meta {
+    grid-column: 2;
+    text-align: left;
+    margin-top: 8px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .row-meta > div { display: inline; }
+  .row-meta > div + div::before { content: " · "; color: var(--ink-4); }
 }
 
 /* ─────────────────────────────────────────────────────────────────
@@ -1023,7 +1056,7 @@
 
 .statgrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(var(--statgrid-cols, 4), 1fr);
   gap: 0;
   margin: 32px 0;
   border: 1px solid var(--rule);
@@ -1038,9 +1071,14 @@
 .statgrid .statcard:nth-last-child(-n+4):nth-child(4n+1) ~ .statcard { border-bottom: 0; }
 @media (max-width: 900px) {
   .statgrid { grid-template-columns: repeat(2, 1fr); }
-  .statgrid .statcard { border-right: 1px solid var(--rule) !important; border-bottom: 1px solid var(--rule) !important; }
-  .statgrid .statcard:nth-child(2n) { border-right: 0 !important; }
-  .statgrid .statcard:nth-last-child(-n+2) { border-bottom: 0 !important; }
+  .statgrid .statcard { border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .statgrid .statcard:nth-child(2n) { border-right: 0; }
+  .statgrid .statcard:nth-last-child(-n+2) { border-bottom: 0; }
+}
+@media (max-width: 480px) {
+  .statgrid { grid-template-columns: 1fr; }
+  .statgrid .statcard { border-right: 0; border-bottom: 1px solid var(--rule); }
+  .statgrid .statcard:last-child { border-bottom: 0; }
 }
 
 /* FT-style table */

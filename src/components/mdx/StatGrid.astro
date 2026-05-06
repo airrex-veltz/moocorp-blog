@@ -3,8 +3,10 @@ interface Props {
   cols?: 2 | 3 | 4;
 }
 const { cols = 3 } = Astro.props;
-const colsStyle = `grid-template-columns: repeat(${cols}, 1fr);`;
+// Use a CSS custom property so the @media (max-width: 900px) override in
+// global.css can still drop the grid to 2 columns on narrow viewports.
+// An inline `grid-template-columns` would win over the media query.
 ---
-<div class="statgrid" style={colsStyle}>
+<div class="statgrid" style={`--statgrid-cols: ${cols};`}>
   <slot />
 </div>
