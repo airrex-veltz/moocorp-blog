@@ -6,7 +6,7 @@
 
 ### 절차
 1. https://search.google.com/search-console 접속
-2. "URL prefix" 선택 → `https://moocorp-blog.vercel.app` 입력
+2. "URL prefix" 선택 → `https://www.mooresearch.com` 입력
 3. 인증 방법: HTML tag 선택
 4. 표시되는 메타 태그에서 `content="..."` 부분만 복사 (예: `abc123XYZ`)
 5. Vercel 대시보드 → Project → Settings → Environment Variables → Add:
@@ -21,7 +21,7 @@
 
 ### 절차
 1. https://searchadvisor.naver.com 접속
-2. "사이트 등록" → `https://moocorp-blog.vercel.app`
+2. "사이트 등록" → `https://www.mooresearch.com`
 3. 사이트 소유 확인: HTML 태그 선택
 4. `content="..."` 값 복사
 5. Vercel 환경변수 추가:
@@ -73,7 +73,7 @@ export default defineConfig({
 
 ### 카카오 애드핏 (한국, 빠른 승인)
 1. https://adfit.kakao.com 가입
-2. 매체 등록 → `moocorp-blog.vercel.app` 또는 자체 도메인
+2. 매체 등록 → `www.mooresearch.com` 또는 자체 도메인
 3. 승인 대기 (~3-7일)
 4. 승인 후 광고 단위 생성:
    - 본문 상단: 728×90 또는 반응형

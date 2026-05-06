@@ -1,6 +1,6 @@
 /* TEAM */
 Site:        Moo Corp Research
-URL:         https://moocorp-blog.vercel.app
+URL:         https://www.mooresearch.com
 
 /* SITE */
 Last update: 2026-05-04

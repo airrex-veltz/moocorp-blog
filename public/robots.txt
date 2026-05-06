@@ -31,4 +31,4 @@ Allow: /
 Disallow: /_astro/
 Disallow: /_vercel/
 
-Sitemap: https://moocorp-blog.vercel.app/sitemap-index.xml
+Sitemap: https://www.mooresearch.com/sitemap-index.xml
