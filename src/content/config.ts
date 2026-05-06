@@ -46,4 +46,25 @@ const stories = defineCollection({
   }),
 });
 
-export const collections = { posts, stories };
+const toons = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string().max(160),
+    description: z.string().max(220),
+    publishedAt: z.coerce.date(),
+    updatedAt: z.coerce.date().optional(),
+    market: z.enum(['US', 'KR', 'GLOBAL']),
+    tickers: z.array(z.string()).default([]),
+    sectors: z.array(z.string()).default([]),
+    tags: z.array(z.string()).default([]),
+    language: z.enum(['ko', 'en']).default('ko'),
+    draft: z.boolean().default(false),
+    author: z.string().default('Moo Corp Toon Director'),
+    sourceStorySlug: z.string().optional(),
+    coverImage: z.string().optional(),
+    panelCount: z.number().int().min(1).max(20).optional(),
+    stylePreset: z.string().optional(),
+  }),
+});
+
+export const collections = { posts, stories, toons };

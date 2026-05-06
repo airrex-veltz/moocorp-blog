@@ -1,0 +1,80 @@
+---
+import Base from './Base.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  toon: CollectionEntry<'toons'>;
+}
+
+const { toon } = Astro.props;
+const { data } = toon;
+
+const dateString = data.publishedAt.toLocaleDateString(data.language === 'ko' ? 'ko-KR' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+<Base
+  title={data.title}
+  description={data.description}
+  language={data.language}
+  publishedAt={data.publishedAt}
+  updatedAt={data.updatedAt}
+  schemaType="Article"
+  tickers={data.tickers}
+  tags={data.tags}
+  activeNav="toons"
+>
+  <div class="container-page page-enter" style="padding-top:48px; padding-bottom:48px; max-width: 880px;">
+    <article>
+      <header style="text-align:center; margin-bottom:32px;">
+        <div style="font-family:var(--mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-4); margin-bottom:12px;">
+          Moo Toons <span class="beta-badge" style="margin-left:4px;">Beta</span>
+        </div>
+        <h1 style="font-family:var(--serif); font-size:36px; line-height:1.2; letter-spacing:-0.01em; color:var(--ink); margin-bottom:12px;">
+          {data.title}
+        </h1>
+        <p style="font-size:15px; line-height:1.6; color:var(--ink-3); max-width:640px; margin:0 auto;">
+          {data.description}
+        </p>
+        <div style="margin-top:16px; font-family:var(--mono); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-4);">
+          {dateString}
+          {data.tickers.length > 0 && <span style="margin-left:8px;">· {data.tickers.slice(0, 3).join(' · ')}</span>}
+        </div>
+      </header>
+
+      <div class="toon-beta-bar" role="note" style="max-width:720px; margin-left:auto; margin-right:auto;">
+        <strong>Beta</strong>
+        <span>일러스트는 AI로 생성되었습니다. 캐릭터·화풍 일관성은 점진적으로 개선됩니다.</span>
+      </div>
+
+      <div class="prose prose-story" style="max-width:720px; margin:0 auto;">
+        <slot />
+      </div>
+
+      {data.sourceStorySlug && (
+        <div style="margin-top:48px; padding-top:24px; border-top:1px solid var(--rule); text-align:center;">
+          <a href={`/stories/${data.sourceStorySlug}`} style="font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent);">
+            원작 스토리 읽기 →
+          </a>
+        </div>
+      )}
+
+      <footer style="margin-top:64px; padding-top:32px; border-top:1px solid var(--rule);">
+        <p style="font-size:13px; color: var(--ink-3); line-height:1.6; text-align:center;">
+          본 일러스트는 AI로 생성된 창작물이며, 실제 인물·장면을 정확히 재현하지 않습니다.
+          원작 스토리와 함께 즐겨주세요.
+        </p>
+      </footer>
+
+      <nav style="margin-top:48px; padding-top:24px; border-top:1px solid var(--rule); display:flex; justify-content:space-between; font-family: var(--mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase;">
+        <a href="/toons" style="color: var(--ink-3); display:inline-flex; align-items:center; gap:8px;">
+          <span aria-hidden="true">←</span>
+          <span>다른 툰</span>
+        </a>
+        <a href="/stories" style="color: var(--ink-3);">스토리 →</a>
+      </nav>
+    </article>
+  </div>
+</Base>

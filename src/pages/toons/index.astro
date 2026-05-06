@@ -1,0 +1,58 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const toons = (await getCollection('toons', ({ data }) => !data.draft))
+  .sort((a, b) => {
+    const dt = b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf();
+    return dt !== 0 ? dt : b.slug.localeCompare(a.slug);
+  });
+
+const fmtDate = (d: Date) =>
+  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+---
+<Base title="Toons (Beta)" description="기존 스토리를 바탕으로 일러스트가 삽입된 웹툰 형식으로 재해석한 베타 콘텐츠." activeNav="toons">
+  <div class="container-page page-enter">
+    <header class="stories-head">
+      <div class="kicker">Moo Toons · 일러스트 서사 (Beta)</div>
+      <h1>이야기를 그림으로 다시 읽다</h1>
+      <p class="lede">
+        Moo Stories에서 발행된 창작 서사를 AI 일러스트와 함께 재해석한 베타 시리즈.
+        하루 1편씩 추가됩니다.
+      </p>
+    </header>
+
+    <div class="toon-beta-bar" role="note">
+      <strong>Beta</strong>
+      <span>일러스트 일관성·화풍을 다듬는 중입니다. 컷 사이의 캐릭터·연출이 들쭉날쭉할 수 있어요.</span>
+    </div>
+
+    {toons.length > 0 ? (
+      <div class="toon-grid">
+        {toons.map((toon) => (
+          <a class="toon-card" href={`/toons/${toon.slug}`}>
+            <div class="toon-card-cover">
+              {toon.data.coverImage ? (
+                <img src={toon.data.coverImage} alt={toon.data.title} loading="lazy" />
+              ) : (
+                <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--ink-4); font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase;">No cover</div>
+              )}
+            </div>
+            <div class="toon-card-body">
+              <div class="toon-card-title">{toon.data.title}</div>
+              <div class="toon-card-dek">{toon.data.description}</div>
+              <div style="margin-top:12px; font-family:var(--mono); font-size:10px; letter-spacing:0.08em; color:var(--ink-4); text-transform:uppercase;">
+                {fmtDate(toon.data.publishedAt)}
+                {toon.data.panelCount && <span style="margin-left:8px;">· {toon.data.panelCount} panels</span>}
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <p style="color: var(--ink-3); padding: 64px 0; text-align: center;">
+        아직 발행된 툰이 없습니다. 매일 오전 11시 KST에 새 에피소드가 공개됩니다.
+      </p>
+    )}
+  </div>
+</Base>

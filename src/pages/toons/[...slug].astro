@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import Toon from '../../layouts/Toon.astro';
+import Panel from '../../components/mdx/Panel.astro';
+import PanelStrip from '../../components/mdx/PanelStrip.astro';
+import PullQuote from '../../components/mdx/PullQuote.astro';
+import SceneBreak from '../../components/mdx/SceneBreak.astro';
+
+export async function getStaticPaths() {
+  const toons = await getCollection('toons', ({ data }) => !data.draft);
+  return toons.map((toon) => ({
+    params: { slug: toon.slug },
+    props: { toon },
+  }));
+}
+
+const { toon } = Astro.props;
+const { Content } = await toon.render();
+
+const toonComponents = {
+  Panel,
+  PanelStrip,
+  PullQuote,
+  SceneBreak,
+};
+---
+<Toon toon={toon}>
+  <Content components={toonComponents} />
+</Toon>

@@ -315,6 +315,140 @@
 .subnav-inner > span { white-space: nowrap; }
 .subnav-link:hover { color: var(--ink); }
 .subnav-link.active { color: var(--ink); border-bottom-color: var(--ink); }
+.beta-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 5px;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-tint);
+  border: 1px solid var(--accent-rule);
+  border-radius: 2px;
+  vertical-align: 1px;
+  line-height: 1.2;
+}
+
+/* Toon (illustrated story) — webtoon-style vertical panels */
+.toon-beta-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  margin: 24px 0 32px;
+  background: var(--accent-tint);
+  border: 1px solid var(--accent-rule);
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-2);
+}
+.toon-beta-bar strong {
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.toon-panel-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 32px 0;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.toon-panel {
+  margin: 0;
+  padding: 0;
+}
+.toon-panel-frame {
+  position: relative;
+  width: 100%;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  overflow: hidden;
+}
+.toon-panel-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+.toon-panel-num {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 2px 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  background: var(--paper);
+  color: var(--ink-2);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+}
+.toon-panel-caption {
+  margin-top: 10px;
+  margin-bottom: 16px;
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  text-align: center;
+  padding: 0 12px;
+}
+.toon-card {
+  display: block;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  overflow: hidden;
+  transition: transform 200ms var(--ease), border-color 200ms var(--ease);
+}
+.toon-card:hover {
+  border-color: var(--accent-rule);
+  transform: translateY(-2px);
+}
+.toon-card-cover {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: var(--paper-2);
+  overflow: hidden;
+}
+.toon-card-cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.toon-card-body {
+  padding: 16px;
+}
+.toon-card-title {
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.35;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.toon-card-dek {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-3);
+}
+.toon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+@media (max-width: 720px) {
+  .toon-panel-caption { font-size: 14px; }
+}
 
 .ticker {
   border-bottom: 1px solid var(--rule);

@@ -1,0 +1,18 @@
+---
+interface Props {
+  src: string;
+  alt?: string;
+  caption?: string;
+  num?: number | string;
+  height?: string | number;
+}
+const { src, alt = '', caption, num, height } = Astro.props;
+const heightCss = height === undefined ? undefined : (typeof height === 'number' ? `${height}px` : height);
+---
+<figure class="toon-panel">
+  <div class="toon-panel-frame" style={heightCss ? `height:${heightCss};` : undefined}>
+    <img src={src} alt={alt} loading="lazy" />
+    {num !== undefined && <span class="toon-panel-num">{num}</span>}
+  </div>
+  {caption && <figcaption class="toon-panel-caption">{caption}</figcaption>}
+</figure>

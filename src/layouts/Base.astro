@@ -14,7 +14,7 @@ interface Props {
   tickers?: string[];
   tags?: string[];
   showTicker?: boolean;
-  activeNav?: 'today' | 'archive' | 'stories' | 'tags' | 'about';
+  activeNav?: 'today' | 'archive' | 'stories' | 'toons' | 'tags' | 'about';
 }
 
 const SITE_NAME = 'Moo Research';
@@ -104,10 +104,11 @@ const articleSchema = publishedAt && schemaType === 'Article' ? {
   keywords: [...tickers, ...tags].join(', '),
 } : null;
 
-const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label: string }> = [
+const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label: string; beta?: boolean }> = [
   { id: 'today', href: '/', label: 'Today' },
   { id: 'archive', href: '/archive', label: 'Archive' },
   { id: 'stories', href: '/stories', label: 'Stories' },
+  { id: 'toons', href: '/toons', label: 'Toons', beta: true },
   { id: 'tags', href: '/tags', label: 'Tags' },
   { id: 'about', href: '/about', label: 'About' },
 ];
@@ -200,7 +201,10 @@ const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label
       <div class="container-page subnav">
         <nav class="subnav-inner" aria-label="Primary">
           {navLinks.map((l) => (
-            <a class={`subnav-link ${activeNav === l.id ? 'active' : ''}`} href={l.href}>{l.label}</a>
+            <a class={`subnav-link ${activeNav === l.id ? 'active' : ''}`} href={l.href}>
+              {l.label}
+              {l.beta && <span class="beta-badge" aria-label="Beta">Beta</span>}
+            </a>
           ))}
           <span style="flex:1"></span>
           <span style="color: var(--ink-4); letter-spacing: 0.04em;">EST. 2024 · SEOUL</span>
@@ -227,6 +231,7 @@ const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label
             <li><a href="/">Today</a></li>
             <li><a href="/archive">Archive</a></li>
             <li><a href="/stories">Stories</a></li>
+            <li><a href="/toons">Toons (Beta)</a></li>
             <li><a href="/tags">Tags</a></li>
           </ul>
         </div>
