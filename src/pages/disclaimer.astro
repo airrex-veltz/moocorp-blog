@@ -2,12 +2,14 @@
 import Base from '../layouts/Base.astro';
 ---
 <Base title="면책조항">
-  <header class="mb-10 pb-8 border-b border-ink">
-    <h1 class="text-4xl font-extrabold tracking-tight">면책조항</h1>
-    <p class="text-ink-muted mt-2 text-sm">최종 업데이트: 2026-05-04</p>
+ <div class="container-page page-enter" style="padding-top:64px; padding-bottom:48px;">
+  <header style="margin-bottom:40px; padding-bottom:32px; border-bottom:1px solid var(--ink); max-width:var(--readable);">
+    <div class="eyebrow" style="margin-bottom:16px;">Legal</div>
+    <h1 style="font-family:var(--kserif); font-size:clamp(32px,4vw,48px); letter-spacing:-0.025em; font-weight:400;">면책조항</h1>
+    <p style="color: var(--ink-3); margin-top:8px; font-size:13px; font-family: var(--mono); letter-spacing:0.04em;">최종 업데이트: 2026-05-04</p>
   </header>
 
-  <div class="prose prose-ink max-w-none">
+  <div class="prose max-w-none">
     <h2>투자 권유가 아닙니다</h2>
     <p>본 사이트의 모든 분석, 의견, 추정은 <strong>정보 제공 목적</strong>으로만 작성되며, 특정 종목의 매수 또는 매도를 권유하지 않습니다.</p>
 
@@ -32,4 +34,5 @@ import Base from '../layouts/Base.astro';
     <h2>전문가 자문 권고</h2>
     <p>구체적인 투자 결정 전에 자격을 갖춘 금융 전문가의 자문을 구하시기를 권장합니다.</p>
   </div>
+ </div>
 </Base>

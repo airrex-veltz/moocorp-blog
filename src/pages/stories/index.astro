@@ -6,87 +6,62 @@ import { getCollection } from 'astro:content';
 const stories = (await getCollection('stories', ({ data }) => !data.draft))
   .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 
-// Helper to extract genre from tags
 function getGenreFromTags(tags: string[]): "action" | "thriller" | "romance" | "melodrama" | "humor" | null {
   const genreMap: Record<string, "action" | "thriller" | "romance" | "melodrama" | "humor"> = {
-    '액션': 'action',
-    'action': 'action',
-    '스릴러': 'thriller',
-    'thriller': 'thriller',
-    '로맨스': 'romance',
-    'romance': 'romance',
-    '멜로': 'melodrama',
-    'melodrama': 'melodrama',
-    '유머': 'humor',
-    'humor': 'humor',
+    '액션': 'action', 'action': 'action',
+    '스릴러': 'thriller', 'thriller': 'thriller',
+    '로맨스': 'romance', 'romance': 'romance',
+    '멜로': 'melodrama', 'melodrama': 'melodrama',
+    '유머': 'humor', 'humor': 'humor',
   };
-
   for (const tag of tags) {
     const genre = genreMap[tag];
     if (genre) return genre;
   }
   return null;
 }
----
-<Base title="스토리" description="미국과 한국 상장사의 역사를 소설처럼 풀어낸 이야기. 매일 5편 발행.">
-  <section class="mb-16 pb-12 border-b border-ink">
-    <div class="text-xs uppercase tracking-[0.25em] text-ink-muted mb-4">Moo Corp Stories</div>
-    <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-[-0.03em] leading-[1.05] mb-6 max-w-3xl">
-      회사가 들려주는 이야기
-    </h1>
-    <p class="text-xl text-ink-subtle leading-relaxed max-w-2xl">
-      상장사의 역사를 액션, 스릴러, 로맨스, 멜로, 유머 5개 장르로 풀어낸 창작 서사. 매일 5편씩.
-    </p>
-    <div class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-xs uppercase tracking-widest text-ink-muted">
-      <span class="inline-flex items-center gap-1.5">
-        <span class="ms" style="font-size:16px" aria-hidden="true">auto_stories</span>
-        <span>창작 서사</span>
-      </span>
-      <span class="text-ink-line">·</span>
-      <span class="inline-flex items-center gap-1.5">
-        <span class="ms" style="font-size:16px" aria-hidden="true">shuffle</span>
-        <span>장르 무작위</span>
-      </span>
-      <span class="text-ink-line">·</span>
-      <span class="inline-flex items-center gap-1.5">
-        <span class="ms" style="font-size:16px" aria-hidden="true">block</span>
-        <span>투자 권유 아님</span>
-      </span>
-    </div>
-  </section>
 
-  {stories.length > 0 ? (
-    <ul class="divide-y divide-ink-line">
-      {stories.map((story) => {
-        const genre = getGenreFromTags(story.data.tags);
-        return (
-          <li class="relative">
-            <a href={`/stories/${story.slug}`} class="block py-7 group hover:bg-ink-paper -mx-2 px-2 transition-colors duration-150">
-              <h2 class="text-2xl font-bold tracking-tight leading-tight mb-2 group-hover:underline underline-offset-4 pr-20 sm:pr-0">
-                {story.data.title}
-              </h2>
-              <p class="text-ink-subtle mb-3 line-clamp-2 leading-relaxed">{story.data.description}</p>
-              <div class="flex flex-wrap items-center gap-2 text-xs text-ink-muted">
-                {story.data.tickers.map((t) => <span class="ticker-pill">{t}</span>)}
-                <span class="text-ink-line">·</span>
-                <time datetime={story.data.publishedAt.toISOString()} class="tabular-nums">
-                  {story.data.publishedAt.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
-                </time>
+const fmtDate = (d: Date) =>
+  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+---
+<Base title="스토리" description="미국과 한국 상장사의 역사를 소설처럼 풀어낸 이야기." activeNav="stories">
+  <div class="container-page page-enter">
+    <header class="stories-head">
+      <div class="kicker">Moo Stories · 창작 서사</div>
+      <h1>회사가 들려주는 이야기</h1>
+      <p class="lede">
+        상장사의 역사를 액션, 스릴러, 로맨스, 멜로, 유머 5개 장르로 풀어낸 창작 서사.
+      </p>
+    </header>
+
+    {stories.length > 0 ? (
+      <div class="row-list" style="margin-top:0; border-top:0;">
+        {stories.map((story, i) => {
+          const genre = getGenreFromTags(story.data.tags);
+          return (
+            <a class="row" href={`/stories/${story.slug}`}>
+              <div class="row-num">No. {String(i + 1).padStart(2, '0')}</div>
+              <div>
+                {genre && (
+                  <div style="margin-bottom: 8px; display: inline-block;">
+                    <GenreBadge genre={genre} size="sm" showLabel={true} />
+                  </div>
+                )}
+                <div class="row-title">{story.data.title}</div>
+                <div class="row-dek">{story.data.description}</div>
+              </div>
+              <div class="row-meta">
+                <div>{fmtDate(story.data.publishedAt)}</div>
+                {story.data.tickers.length > 0 && (
+                  <div style="margin-top:4px; color:var(--ink-4);">{story.data.tickers.slice(0, 3).join(' · ')}</div>
+                )}
               </div>
             </a>
-            {genre && (
-              <div class="absolute top-7 right-2">
-                <GenreBadge genre={genre} size="sm" showLabel={false} class="sm:hidden" />
-                <div class="hidden sm:block">
-                  <GenreBadge genre={genre} size="sm" showLabel={true} />
-                </div>
-              </div>
-            )}
-          </li>
-        );
-      })}
-    </ul>
-  ) : (
-    <p class="text-ink-muted py-16 text-center">아직 발행된 스토리가 없습니다.</p>
-  )}
+          );
+        })}
+      </div>
+    ) : (
+      <p style="color: var(--ink-3); padding: 64px 0; text-align: center;">아직 발행된 스토리가 없습니다.</p>
+    )}
+  </div>
 </Base>

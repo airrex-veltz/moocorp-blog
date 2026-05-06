@@ -11,24 +11,29 @@ for (const post of posts) {
 }
 const tags = Array.from(tagCounts.entries()).sort((a, b) => b[1] - a[1]);
 ---
-<Base title="태그">
-  <header class="mb-10 pb-8 border-b border-ink">
-    <h1 class="text-4xl font-extrabold tracking-tight">태그</h1>
-    <p class="text-ink-muted mt-2">{tags.length}개 태그, {posts.length}개 글</p>
-  </header>
+<Base title="태그" activeNav="tags">
+  <div class="container-page page-enter">
+    <header class="stories-head">
+      <div class="kicker">All Tags · 전체 태그</div>
+      <h1>태그</h1>
+      <p class="lede">{tags.length}개 태그, 누적 {posts.length}편의 분석.</p>
+    </header>
 
-  {tags.length === 0 ? (
-    <p class="text-ink-muted">아직 태그가 없습니다.</p>
-  ) : (
-    <ul class="flex flex-wrap gap-2">
-      {tags.map(([tag, count]) => (
-        <li>
-          <a href={`/tags/${tag}`} class="pill-subtle hover:border-ink hover:text-ink transition-colors">
-            <span>#{tag}</span>
-            <span class="ml-1 text-ink-muted">{count}</span>
-          </a>
-        </li>
-      ))}
-    </ul>
-  )}
+    {tags.length === 0 ? (
+      <p style="color: var(--ink-3); padding: 64px 0;">아직 태그가 없습니다.</p>
+    ) : (
+      <ul style="display: flex; flex-wrap: wrap; gap: 10px; padding: 48px 0; list-style: none; margin: 0;">
+        {tags.map(([tag, count]) => (
+          <li>
+            <a href={`/tags/${tag}`} style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border:1px solid var(--rule); color:var(--ink-2); text-decoration:none; font-family:var(--mono); font-size:12px; letter-spacing:0.02em; transition: border-color 150ms ease, color 150ms ease, background 150ms ease;"
+              onmouseover="this.style.background='var(--accent-tint)'; this.style.borderColor='var(--accent)'; this.style.color='var(--accent)';"
+              onmouseout="this.style.background=''; this.style.borderColor='var(--rule)'; this.style.color='var(--ink-2)';">
+              <span>#{tag}</span>
+              <span style="color: var(--ink-4); font-size:10px;">{count}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
 </Base>

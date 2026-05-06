@@ -1,0 +1,70 @@
+---
+interface Props {
+  title: string;
+  meta?: string;
+  data: number[];
+  labels?: string[];
+  source?: string;
+  height?: number;
+}
+const { title, meta, data, labels = [], source, height = 240 } = Astro.props;
+
+const w = 720;
+const h = height;
+const padL = 36, padR = 8, padT = 16, padB = 28;
+const innerW = w - padL - padR;
+const innerH = h - padT - padB;
+const max = Math.max(...data) * 1.05;
+const min = 0;
+const xStep = innerW / Math.max(1, data.length - 1);
+const points = data.map((v, i) => {
+  const x = padL + i * xStep;
+  const y = padT + innerH - ((v - min) / (max - min)) * innerH;
+  return [x, y] as [number, number];
+});
+const path = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(' ');
+const areaPath = `${path} L ${padL + innerW} ${padT + innerH} L ${padL} ${padT + innerH} Z`;
+const yTicks = [0, 0.25, 0.5, 0.75, 1].map((t) => ({
+  y: padT + innerH - t * innerH,
+  val: Math.round(min + (max - min) * t),
+}));
+const labelStep = Math.max(1, Math.ceil(data.length / 6));
+const last = points[points.length - 1];
+---
+<figure class="chart-figure">
+  <figcaption class="cap">
+    <span class="cap-title">{title}</span>
+    {meta && <span class="cap-meta">{meta}</span>}
+  </figcaption>
+  <svg viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="xMidYMid meet" role="img" aria-label={title}>
+    {yTicks.map((t, i) => (
+      <line
+        x1={padL}
+        x2={padL + innerW}
+        y1={t.y}
+        y2={t.y}
+        stroke="var(--rule)"
+        stroke-width="1"
+        stroke-dasharray={i === 0 || i === yTicks.length - 1 ? '0' : '2 3'}
+      />
+    ))}
+    {yTicks.map((t) => (
+      <text x={padL - 8} y={t.y + 3} text-anchor="end" font-family="var(--mono)" font-size="10" fill="var(--ink-3)">{t.val}</text>
+    ))}
+    {labels.map((l, i) =>
+      i % labelStep === 0 || i === labels.length - 1 ? (
+        <text x={padL + i * xStep} y={h - 8} text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--ink-3)">{l}</text>
+      ) : null
+    )}
+    <path d={areaPath} fill="var(--accent-tint)" />
+    <path d={path} stroke="var(--accent)" stroke-width="1.8" fill="none" stroke-linejoin="round" stroke-linecap="round" />
+    {last && (
+      <>
+        <circle cx={last[0]} cy={last[1]} r="3.5" fill="var(--accent)" />
+        <circle cx={last[0]} cy={last[1]} r="6" fill="none" stroke="var(--accent)" stroke-opacity="0.3" stroke-width="1.2" />
+        <text x={last[0] - 4} y={last[1] - 10} text-anchor="end" font-family="var(--mono)" font-size="11" font-weight="600" fill="var(--accent)">{data[data.length - 1]}</text>
+      </>
+    )}
+  </svg>
+  {source && <div class="source">{source}</div>}
+</figure>

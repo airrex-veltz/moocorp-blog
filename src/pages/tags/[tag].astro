@@ -1,6 +1,5 @@
 ---
 import Base from '../../layouts/Base.astro';
-import PostMeta from '../../components/PostMeta.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -20,30 +19,36 @@ export async function getStaticPaths() {
 }
 
 const { tag, posts } = Astro.props;
+const fmtDate = (d: Date) =>
+  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
 ---
-<Base title={`#${tag}`}>
-  <header class="mb-10 pb-8 border-b border-ink">
-    <div class="text-xs uppercase tracking-widest text-ink-muted mb-2">태그</div>
-    <h1 class="text-4xl font-extrabold tracking-tight">#{tag}</h1>
-    <p class="text-ink-muted mt-2">{posts.length}개 글</p>
-  </header>
+<Base title={`#${tag}`} activeNav="tags">
+  <div class="container-page page-enter">
+    <header class="stories-head">
+      <div class="kicker">Tag · 태그</div>
+      <h1>#{tag}</h1>
+      <p class="lede">{posts.length}편의 분석에 등장한 태그.</p>
+    </header>
 
-  <ul class="divide-y divide-ink-line">
-    {posts.map((post) => (
-      <li class="py-8 first:pt-0">
-        <a href={`/posts/${post.slug}`} class="block group">
-          <h2 class="text-2xl font-bold tracking-tight leading-tight mb-2 group-hover:underline underline-offset-4">
-            {post.data.title}
-          </h2>
-          <p class="text-ink-subtle mb-3 line-clamp-2 leading-relaxed">{post.data.description}</p>
-          <PostMeta
-            market={post.data.market}
-            tickers={post.data.tickers}
-            publishedAt={post.data.publishedAt}
-            language={post.data.language}
-          />
+    <div class="row-list" style="margin-top:0; border-top:0;">
+      {posts.map((post, i) => (
+        <a class="row" href={`/posts/${post.slug}`}>
+          <div class="row-num">No. {String(i + 1).padStart(2, '0')}</div>
+          <div>
+            <div style="font-family: var(--mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color: var(--accent); margin-bottom:6px;">
+              {post.data.market}
+            </div>
+            <div class="row-title">{post.data.title}</div>
+            <div class="row-dek">{post.data.description}</div>
+          </div>
+          <div class="row-meta">
+            <div>{fmtDate(post.data.publishedAt)}</div>
+            {post.data.tickers.length > 0 && (
+              <div style="margin-top:4px; color:var(--ink-4);">{post.data.tickers.slice(0, 4).join(' · ')}</div>
+            )}
+          </div>
         </a>
-      </li>
-    ))}
-  </ul>
+      ))}
+    </div>
+  </div>
 </Base>

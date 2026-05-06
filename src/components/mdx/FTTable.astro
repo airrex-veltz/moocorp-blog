@@ -1,0 +1,51 @@
+---
+interface Column {
+  key: string;
+  label: string;
+  num?: boolean;
+  width?: string;
+}
+interface Row {
+  [key: string]: string | { value: string; trend?: 'up' | 'down' };
+}
+interface Props {
+  title?: string;
+  meta?: string;
+  source?: string;
+  columns: Column[];
+  rows: Row[];
+}
+const { title, meta, source, columns, rows } = Astro.props;
+---
+<figure class="chart-figure">
+  {title && (
+    <figcaption class="cap">
+      <span class="cap-title">{title}</span>
+      {meta && <span class="cap-meta">{meta}</span>}
+    </figcaption>
+  )}
+  <table class="ft-table">
+    <thead>
+      <tr>
+        {columns.map((c) => (
+          <th class={c.num ? 'num' : ''} style={c.width ? `width:${c.width}` : ''}>{c.label}</th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((r) => (
+        <tr>
+          {columns.map((c) => {
+            const v = r[c.key];
+            if (typeof v === 'object' && v !== null) {
+              const dir = v.trend === 'up' ? 'pos' : v.trend === 'down' ? 'neg' : '';
+              return <td class={`${c.num ? 'num' : ''} ${dir}`}>{v.value}</td>;
+            }
+            return <td class={c.num ? 'num' : ''}>{v ?? ''}</td>;
+          })}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  {source && <div class="source">{source}</div>}
+</figure>

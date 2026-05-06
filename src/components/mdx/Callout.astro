@@ -1,37 +1,22 @@
 ---
 interface Props {
-  type?: 'note' | 'risk' | 'catalyst' | 'data';
+  type?: 'note' | 'risk' | 'catalyst' | 'data' | 'key';
   title?: string;
+  label?: string;
 }
-const { type = 'note', title } = Astro.props;
+const { type = 'note', title, label } = Astro.props;
 
-const icon = {
-  note: 'info',
-  risk: 'warning',
-  catalyst: 'bolt',
-  data: 'analytics',
+const defaultLabel = {
+  note: 'Note',
+  risk: 'Risk Map',
+  catalyst: 'Catalyst',
+  data: 'Key Data',
+  key: 'Key Frame',
 }[type];
 
-const defaultTitle = {
-  note: '참고',
-  risk: '리스크',
-  catalyst: '카탈리스트',
-  data: '핵심 데이터',
-}[type];
-
-const borderClass = {
-  note: 'border-l-2 border-ink',
-  risk: 'border-l-4 border-ink bg-ink-line',
-  catalyst: 'border-l-4 border-accent-tertiary bg-accent-tertiary/5',
-  data: 'border-l-4 border-accent-secondary bg-accent-secondary/5',
-}[type];
+const lab = label ?? title ?? defaultLabel;
 ---
-<aside class={`${borderClass} pl-4 py-1 my-8 not-prose`}>
-  <div class="flex items-center gap-2 text-xs uppercase tracking-widest text-ink-subtle mb-2">
-    <span class="ms" style="font-size:16px" aria-hidden="true">{icon}</span>
-    <span>{title ?? defaultTitle}</span>
-  </div>
-  <div class="text-base leading-relaxed text-ink">
-    <slot />
-  </div>
+<aside class="callout">
+  <span class="lab">{lab}</span>
+  <slot />
 </aside>
