@@ -1,0 +1,12 @@
+---
+interface Item { title: string; body: string; }
+interface Props {
+  items: Item[];
+}
+const { items } = Astro.props;
+---
+<ol class="numbered-list">
+  {items.map((it) => (
+    <li><div><strong>{it.title}</strong>{it.body}</div></li>
+  ))}
+</ol>

@@ -5,49 +5,78 @@ interface Props {
 const { headings } = Astro.props;
 const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
 ---
-{items.length >= 2 && (
-  <aside class="not-prose hidden xl:block fixed top-32 right-6 w-56 max-h-[calc(100vh-12rem)] overflow-y-auto pr-2">
-    <div class="text-xs uppercase tracking-widest text-ink-muted mb-3 pb-2 border-b border-ink-line">목차</div>
-    <nav>
-      <ol class="space-y-2 text-sm">
-        {items.map((h) => (
-          <li class={h.depth === 3 ? 'pl-3' : ''}>
-            <a
-              href={`#${h.slug}`}
-              data-toc-link={h.slug}
-              class={`block leading-snug hover:text-ink hover:underline underline-offset-4 transition-colors ${h.depth === 3 ? 'text-ink-muted' : 'text-ink-subtle'}`}
-            >
-              {h.text}
-            </a>
-          </li>
-        ))}
-      </ol>
-    </nav>
-  </aside>
+<aside class="post-toc" aria-label="목차">
+  <h5>Contents</h5>
+  {items.length > 0 ? (
+    <ol>
+      {items.map((h) => (
+        <li
+          data-toc-link={h.slug}
+          style={h.depth === 3 ? 'padding-left: 44px; font-size: 10.5px;' : ''}
+        >
+          <a href={`#${h.slug}`} style="color:inherit; display:block;">{h.text}</a>
+        </li>
+      ))}
+    </ol>
+  ) : (
+    <ol><li style="padding-left:0; color: var(--ink-4);">—</li></ol>
+  )}
+  <div class="progress">
+    Reading
+    <div class="progress-num"><span id="toc-progress-num">0</span><span>%</span></div>
+  </div>
+</aside>
 
-  <script is:inline>
-    (function () {
-      const links = document.querySelectorAll('[data-toc-link]');
-      if (!links.length) return;
-      const linkBySlug = new Map();
-      links.forEach((a) => linkBySlug.set(a.getAttribute('data-toc-link'), a));
+<script is:inline>
+  function __moo_initToc() {
+    const items = document.querySelectorAll('.post-toc li[data-toc-link]');
+    if (!items.length) return;
+    const itemBySlug = new Map();
+    items.forEach((li) => itemBySlug.set(li.getAttribute('data-toc-link'), li));
 
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            const a = linkBySlug.get(entry.target.id);
-            if (!a) return;
-            if (entry.isIntersecting) {
-              links.forEach((l) => l.classList.remove('text-ink', 'font-semibold'));
-              a.classList.add('text-ink', 'font-semibold');
-            }
-          });
-        },
-        { rootMargin: '0px 0px -75% 0px', threshold: 0 }
-      );
+    // Smooth scroll on click with offset for sticky masthead
+    items.forEach((li) => {
+      const a = li.querySelector('a');
+      if (!a) return;
+      a.addEventListener('click', (e) => {
+        const slug = li.getAttribute('data-toc-link');
+        const target = document.getElementById(slug);
+        if (!target) return;
+        e.preventDefault();
+        const y = target.getBoundingClientRect().top + window.scrollY - 100;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+        history.replaceState(null, '', '#' + slug);
+      });
+    });
 
-      const headings = document.querySelectorAll('article h2, article h3');
-      headings.forEach((h) => observer.observe(h));
-    })();
-  </script>
-)}
+    // Position-based active detection: pick the last heading whose top < 140
+    const headings = Array.from(document.querySelectorAll('.post-body h2, .post-body h3'))
+      .filter((h) => h.id && itemBySlug.has(h.id));
+    if (!headings.length) return;
+
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      let active = headings[0].id;
+      for (const h of headings) {
+        if (h.getBoundingClientRect().top < 140) active = h.id;
+        else break;
+      }
+      itemBySlug.forEach((el) => el.classList.remove('active'));
+      const li = itemBySlug.get(active);
+      if (li) li.classList.add('active');
+    };
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', __moo_initToc);
+  } else {
+    __moo_initToc();
+  }
+</script>

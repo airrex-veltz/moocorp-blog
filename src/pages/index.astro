@@ -1,84 +1,209 @@
 ---
 import Base from '../layouts/Base.astro';
-import PostMeta from '../components/PostMeta.astro';
+import Ticker from '../components/Ticker.astro';
+import GenreIcon from '../components/GenreIcon.astro';
 import { getCollection } from 'astro:content';
 
-const posts = (await getCollection('posts', ({ data }) => !data.draft))
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
   .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 
-const featured = posts[0];
-const rest = posts.slice(1);
+const allStories = (await getCollection('stories', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+
+const featured = allPosts[0];
+const todayPosts = allPosts.slice(1, 4);
+const marketPosts = allPosts.slice(4, 8);
+const storyCards = allStories.slice(0, 3);
+
+// Derive featured stats
+const fbBody = (featured?.body ?? '').replace(/\s+/g, '').length;
+const fbReadMin = Math.max(1, Math.round(fbBody / 500));
+const monthCount = allPosts.filter((p) => {
+  const d = p.data.publishedAt;
+  const now = new Date();
+  return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+}).length;
+const tickerSet = new Set<string>();
+allPosts.forEach((p) => p.data.tickers.forEach((t) => tickerSet.add(t)));
+
+const fmtDate = (d: Date) =>
+  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+
+const heroImg = featured?.data.heroImage?.url;
+
+// Issue / Vol — match Base
+const SITE_START = new Date('2024-01-01T00:00:00Z');
+const now = new Date();
+const yearsSince = now.getUTCFullYear() - SITE_START.getUTCFullYear() + 1;
+const toRoman = (n: number) => {
+  const m: [number, string][] = [[10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']];
+  let s = '';
+  for (const [v, sym] of m) while (n >= v) { s += sym; n -= v; }
+  return s;
+};
+const vol = toRoman(yearsSince);
+const isod = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+const dayNum = (isod.getUTCDay() + 6) % 7;
+isod.setUTCDate(isod.getUTCDate() - dayNum + 3);
+const firstThursday = new Date(Date.UTC(isod.getUTCFullYear(), 0, 4));
+const issue = 1 + Math.round(((isod.getTime() - firstThursday.getTime()) / 86400000 - 3 + ((firstThursday.getUTCDay() + 6) % 7)) / 7);
+const volLabel = `Vol. ${vol} · Issue ${issue}`;
 ---
-<Base>
-  <section class="mb-16 pb-12 border-b border-ink">
-    <div class="text-xs uppercase tracking-[0.25em] text-ink-muted mb-4">Moo Corp Research</div>
-    <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-[-0.03em] leading-[1.05] mb-6 max-w-3xl">
-      미국·한국 상장사 분석
-    </h1>
-    <p class="text-xl text-ink-subtle leading-relaxed max-w-2xl">
-      매일 한 종목, 매주 시장 전체. 펀더멘털, 카탈리스트, 리스크를 데이터로 풀어냅니다.
-    </p>
-    <div class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-xs uppercase tracking-widest text-ink-muted">
-      <span class="inline-flex items-center gap-1.5">
-        <span class="ms" style="font-size:16px" aria-hidden="true">trending_up</span>
-        <span>매일 발행</span>
-      </span>
-      <span class="text-ink-line">·</span>
-      <span class="inline-flex items-center gap-1.5">
-        <span class="ms" style="font-size:16px" aria-hidden="true">verified</span>
-        <span>데이터 기반</span>
-      </span>
-      <span class="text-ink-line">·</span>
-      <span class="inline-flex items-center gap-1.5">
-        <span class="ms" style="font-size:16px" aria-hidden="true">block</span>
-        <span>투자 권유 아님</span>
-      </span>
-    </div>
-  </section>
+<Base activeNav="today">
+  <Ticker />
 
-  {featured && (
-    <section class="mb-12 pb-12 border-b border-ink-line">
-      <div class="text-xs uppercase tracking-[0.25em] text-ink-muted mb-4">최신</div>
-      <a href={`/posts/${featured.slug}`} class="block group">
-        <h2 class="text-3xl sm:text-4xl font-extrabold tracking-[-0.02em] leading-[1.15] mb-3 group-hover:underline underline-offset-4 decoration-1 group-hover:decoration-2">
-          {featured.data.title}
-        </h2>
-        <p class="text-lg text-ink-subtle mb-4 leading-relaxed line-clamp-2 max-w-2xl">{featured.data.description}</p>
-        <PostMeta
-          market={featured.data.market}
-          tickers={featured.data.tickers}
-          publishedAt={featured.data.publishedAt}
-          language={featured.data.language}
-        />
-      </a>
-    </section>
-  )}
+  <div class="container-page page-enter">
+    {featured && (
+      <article class="hero">
+        {heroImg && (
+          <div class="hero-figure">
+            <img src={heroImg} alt={featured.data.heroImage?.alt ?? ''} loading="eager" />
+          </div>
+        )}
+        <div class="hero-grid">
+          <div>
+            <div class="hero-eyebrow">
+              <span class="vol">{volLabel}</span>
+              <span class="sep">/</span>
+              <span class="eyebrow">오늘의 분석 · Today's Analysis</span>
+            </div>
+            <h1 class="hero-title">
+              <a href={`/posts/${featured.slug}`} style="color:inherit">{featured.data.title}</a>
+            </h1>
+            <p class="hero-dek">{featured.data.description}</p>
+            <div class="hero-meta">
+              <span class="author">{featured.data.author}</span>
+              <span class="dot">·</span>
+              <span>{fmtDate(featured.data.publishedAt)}</span>
+              <span class="dot">·</span>
+              <span>읽는 시간 {fbReadMin}분</span>
+              {featured.data.tickers.length > 0 && (
+                <>
+                  <span class="dot">·</span>
+                  <span style="display:flex; gap:6px; flex-wrap:wrap;">
+                    {featured.data.tickers.slice(0, 4).map((t) => (
+                      <span class="ticker-pill">{t}</span>
+                    ))}
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+          <aside class="hero-side">
+            <div class="label">Issue at a glance</div>
+            <div class="stat-row">
+              <div class="stat tabular">{monthCount}<span style="font-size:18px; color:var(--ink-3);">편</span></div>
+              <div class="stat-sub">이번 달 발행 · {now.getFullYear()}.{String(now.getMonth() + 1).padStart(2, '0')}</div>
+            </div>
+            <div class="stat-row">
+              <div class="stat tabular">{tickerSet.size}<span style="font-size:18px; color:var(--ink-3);">종목</span></div>
+              <div class="stat-sub">누적 커버리지 · US · KR</div>
+            </div>
+            <div class="stat-row">
+              <div class="stat tabular">{fbReadMin}<span style="font-size:18px; color:var(--ink-3);">분</span></div>
+              <div class="stat-sub">읽는 시간 · {Math.round(fbBody / 1000)}K chars</div>
+            </div>
+          </aside>
+        </div>
+      </article>
+    )}
 
-  {rest.length > 0 && (
-    <section>
-      <div class="text-xs uppercase tracking-[0.25em] text-ink-muted mb-6">아카이브</div>
-      <ul class="divide-y divide-ink-line">
-        {rest.map((post) => (
-          <li>
-            <a href={`/posts/${post.slug}`} class="block py-7 group hover:bg-ink-paper -mx-2 px-2 transition-colors duration-150">
-              <h2 class="text-2xl font-bold tracking-tight leading-tight mb-2 group-hover:underline underline-offset-4">
-                {post.data.title}
-              </h2>
-              <p class="text-ink-subtle mb-3 line-clamp-2 leading-relaxed">{post.data.description}</p>
-              <PostMeta
-                market={post.data.market}
-                tickers={post.data.tickers}
-                publishedAt={post.data.publishedAt}
-                language={post.data.language}
-              />
+    {todayPosts.length > 0 && (
+      <section>
+        <div class="section-header">
+          <h2 class="section-title">오늘의 분석 <span class="en">· Today's Analysis</span></h2>
+          <span class="section-meta">최근 {allPosts.length}편</span>
+        </div>
+        <div class="article-grid">
+          {todayPosts.map((p, i) => (
+            <a class="article-card" href={`/posts/${p.slug}`}>
+              <div class="article-num">No. {String(i + 1).padStart(2, '0')}</div>
+              <div class="article-genre">
+                <GenreIcon genre="analysis" />
+                Today's Analysis
+              </div>
+              <h3 class="article-title">{p.data.title}</h3>
+              <p class="article-dek">{p.data.description}</p>
+              <div class="article-meta">
+                <span>{p.data.author}</span>
+                <span style="color: var(--ink-4)">·</span>
+                <span>{fmtDate(p.data.publishedAt)}</span>
+                {p.data.tickers.length > 0 && (
+                  <div class="article-tickers" style="margin-left:auto">
+                    {p.data.tickers.slice(0, 2).map((t) => (
+                      <span class="tk">{t}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
             </a>
-          </li>
-        ))}
-      </ul>
-    </section>
-  )}
+          ))}
+        </div>
+      </section>
+    )}
 
-  {posts.length === 0 && (
-    <p class="text-ink-muted py-16 text-center">아직 발행된 분석이 없습니다.</p>
-  )}
+    {marketPosts.length > 0 && (
+      <section>
+        <div class="section-header">
+          <h2 class="section-title">마켓 <span class="en">· Market</span></h2>
+          <span class="section-meta"><a href="/archive">전체 보기 →</a></span>
+        </div>
+        <div class="row-list">
+          {marketPosts.map((p, i) => (
+            <a class="row" href={`/posts/${p.slug}`}>
+              <div class="row-num">No. {String(i + 1).padStart(2, '0')}</div>
+              <div>
+                <div class="row-title">{p.data.title}</div>
+                <div class="row-dek">{p.data.description}</div>
+              </div>
+              <div class="row-meta">
+                <div>{fmtDate(p.data.publishedAt)}</div>
+                {p.data.tickers.length > 0 && (
+                  <div style="margin-top:4px; color:var(--ink-4);">{p.data.tickers.slice(0, 4).join(' · ')}</div>
+                )}
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {storyCards.length > 0 && (
+      <section>
+        <div class="section-header">
+          <h2 class="section-title">스토리 <span class="en">· Stories</span></h2>
+          <span class="section-meta"><a href="/stories">긴 호흡의 분석 →</a></span>
+        </div>
+        <div class="article-grid">
+          {storyCards.map((s, i) => (
+            <a class="article-card" href={`/stories/${s.slug}`}>
+              <div class="article-num">No. {String(i + 1).padStart(2, '0')}</div>
+              <div class="article-genre">
+                <GenreIcon genre="story" />
+                Story
+              </div>
+              <h3 class="article-title">{s.data.title}</h3>
+              <p class="article-dek">{s.data.description}</p>
+              <div class="article-meta">
+                <span>{s.data.author}</span>
+                <span style="color: var(--ink-4)">·</span>
+                <span>{fmtDate(s.data.publishedAt)}</span>
+                {s.data.tickers.length > 0 && (
+                  <div class="article-tickers" style="margin-left:auto">
+                    {s.data.tickers.slice(0, 2).map((t) => (
+                      <span class="tk">{t}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {allPosts.length === 0 && (
+      <p style="color:var(--ink-3); text-align:center; padding:80px 0;">아직 발행된 분석이 없습니다.</p>
+    )}
+  </div>
 </Base>

@@ -1,0 +1,28 @@
+---
+// Static market ticker — illustrative data, replace with API later.
+const items = [
+  { sym: 'S&P 500', px: '5,847.21', ch: '+0.62%', dir: 'pos' },
+  { sym: 'NASDAQ', px: '18,932.04', ch: '+1.14%', dir: 'pos' },
+  { sym: 'KOSPI', px: '2,684.12', ch: '−0.31%', dir: 'neg' },
+  { sym: 'NVDA', px: '1,142.55', ch: '+2.78%', dir: 'pos' },
+  { sym: 'TSLA', px: '248.40', ch: '−1.92%', dir: 'neg' },
+  { sym: '005930', px: '78,400', ch: '+0.51%', dir: 'pos' },
+  { sym: 'USD/KRW', px: '1,418.20', ch: '−0.18%', dir: 'neg' },
+  { sym: 'BTC', px: '$96,420', ch: '+0.94%', dir: 'pos' },
+  { sym: 'WTI', px: '$71.84', ch: '−0.42%', dir: 'neg' },
+  { sym: '10Y UST', px: '4.31%', ch: '+0.04', dir: 'pos' },
+];
+const doubled = [...items, ...items];
+---
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    {doubled.map((t) => (
+      <span class="ticker-item">
+        <span class="ticker-sym">{t.sym}</span>
+        <span class="ticker-px">{t.px}</span>
+        <span class={`ticker-ch ${t.dir}`}>{t.ch}</span>
+        <span style="color: var(--ink-4); margin-left: 4px;">·</span>
+      </span>
+    ))}
+  </div>
+</div>

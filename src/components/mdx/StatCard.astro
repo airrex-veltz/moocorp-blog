@@ -3,36 +3,24 @@ interface Props {
   label: string;
   value: string;
   trend?: 'up' | 'down' | 'flat';
+  delta?: string;
   context?: string;
+  mono?: boolean;
 }
+const { label, value, trend, delta, context, mono } = Astro.props;
 
-const { label, value, trend, context } = Astro.props;
-
-const trendIcon = {
-  up: 'trending_up',
-  down: 'trending_down',
-  flat: 'trending_flat',
-}[trend ?? 'flat'];
-
-const borderClass = {
-  up: 'border-l-4 border-accent-secondary',
-  down: 'border-l-4 border-ink',
-  flat: 'border-l-4 border-accent-tertiary',
-}[trend ?? 'flat'];
-
-const valueClass = {
-  up: 'text-accent-secondary',
-  down: 'text-ink font-bold',
-  flat: 'text-accent-tertiary',
-}[trend ?? 'flat'];
+const dirClass = trend === 'up' ? 'pos' : trend === 'down' ? 'neg' : '';
+const arrow = trend === 'up' ? '▲' : trend === 'down' ? '▼' : '';
 ---
-<div class={`border border-ink ${borderClass} p-5 not-prose`}>
-  <div class="text-xs uppercase tracking-widest text-ink-muted mb-1.5">{label}</div>
-  <div class="flex items-baseline gap-2">
-    <div class={`text-3xl font-extrabold tabular-nums tracking-tight ${valueClass}`}>{value}</div>
-    {trend && (
-      <span class={`ms ${valueClass}`} style="font-size:20px" aria-hidden="true">{trendIcon}</span>
-    )}
-  </div>
-  {context && <div class="text-xs text-ink-muted mt-2">{context}</div>}
+<div class="statcard">
+  <div class="lab">{label}</div>
+  <div class={`val ${mono ? 'mono' : ''}`}>{value}</div>
+  {(delta || trend) && (
+    <div class={`delta ${dirClass}`}>
+      {arrow && <span>{arrow}</span>}
+      {delta && <span>{delta}</span>}
+      {context && <span class="vs">{context}</span>}
+    </div>
+  )}
+  {context && !delta && !trend && <div class="foot">{context}</div>}
 </div>

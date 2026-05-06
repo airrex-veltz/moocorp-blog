@@ -2,14 +2,51 @@
 interface Props {
   title?: string;
 }
-const { title = '핵심 요약' } = Astro.props;
+const { title = '핵심 요약 · Key Takeaways' } = Astro.props;
 ---
-<section class="border border-ink p-5 my-8 not-prose">
-  <div class="flex items-center gap-2 text-xs uppercase tracking-widest text-ink-subtle mb-3">
-    <span class="ms" style="font-size:16px" aria-hidden="true">summarize</span>
-    <span>{title}</span>
-  </div>
-  <div class="text-base leading-relaxed [&>ul]:list-none [&>ul]:p-0 [&>ul]:m-0 [&_li]:relative [&_li]:pl-5 [&_li]:py-1 [&_li]:before:absolute [&_li]:before:left-0 [&_li]:before:content-['—'] [&_li]:before:text-ink-muted">
+<section class="not-prose" style="margin: 32px 0;">
+  <div style="font-family: var(--mono); font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color: var(--ink-3); margin-bottom:12px; padding-bottom:8px; border-bottom: 1px solid var(--rule);">{title}</div>
+  <div class="key-points-body">
     <slot />
   </div>
 </section>
+
+<style is:global>
+  .key-points-body ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: kp;
+  }
+  .key-points-body ul li {
+    counter-increment: kp;
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 20px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--kserif);
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--ink-2);
+  }
+  .key-points-body ul li::before {
+    content: counter(kp, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.16em;
+    font-weight: 600;
+    padding-top: 4px;
+  }
+  .key-points-body ul li strong {
+    color: var(--ink);
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 600;
+    font-family: var(--sans);
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+</style>

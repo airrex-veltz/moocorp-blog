@@ -7,9 +7,16 @@ import StatGrid from '../../components/mdx/StatGrid.astro';
 import Callout from '../../components/mdx/Callout.astro';
 import Chart from '../../components/mdx/Chart.astro';
 import Quote from '../../components/mdx/Quote.astro';
+import PullQuote from '../../components/mdx/PullQuote.astro';
 import KeyPoints from '../../components/mdx/KeyPoints.astro';
+import KeyTakeaways from '../../components/mdx/KeyTakeaways.astro';
 import DataTable from '../../components/mdx/DataTable.astro';
 import HeroImage from '../../components/mdx/HeroImage.astro';
+import Figure from '../../components/mdx/Figure.astro';
+import ChapterMarker from '../../components/mdx/ChapterMarker.astro';
+import Dingbat from '../../components/mdx/Dingbat.astro';
+import MiniChart from '../../components/mdx/MiniChart.astro';
+import FTTable from '../../components/mdx/FTTable.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ data }) => !data.draft);
@@ -22,7 +29,10 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content, headings } = await post.render();
 
-const components = { StatCard, StatGrid, Callout, Chart, Quote, KeyPoints, DataTable, HeroImage };
+const components = {
+  StatCard, StatGrid, Callout, Chart, Quote, PullQuote, KeyPoints, KeyTakeaways,
+  DataTable, HeroImage, Figure, ChapterMarker, Dingbat, MiniChart, FTTable,
+};
 ---
 <Post post={post} headings={headings}>
   <Content components={components} />

@@ -13,11 +13,13 @@ interface Props {
   schemaType?: 'WebSite' | 'Article';
   tickers?: string[];
   tags?: string[];
+  showTicker?: boolean;
+  activeNav?: 'today' | 'archive' | 'stories' | 'tags' | 'about';
 }
 
-const SITE_NAME = 'Moo Corp';
+const SITE_NAME = 'Moo Research';
 const SITE_URL = 'https://moocorp-blog.vercel.app';
-const DEFAULT_TITLE = 'Moo Corp — 미국·한국 상장사 분석';
+const DEFAULT_TITLE = 'Moo Research — 미국·한국 상장사 분석';
 const DEFAULT_DESC = '미국과 한국 상장사 동향을 매일 분석합니다. 펀더멘털, 카탈리스트, 리스크를 한 곳에.';
 
 const {
@@ -30,6 +32,8 @@ const {
   schemaType = publishedAt ? 'Article' : 'WebSite',
   tickers = [],
   tags = [],
+  showTicker = true,
+  activeNav = 'today',
 } = Astro.props;
 
 const fullTitle = title ? `${title} · ${SITE_NAME}` : DEFAULT_TITLE;
@@ -37,17 +41,34 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 const ogImage = image ? new URL(image, Astro.site).toString() : new URL('/og-default.svg', Astro.site).toString();
 const year = new Date().getFullYear();
 
-// Verification codes — set via env (user adds when registering Search Console / Naver)
-// In Astro, only PUBLIC_ vars are exposed at build time
+// Volume / Issue auto-derivation: site started 2024-01-01.
+// Vol = years since start (Roman numerals). Issue = ISO week of year.
+const SITE_START = new Date('2024-01-01T00:00:00Z');
+const now = new Date();
+const yearsSince = now.getUTCFullYear() - SITE_START.getUTCFullYear() + 1;
+const toRoman = (n: number) => {
+  const m: [number, string][] = [[10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']];
+  let s = '';
+  for (const [v, sym] of m) while (n >= v) { s += sym; n -= v; }
+  return s;
+};
+const vol = toRoman(yearsSince);
+// ISO week
+const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+const dayNum = (d.getUTCDay() + 6) % 7;
+d.setUTCDate(d.getUTCDate() - dayNum + 3);
+const firstThursday = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));
+const issue = 1 + Math.round(((d.getTime() - firstThursday.getTime()) / 86400000 - 3 + ((firstThursday.getUTCDay() + 6) % 7)) / 7);
+const dateLabel = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} · Vol. ${vol} · No. ${issue}`;
+
 const googleVerify = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
 const naverVerify = import.meta.env.PUBLIC_NAVER_SITE_VERIFICATION;
 
-// JSON-LD structured data
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: SITE_NAME,
-  alternateName: 'Moo Corp Research',
+  alternateName: 'Moo Research',
   url: SITE_URL,
   description: DEFAULT_DESC,
   inLanguage: 'ko-KR',
@@ -62,7 +83,7 @@ const orgSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: SITE_NAME,
-  alternateName: 'Moo Corp Research',
+  alternateName: 'Moo Research',
   url: SITE_URL,
   logo: `${SITE_URL}/favicon.svg`,
   description: DEFAULT_DESC,
@@ -82,6 +103,14 @@ const articleSchema = publishedAt && schemaType === 'Article' ? {
   inLanguage: language === 'ko' ? 'ko-KR' : 'en-US',
   keywords: [...tickers, ...tags].join(', '),
 } : null;
+
+const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label: string }> = [
+  { id: 'today', href: '/', label: 'Today' },
+  { id: 'archive', href: '/archive', label: 'Archive' },
+  { id: 'stories', href: '/stories', label: 'Stories' },
+  { id: 'tags', href: '/tags', label: 'Tags' },
+  { id: 'about', href: '/about', label: 'About' },
+];
 ---
 <!doctype html>
 <html lang={language}>
@@ -120,64 +149,134 @@ const articleSchema = publishedAt && schemaType === 'Article' ? {
     <link rel="stylesheet" as="style" crossorigin
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
     <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,400&family=Noto+Serif+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" />
+    <link rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,300..700,0..1,-50..200" />
 
     <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
     {articleSchema && <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />}
+
+    <script is:inline>
+      (() => {
+        try {
+          const stored = localStorage.getItem('moo-theme');
+          const sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const dark = stored ? stored === 'dark' : sysDark;
+          if (dark) document.documentElement.setAttribute('data-theme', 'dark');
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
-    <header class="border-b border-ink">
-      <div class="container-narrow flex items-center justify-between py-5">
-        <a href="/" class="flex items-baseline gap-2 hover:opacity-70 transition-opacity">
-          <span class="text-2xl font-extrabold tracking-tight">Moo Corp</span>
-          <span class="hidden sm:inline text-xs text-ink-muted uppercase tracking-widest">Research</span>
+    <header class="masthead">
+      <div class="container-page masthead-inner">
+        <div class="masthead-date">{dateLabel}</div>
+        <a href="/" class="masthead-logo" aria-label={SITE_NAME}>
+          <span>Moo</span>
+          <span class="dot"></span>
+          <span style="color: var(--ink-3); font-style: italic; font-size: 16px;">Research</span>
         </a>
-        <nav class="text-sm flex gap-5 items-center">
-          <a href="/" class="hover:underline underline-offset-4">분석</a>
-          <a href="/stories" class="hover:underline underline-offset-4">스토리</a>
-          <a href="/tags" class="hover:underline underline-offset-4">태그</a>
-          <a href="/about" class="hover:underline underline-offset-4">소개</a>
-          <a href="/rss.xml" aria-label="RSS" class="hover:opacity-60 transition-opacity">
-            <span class="ms" aria-hidden="true">rss_feed</span>
+        <div class="masthead-actions">
+          <a class="icon-btn" href="/rss.xml" aria-label="RSS feed" title="RSS">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 11a9 9 0 0 1 9 9" />
+              <path d="M4 4a16 16 0 0 1 16 16" />
+              <circle cx="5" cy="19" r="1" fill="currentColor" />
+            </svg>
           </a>
+          <button id="theme-toggle" class="icon-btn" aria-label="Toggle theme" type="button">
+            <svg class="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4" />
+            </svg>
+            <svg class="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" style="display:none">
+              <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" />
+            </svg>
+          </button>
+          <a href="#" class="subscribe-btn" onclick="event.preventDefault();alert('구독 — placeholder');return false;">Subscribe</a>
+        </div>
+      </div>
+      <div class="container-page subnav">
+        <nav class="subnav-inner" aria-label="Primary">
+          {navLinks.map((l) => (
+            <a class={`subnav-link ${activeNav === l.id ? 'active' : ''}`} href={l.href}>{l.label}</a>
+          ))}
+          <span style="flex:1"></span>
+          <span style="color: var(--ink-4); letter-spacing: 0.04em;">EST. 2024 · SEOUL</span>
         </nav>
       </div>
     </header>
 
-    <main class="container-narrow py-12">
+    <main>
       <slot />
     </main>
 
-    <footer class="border-t border-ink mt-24">
-      <div class="container-narrow py-10">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
-          <div>
-            <div class="text-xs uppercase tracking-widest text-ink-muted mb-2">About</div>
-            <p class="text-ink-subtle leading-relaxed">미국과 한국 상장사 동향을 매일 분석합니다.</p>
-          </div>
-          <div>
-            <div class="text-xs uppercase tracking-widest text-ink-muted mb-2">Links</div>
-            <ul class="space-y-1">
-              <li><a href="/" class="hover:underline underline-offset-4">홈</a></li>
-              <li><a href="/about" class="hover:underline underline-offset-4">소개</a></li>
-              <li><a href="/privacy" class="hover:underline underline-offset-4">개인정보처리방침</a></li>
-              <li><a href="/disclaimer" class="hover:underline underline-offset-4">면책조항</a></li>
-              <li><a href="/rss.xml" class="hover:underline underline-offset-4">RSS</a></li>
-            </ul>
-          </div>
-          <div>
-            <div class="text-xs uppercase tracking-widest text-ink-muted mb-2">Disclosure</div>
-            <p class="text-ink-subtle leading-relaxed text-xs">본 사이트의 분석은 정보 제공 목적이며, 투자 권유가 아닙니다.</p>
-          </div>
+    <footer class="site-footer">
+      <div class="container-page footer-inner">
+        <div class="footer-brand">
+          <div class="footer-logo">Moo Research</div>
+          <p class="footer-tag">
+            상장사를 한 단계 더 깊이 읽기 위한 에디토리얼.<br />
+            매주 화·금 발행. 광고 없음.
+          </p>
         </div>
-        <div class="mt-8 pt-6 border-t border-ink-line flex flex-col sm:flex-row sm:justify-between gap-2 text-xs text-ink-muted">
-          <span>© {year} Moo Corp Research</span>
-          <span>Made with Astro</span>
+        <div>
+          <h4>Sections</h4>
+          <ul>
+            <li><a href="/">Today</a></li>
+            <li><a href="/archive">Archive</a></li>
+            <li><a href="/stories">Stories</a></li>
+            <li><a href="/tags">Tags</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>About</h4>
+          <ul>
+            <li><a href="/about">About</a></li>
+            <li><a href="/about">Methodology</a></li>
+            <li><a href="mailto:hello@moocorp.example">Contact</a></li>
+            <li><a href="/rss.xml">RSS</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="/privacy">Privacy</a></li>
+            <li><a href="/disclaimer">Disclaimer</a></li>
+            <li><a href="/disclaimer">Terms</a></li>
+          </ul>
         </div>
       </div>
+      <div class="container-page footer-base">
+        <span>© {year} MOO RESEARCH · ALL RIGHTS RESERVED</span>
+        <span>NOT INVESTMENT ADVICE · SEE DISCLAIMER</span>
+      </div>
     </footer>
+
     <Analytics />
     <SpeedInsights />
+
+    <script is:inline>
+      (() => {
+        const btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+        const sun = btn.querySelector('.i-sun');
+        const moon = btn.querySelector('.i-moon');
+        const sync = () => {
+          const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+          if (sun) sun.style.display = dark ? 'none' : '';
+          if (moon) moon.style.display = dark ? '' : 'none';
+        };
+        sync();
+        btn.addEventListener('click', () => {
+          const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+          const next = dark ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', next);
+          try { localStorage.setItem('moo-theme', next); } catch (e) {}
+          sync();
+        });
+      })();
+    </script>
   </body>
 </html>

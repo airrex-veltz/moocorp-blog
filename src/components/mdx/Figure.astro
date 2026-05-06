@@ -1,0 +1,34 @@
+---
+interface Props {
+  num?: string | number;
+  title?: string;
+  meta?: string;
+  source?: string;
+  caption?: string;
+  credit?: string;
+  src?: string;
+  alt?: string;
+  height?: string | number;
+}
+const { num, title, meta, source, caption, credit, src, alt = '', height = 420 } = Astro.props;
+const heightCss = typeof height === 'number' ? `${height}px` : height;
+const figNum = num !== undefined ? `Figure ${num}` : null;
+const heading = title || meta;
+---
+<figure class="post-figure">
+  {figNum && <span class="fig-num">{figNum}</span>}
+  {src ? (
+    <img src={src} alt={alt} loading="lazy" style={`height:${heightCss}; width:100%; object-fit:cover;`} />
+  ) : (
+    <div class="placeholder-img" style={`height:${heightCss};`}>
+      {alt || 'Image placeholder'}
+    </div>
+  )}
+  {(caption || credit || heading) && (
+    <figcaption class="caption">
+      <span>{caption || heading}</span>
+      {credit && <span class="credit">{credit}</span>}
+    </figcaption>
+  )}
+  {source && <div style="font-family: var(--mono); font-size: 10px; color: var(--ink-4); letter-spacing: 0.04em; margin-top: 8px;">{source}</div>}
+</figure>

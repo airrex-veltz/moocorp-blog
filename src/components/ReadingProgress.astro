@@ -1,21 +1,21 @@
 ---
 ---
-<div class="fixed top-0 left-0 right-0 h-0.5 z-50 pointer-events-none">
-  <div id="reading-progress" class="h-full bg-ink origin-left" style="transform: scaleX(0)"></div>
-</div>
+<div id="reading-progress" class="reading-progress" style="width: 0%"></div>
 
 <script is:inline>
   (function () {
     const bar = document.getElementById('reading-progress');
     if (!bar) return;
     const update = () => {
-      const article = document.querySelector('article');
+      const article = document.querySelector('article.post-article') || document.querySelector('article');
       if (!article) return;
       const rect = article.getBoundingClientRect();
-      const total = rect.height + rect.top - window.innerHeight;
+      const total = rect.height - window.innerHeight;
       const scrolled = -rect.top;
       const ratio = total > 0 ? Math.min(Math.max(scrolled / total, 0), 1) : 0;
-      bar.style.transform = `scaleX(${ratio})`;
+      bar.style.width = (ratio * 100).toFixed(2) + '%';
+      const num = document.getElementById('toc-progress-num');
+      if (num) num.textContent = Math.round(ratio * 100).toString();
     };
     update();
     window.addEventListener('scroll', update, { passive: true });

@@ -1,0 +1,87 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+
+const counts = {
+  all: posts.length,
+  US: posts.filter((p) => p.data.market === 'US').length,
+  KR: posts.filter((p) => p.data.market === 'KR').length,
+  GLOBAL: posts.filter((p) => p.data.market === 'GLOBAL').length,
+};
+
+const fmtDate = (d: Date) =>
+  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+---
+<Base title="아카이브" description="전체 분석 글 — 시장별 필터" activeNav="archive">
+  <div class="container-page page-enter">
+    <header class="stories-head">
+      <div class="kicker">All Posts · 전체 분석</div>
+      <h1>아카이브</h1>
+      <p class="lede">
+        상장사 동향과 거시 변수를 한 발짝 떨어져 읽는 글들. 시장별로 필터링해 읽으세요.
+      </p>
+      <div class="stories-filter" role="tablist" aria-label="시장 필터">
+        <button class="active" data-filter="all" type="button">전체 <span class="count">{counts.all}</span></button>
+        <button data-filter="US" type="button">US <span class="count">{counts.US}</span></button>
+        <button data-filter="KR" type="button">KR <span class="count">{counts.KR}</span></button>
+        {counts.GLOBAL > 0 && (
+          <button data-filter="GLOBAL" type="button">Global <span class="count">{counts.GLOBAL}</span></button>
+        )}
+      </div>
+    </header>
+
+    <div class="row-list" id="archive-list" style="margin-top:0; border-top:0;">
+      {posts.map((p, i) => (
+        <a class="row" href={`/posts/${p.slug}`} data-market={p.data.market}>
+          <div class="row-num">No. {String(i + 1).padStart(2, '0')}</div>
+          <div>
+            <div style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px;">
+              {p.data.market} · {p.data.market === 'KR' ? 'Korea' : p.data.market === 'US' ? 'United States' : 'Global'}
+            </div>
+            <div class="row-title">{p.data.title}</div>
+            <div class="row-dek">{p.data.description}</div>
+          </div>
+          <div class="row-meta">
+            <div>{fmtDate(p.data.publishedAt)}</div>
+            <div style="margin-top: 4px;">{p.data.author}</div>
+            {p.data.tickers.length > 0 && (
+              <div style="margin-top: 4px; color: var(--ink-4);">{p.data.tickers.slice(0, 4).join(' · ')}</div>
+            )}
+          </div>
+        </a>
+      ))}
+    </div>
+
+    {posts.length === 0 && (
+      <p style="color:var(--ink-3); text-align:center; padding:80px 0;">아직 발행된 분석이 없습니다.</p>
+    )}
+  </div>
+</Base>
+
+<script is:inline>
+  (function () {
+    const buttons = document.querySelectorAll('.stories-filter [data-filter]');
+    const rows = document.querySelectorAll('#archive-list [data-market]');
+    if (!buttons.length || !rows.length) return;
+    buttons.forEach((b) => {
+      b.addEventListener('click', () => {
+        const f = b.getAttribute('data-filter');
+        buttons.forEach((x) => x.classList.remove('active'));
+        b.classList.add('active');
+        let visible = 0;
+        rows.forEach((r) => {
+          const ok = f === 'all' || r.getAttribute('data-market') === f;
+          r.style.display = ok ? '' : 'none';
+          if (ok) {
+            visible++;
+            const num = r.querySelector('.row-num');
+            if (num) num.textContent = 'No. ' + String(visible).padStart(2, '0');
+          }
+        });
+      });
+    });
+  })();
+</script>

@@ -1,11 +1,9 @@
 ---
 import Base from './Base.astro';
-import PostMeta from '../components/PostMeta.astro';
-import PostHero from '../components/PostHero.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import RelatedPosts from '../components/RelatedPosts.astro';
-import HeroImage from '../components/mdx/HeroImage.astro';
+import GenreIcon from '../components/GenreIcon.astro';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -18,6 +16,37 @@ const { data, body } = post;
 
 const wordCount = body ? body.replace(/\s+/g, '').length : 0;
 const readingTime = Math.max(1, Math.round(wordCount / 500));
+
+const fmtDate = (d: Date) =>
+  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+
+// Issue / Vol — match Base
+const SITE_START = new Date('2024-01-01T00:00:00Z');
+const pd = data.publishedAt;
+const yearsSince = pd.getUTCFullYear() - SITE_START.getUTCFullYear() + 1;
+const toRoman = (n: number) => {
+  const m: [number, string][] = [[10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']];
+  let s = '';
+  for (const [v, sym] of m) while (n >= v) { s += sym; n -= v; }
+  return s;
+};
+const vol = toRoman(yearsSince);
+const isod = new Date(Date.UTC(pd.getUTCFullYear(), pd.getUTCMonth(), pd.getUTCDate()));
+const dayNum = (isod.getUTCDay() + 6) % 7;
+isod.setUTCDate(isod.getUTCDate() - dayNum + 3);
+const firstThursday = new Date(Date.UTC(isod.getUTCFullYear(), 0, 4));
+const issue = 1 + Math.round(((isod.getTime() - firstThursday.getTime()) / 86400000 - 3 + ((firstThursday.getUTCDay() + 6) % 7)) / 7);
+const volLabel = `Vol. ${vol} · Issue ${issue}`;
+
+// Author initial for avatar
+const authorInitial = (data.author || 'M').trim().charAt(0).toUpperCase();
+
+// Filter headings to h2/h3 only for TOC
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
+
+const heroImg = data.heroImage?.url;
+const heroAlt = data.heroImage?.alt ?? '';
+const heroAttribution = data.heroImage?.attribution ?? '';
 ---
 <Base
   title={data.title}
@@ -28,69 +57,129 @@ const readingTime = Math.max(1, Math.round(wordCount / 500));
   schemaType="Article"
   tickers={data.tickers}
   tags={data.tags}
+  activeNav="today"
 >
   <ReadingProgress />
-  <TableOfContents headings={headings} />
 
-  <article>
-    {data.heroImage && data.heroImage.url && (
-      <HeroImage
-        src={data.heroImage.url}
-        alt={data.heroImage.alt || ''}
-        attribution={data.heroImage.attribution || ''}
-        sourceUrl={data.heroImage.sourceUrl}
-        colorTreatment={data.heroImage.colorTreatment || 'desaturate'}
-      />
+  <div class="post-wrap page-enter">
+    {/* TOC — left rail */}
+    {tocHeadings.length > 0 ? (
+      <TableOfContents headings={tocHeadings} />
+    ) : (
+      <aside class="post-toc" aria-hidden="true"></aside>
     )}
 
-    <PostHero
-      market={data.market}
-      tickers={data.tickers}
-      sectors={data.sectors}
-    />
+    {/* Article */}
+    <article class="post-article">
+      <div class="post-eyebrow">
+        <span>{data.market} · {data.language === 'ko' ? '한국 시장' : 'Markets'}</span>
+        <span class="sep">/</span>
+        <span>{volLabel}</span>
+      </div>
 
-    <header class="mb-12">
-      <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-[-0.025em] leading-[1.05] mb-6">
-        {data.title}
-      </h1>
-      <p class="text-xl text-ink-subtle leading-relaxed mb-6 max-w-[60ch]">{data.description}</p>
-      <PostMeta
-        market={data.market}
-        tickers={data.tickers}
-        publishedAt={data.publishedAt}
-        language={data.language}
-        readingTime={readingTime}
-      />
-    </header>
+      <h1 class="post-title">{data.title}</h1>
+      <p class="post-dek">{data.description}</p>
 
-    <div class="ad-slot ad-slot-top"></div>
+      <div class="post-meta">
+        <span class="avatar" aria-hidden="true">{authorInitial}</span>
+        <span class="author-name">{data.author}</span>
+        <span class="pipe">|</span>
+        <time datetime={data.publishedAt.toISOString()}>{fmtDate(data.publishedAt)}</time>
+        <span class="pipe">|</span>
+        <span>읽는 시간 {readingTime}분</span>
+        {data.tickers.length > 0 && (
+          <>
+            <span class="pipe">|</span>
+            <span style="display:flex; gap:6px; flex-wrap:wrap;">
+              {data.tickers.map((t) => (
+                <span class="ticker-pill">{t}</span>
+              ))}
+            </span>
+          </>
+        )}
+      </div>
 
-    <div class="prose prose-ink prose-article max-w-none">
-      <slot />
-    </div>
+      {heroImg && (
+        <figure class="post-figure">
+          <span class="fig-num">Figure 0</span>
+          <img src={heroImg} alt={heroAlt} loading="eager" />
+          <figcaption class="caption">
+            <span>{heroAlt || data.title}</span>
+            {heroAttribution && <span class="credit">{heroAttribution}</span>}
+          </figcaption>
+        </figure>
+      )}
 
-    <div class="ad-slot ad-slot-bottom"></div>
+      <div class="post-body">
+        <slot />
+      </div>
 
-    {data.tags.length > 0 && (
-      <footer class="mt-12 pt-8 border-t border-ink-line">
-        <div class="text-xs uppercase tracking-widest text-ink-muted mb-3">관련 태그</div>
-        <div class="flex flex-wrap gap-2">
-          {data.tags.map((tag) => (
-            <a href={`/tags/${tag}`} class="pill-subtle hover:border-ink hover:text-ink transition-colors">
-              <span>#{tag}</span>
-            </a>
+      {data.tags.length > 0 && (
+        <footer style="margin-top:48px; padding-top:24px; border-top:1px solid var(--rule);">
+          <div style="font-family: var(--mono); font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color: var(--ink-4); margin-bottom:12px;">Tags</div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px;">
+            {data.tags.map((tag) => (
+              <a href={`/tags/${tag}`} class="ticker-pill" style="text-decoration:none;">#{tag}</a>
+            ))}
+          </div>
+        </footer>
+      )}
+
+      <RelatedPosts current={post} />
+
+      <nav style="margin-top:48px; padding-top:24px; border-top:1px solid var(--rule);">
+        <a href="/" style="font-family: var(--mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color: var(--ink-3); display:inline-flex; align-items:center; gap:8px;">
+          <span aria-hidden="true">←</span>
+          <span>다른 분석 보기</span>
+        </a>
+      </nav>
+    </article>
+
+    {/* Right aside — tickers / tags / share */}
+    <aside class="post-aside">
+      {data.tickers.length > 0 && (
+        <div class="post-aside-block">
+          <h5>Tickers</h5>
+          {data.tickers.map((t) => (
+            <div style="margin-bottom:12px;">
+              <div style="font-family: var(--mono); font-size:13px; color: var(--ink); font-weight:600;">{t}</div>
+              <div style="font-family: var(--mono); font-size:11px; color: var(--ink-3);">{data.market}</div>
+            </div>
           ))}
         </div>
-      </footer>
-    )}
+      )}
 
-    <RelatedPosts current={post} />
+      {data.tags.length > 0 && (
+        <div class="post-aside-block">
+          <h5>Tags</h5>
+          <div style="display:flex; flex-wrap:wrap; gap:6px;">
+            {data.tags.map((tag) => (
+              <a href={`/tags/${tag}`} style="font-family: var(--sans); font-size:11px; padding:3px 8px; border:1px solid var(--rule); color: var(--ink-2); letter-spacing:0; text-decoration:none;">{tag}</a>
+            ))}
+          </div>
+        </div>
+      )}
 
-    <nav class="mt-12 pt-6 border-t border-ink-line">
-      <a href="/" class="inline-flex items-center gap-2 text-sm hover:underline underline-offset-4 hover:-translate-x-1 transition-transform duration-150">
-        <span class="ms" aria-hidden="true">arrow_back</span>
-        <span>다른 분석 보기</span>
-      </a>
-    </nav>
-  </article>
+      <div class="post-aside-block">
+        <h5>Share</h5>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button type="button" data-share="copy" style="background:transparent; border:0; padding:0; text-align:left; cursor:pointer; color: var(--ink-2); letter-spacing:0; font-size:12px; font-family: var(--sans);">Copy link</button>
+          <a target="_blank" rel="noopener" href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(data.title)}&url=${encodeURIComponent(Astro.url.toString())}`} style="color: var(--ink-2); letter-spacing:0; font-size:12px; font-family: var(--sans);">X / Twitter</a>
+          <a target="_blank" rel="noopener" href={`https://www.threads.net/intent/post?text=${encodeURIComponent(data.title + ' ' + Astro.url.toString())}`} style="color: var(--ink-2); letter-spacing:0; font-size:12px; font-family: var(--sans);">Threads</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script is:inline>
+    document.querySelectorAll('[data-share="copy"]').forEach((b) => {
+      b.addEventListener('click', () => {
+        navigator.clipboard?.writeText(window.location.href).then(() => {
+          const o = b.textContent;
+          b.textContent = 'Copied ✓';
+          setTimeout(() => { b.textContent = o; }, 1400);
+        });
+      });
+    });
+  </script>
 </Base>

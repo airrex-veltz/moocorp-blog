@@ -1,12 +1,14 @@
 ---
 import Base from '../layouts/Base.astro';
 ---
-<Base title="소개">
-  <header class="mb-10 pb-8 border-b border-ink">
-    <h1 class="text-4xl font-extrabold tracking-tight">Moo Corp 소개</h1>
+<Base title="소개" activeNav="about">
+ <div class="container-page page-enter" style="padding-top:64px; padding-bottom:48px;">
+  <header style="margin-bottom:40px; padding-bottom:32px; border-bottom:1px solid var(--ink); max-width:var(--readable);">
+    <div class="eyebrow eyebrow-accent" style="margin-bottom:16px;">About</div>
+    <h1 style="font-family:var(--kserif); font-size:clamp(36px,4.4vw,52px); letter-spacing:-0.025em; font-weight:400;">Moo Research 소개</h1>
   </header>
 
-  <div class="prose prose-ink max-w-none">
+  <div class="prose max-w-none">
     <p class="text-lg">
       <strong>Moo Corp</strong>은 미국과 한국에 상장된 회사들의 동향을 분석하여 매일 블로그 형태로 공개하는
       리서치 프로젝트입니다.
@@ -33,4 +35,5 @@ import Base from '../layouts/Base.astro';
     <h2>연락</h2>
     <p>제보, 협업, 광고 문의는 GitHub Issue 또는 RSS를 통해 접수합니다.</p>
   </div>
+ </div>
 </Base>
