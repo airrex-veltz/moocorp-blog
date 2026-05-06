@@ -32,7 +32,10 @@
   /* Type stacks */
   --serif: "Source Serif 4", "Source Serif Pro", "Noto Serif", Georgia, serif;
   --sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Helvetica Neue", system-ui, sans-serif;
-  --kserif: "Noto Serif KR", "Source Serif 4", "Nanum Myeongjo", serif;
+  /* `--kserif` is the slot for the user-selected Korean display font.
+     The design tweaks-panel exposed 4 candidates; the user landed on
+     IBM Plex Sans KR (modern sans-serif, fintech/newsletter tone). */
+  --kserif: "IBM Plex Sans KR", "Pretendard Variable", -apple-system, sans-serif;
   --mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   /* Scale */

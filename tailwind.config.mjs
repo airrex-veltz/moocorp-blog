@@ -7,7 +7,7 @@ export default {
       fontFamily: {
         sans: ['"Pretendard Variable"', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', '"Helvetica Neue"', '"Segoe UI"', '"Apple SD Gothic Neo"', '"Noto Sans KR"', '"Malgun Gothic"', 'sans-serif'],
         serif: ['"Source Serif 4"', '"Source Serif Pro"', '"Noto Serif"', 'Georgia', 'serif'],
-        kserif: ['"Noto Serif KR"', '"Source Serif 4"', '"Nanum Myeongjo"', 'serif'],
+        kserif: ['"IBM Plex Sans KR"', '"Pretendard Variable"', '-apple-system', 'sans-serif'],
         mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       borderWidth: { '3': '3px' },
