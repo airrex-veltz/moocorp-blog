@@ -5,11 +5,17 @@
 ## 개발
 
 ```bash
-npm install
+npm install      # core.hooksPath=.githooks 자동 설정 (pre-commit MDX fixer 활성화)
 npm run dev      # http://localhost:4321
 npm run build    # dist/ 생성
 npm run preview  # 빌드 결과 미리보기
+npm run mdx:fix  # src/content 전체 MDX의 JSX-깨진 따옴표 일괄 보정
 ```
+
+> `pre-commit` 훅이 staged `src/content/**/*.mdx`의 caption/alt 안 unescape된
+> `"` 와 `\"` 잔재를 자동으로 한글 곡선 따옴표(`"`/`"`)로 치환하고 re-stage합니다.
+> JSX는 attribute 문자열의 backslash escape를 지원하지 않아서 그대로 두면 Vercel
+> 빌드가 실패합니다. 자세한 내용은 `scripts/fix-mdx-jsx-quotes.py` 참고.
 
 ## 글 작성
 

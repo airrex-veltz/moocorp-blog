@@ -9,7 +9,9 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "mdx:fix": "python3 scripts/fix-mdx-jsx-quotes.py",
+    "prepare": "git rev-parse --git-dir >/dev/null 2>&1 && git config core.hooksPath .githooks || true"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.0",

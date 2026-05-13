@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Auto-fix JSX-invalid quotes in staged MDX content files before they reach
+# Vercel. See scripts/fix-mdx-jsx-quotes.py for the rationale.
+set -eu
+
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root"
+
+# Collect staged .mdx files under src/content/ (portable for bash 3.2).
+staged_list=$(git diff --cached --name-only --diff-filter=ACMR -z \
+  | tr '\0' '\n' \
+  | grep -E '^src/content/.*\.mdx$' || true)
+
+[ -z "$staged_list" ] && exit 0
+
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "pre-commit: python3 not found — skipping MDX quote fixer" >&2
+  exit 0
+fi
+
+# Pass each path as a separate argument.
+echo "$staged_list" | xargs python3 scripts/fix-mdx-jsx-quotes.py
+
+# Re-stage anything the fixer modified.
+echo "$staged_list" | while IFS= read -r f; do
+  [ -z "$f" ] && continue
+  [ -f "$f" ] || continue
+  if ! git diff --quiet -- "$f"; then
+    git add -- "$f"
+  fi
+done
