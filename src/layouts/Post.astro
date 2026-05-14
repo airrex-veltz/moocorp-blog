@@ -114,6 +114,10 @@ const heroAttribution = data.heroImage?.attribution ?? '';
         <slot />
       </div>
 
+      <aside aria-label="AI 생성 및 면책 고지" style="margin-top:40px; padding:16px 20px; border:1px solid var(--rule); border-radius:4px; background:var(--bg-2); font-size:13px; line-height:1.6; color: var(--ink-3);">
+        <strong style="color: var(--ink-2);">고지</strong> · 본 분석은 AI 시스템이 자동 작성합니다. 데이터 해석 오류·사실관계 혼동이 있을 수 있습니다. 정보 제공 목적이며 투자 권유가 아닙니다. 자세한 내용은 <a href="/disclaimer" style="text-decoration:underline;">면책조항</a>을 확인해 주세요.
+      </aside>
+
       {data.tags.length > 0 && (
         <footer style="margin-top:48px; padding-top:24px; border-top:1px solid var(--rule);">
           <div style="font-family: var(--mono); font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color: var(--ink-4); margin-bottom:12px;">Tags</div>

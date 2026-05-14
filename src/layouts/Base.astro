@@ -107,8 +107,6 @@ const articleSchema = publishedAt && schemaType === 'Article' ? {
 const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label: string; beta?: boolean }> = [
   { id: 'today', href: '/', label: 'Today' },
   { id: 'archive', href: '/archive', label: 'Archive' },
-  { id: 'stories', href: '/stories', label: 'Stories' },
-  { id: 'toons', href: '/toons', label: 'Toons', beta: true },
   { id: 'tags', href: '/tags', label: 'Tags' },
   { id: 'about', href: '/about', label: 'About' },
 ];
@@ -222,7 +220,7 @@ const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label
           <div class="footer-logo">Moo Research</div>
           <p class="footer-tag">
             상장사를 한 단계 더 깊이 읽기 위한 에디토리얼.<br />
-            매주 화·금 발행. 광고 없음.
+            본 사이트의 모든 분석은 AI 시스템이 자동 작성합니다.
           </p>
         </div>
         <div>
@@ -230,8 +228,6 @@ const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label
           <ul>
             <li><a href="/">Today</a></li>
             <li><a href="/archive">Archive</a></li>
-            <li><a href="/stories">Stories</a></li>
-            <li><a href="/toons">Toons (Beta)</a></li>
             <li><a href="/tags">Tags</a></li>
           </ul>
         </div>
@@ -240,7 +236,7 @@ const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label
           <ul>
             <li><a href="/about">About</a></li>
             <li><a href="/about">Methodology</a></li>
-            <li><a href="mailto:hello@moocorp.example">Contact</a></li>
+            <li><a href="mailto:nicepark0606@gmail.com">Contact</a></li>
             <li><a href="/rss.xml">RSS</a></li>
           </ul>
         </div>
@@ -249,13 +245,12 @@ const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label
           <ul>
             <li><a href="/privacy">Privacy</a></li>
             <li><a href="/disclaimer">Disclaimer</a></li>
-            <li><a href="/disclaimer">Terms</a></li>
           </ul>
         </div>
       </div>
       <div class="container-page footer-base">
         <span>© {year} MOO RESEARCH · ALL RIGHTS RESERVED</span>
-        <span>NOT INVESTMENT ADVICE · SEE DISCLAIMER</span>
+        <span>AI 자동 생성 · NOT INVESTMENT ADVICE · SEE DISCLAIMER</span>
       </div>
     </footer>
 
