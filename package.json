@@ -11,6 +11,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "mdx:fix": "python3 scripts/fix-mdx-jsx-quotes.py",
+    "check:fiction": "node scripts/check-fiction-safety.mjs",
+    "check:fiction:strict": "node scripts/check-fiction-safety.mjs --strict",
     "prepare": "git rev-parse --git-dir >/dev/null 2>&1 && git config core.hooksPath .githooks || true"
   },
   "dependencies": {

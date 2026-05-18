@@ -107,6 +107,7 @@ const articleSchema = publishedAt && schemaType === 'Article' ? {
 const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label: string; beta?: boolean }> = [
   { id: 'today', href: '/', label: 'Today' },
   { id: 'archive', href: '/archive', label: 'Archive' },
+  { id: 'stories', href: '/stories', label: 'Fiction', beta: true },
   { id: 'tags', href: '/tags', label: 'Tags' },
   { id: 'about', href: '/about', label: 'About' },
 ];

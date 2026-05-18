@@ -43,6 +43,8 @@ const stories = defineCollection({
     draft: z.boolean().default(false),
     author: z.string().default('Moo Corp Story Writer'),
     heroImage: heroImageSchema,
+    fiction: z.boolean().default(true),
+    aiGenerated: z.boolean().default(true),
   }),
 });
 
@@ -64,6 +66,8 @@ const toons = defineCollection({
     coverImage: z.string().optional(),
     panelCount: z.number().int().min(1).max(20).optional(),
     stylePreset: z.string().optional(),
+    fiction: z.boolean().default(true),
+    aiGenerated: z.boolean().default(true),
   }),
 });
 
