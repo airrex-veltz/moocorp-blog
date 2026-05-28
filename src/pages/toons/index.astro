@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import GenreBadge from '../../components/GenreBadge.astro';
 import { getCollection } from 'astro:content';
 
 const toons = (await getCollection('toons', ({ data }) => !data.draft))
@@ -7,6 +8,25 @@ const toons = (await getCollection('toons', ({ data }) => !data.draft))
     const dt = b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf();
     return dt !== 0 ? dt : b.slug.localeCompare(a.slug);
   });
+
+function extractGenre(title: string): { title: string; genre: "action" | "thriller" | "romance" | "melodrama" | "humor" | null } {
+  const genreMap: Record<string, "action" | "thriller" | "romance" | "melodrama" | "humor"> = {
+    '액션': 'action', 'action': 'action',
+    '스릴러': 'thriller', 'thriller': 'thriller',
+    '로맨스': 'romance', 'romance': 'romance',
+    '멜로드라마': 'melodrama', '멜로': 'melodrama', 'melodrama': 'melodrama',
+    '유머': 'humor', 'humor': 'humor',
+  };
+
+  const match = title.match(/\(([^)]+)\)$/);
+  if (match) {
+    const genreText = match[1];
+    const genre = genreMap[genreText];
+    const cleanTitle = title.replace(/\s*\([^)]+\)$/, '');
+    return { title: cleanTitle, genre: genre || null };
+  }
+  return { title, genre: null };
+}
 
 const fmtDate = (d: Date) =>
   `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
@@ -29,25 +49,33 @@ const fmtDate = (d: Date) =>
 
     {toons.length > 0 ? (
       <div class="toon-grid">
-        {toons.map((toon) => (
-          <a class="toon-card" href={`/toons/${toon.slug}`}>
-            <div class="toon-card-cover">
-              {toon.data.coverImage ? (
-                <img src={toon.data.coverImage} alt={toon.data.title} loading="lazy" />
-              ) : (
-                <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--ink-4); font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase;">No cover</div>
-              )}
-            </div>
-            <div class="toon-card-body">
-              <div class="toon-card-title">{toon.data.title}</div>
-              <div class="toon-card-dek">{toon.data.description}</div>
-              <div style="margin-top:12px; font-family:var(--mono); font-size:10px; letter-spacing:0.08em; color:var(--ink-4); text-transform:uppercase;">
-                {fmtDate(toon.data.publishedAt)}
-                {toon.data.panelCount && <span style="margin-left:8px;">· {toon.data.panelCount} panels</span>}
+        {toons.map((toon, i) => {
+          const { title: cleanTitle, genre } = extractGenre(toon.data.title);
+          return (
+            <a class="toon-card" href={`/toons/${toon.slug}`}>
+              <div class="toon-card-cover">
+                {toon.data.coverImage ? (
+                  <img src={toon.data.coverImage} alt={cleanTitle} loading="lazy" />
+                ) : (
+                  <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--ink-4); font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase;">No cover</div>
+                )}
               </div>
-            </div>
-          </a>
-        ))}
+              <div class="toon-card-body">
+                {genre && (
+                  <div style="margin-bottom: 8px; display: inline-block;">
+                    <GenreBadge genre={genre} size="sm" showLabel={true} />
+                  </div>
+                )}
+                <div class="toon-card-title">{cleanTitle}</div>
+                <div class="toon-card-dek">{toon.data.description}</div>
+                <div style="margin-top:12px; font-family:var(--mono); font-size:10px; letter-spacing:0.08em; color:var(--ink-4); text-transform:uppercase;">
+                  {fmtDate(toon.data.publishedAt)}
+                  {toon.data.panelCount && <span style="margin-left:8px;">· {toon.data.panelCount} panels</span>}
+                </div>
+              </div>
+            </a>
+          );
+        })}
       </div>
     ) : (
       <p style="color: var(--ink-3); padding: 64px 0; text-align: center;">
