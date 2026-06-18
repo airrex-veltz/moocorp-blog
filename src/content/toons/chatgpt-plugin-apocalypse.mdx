@@ -10,58 +10,21 @@ language: ko
 fiction: true
 aiGenerated: true
 author: "Moo Corp Toon Director"
+coverImage: "/toons/chatgpt-plugin-apocalypse/1.webp"
 panelCount: 6
+stylePreset: "animagine-xl-3.1"
 ---
 
-## Panel 1
-**Scene:** 새벽 3시, 좁은 원룸 사무실. 모니터 두 대가 파란빛을 뿜는다. 스타트업 창업자 JAY(30대 초반, 후드티, 다크서클 진함)가 노트북 앞에서 두 주먹을 치켜든다. 화면에는 "ChatGPT Plugin: APPROVED" 배너가 초록빛으로 빛난다.
-**Dialogue:**
-- JAY: "드디어. 6개월이 이 순간을 위해서였어."
-**Caption:** 2026년 봄. GPT 플러그인 스토어 승인은 곧 로켓 티켓처럼 보였다.
+import Panel from '../../components/mdx/Panel.astro';
+import PanelStrip from '../../components/mdx/PanelStrip.astro';
 
----
-
-## Panel 2
-**Scene:** 한 달 뒤. 같은 사무실, 이제는 화이트보드에 MAU 그래프가 가득하다. JAY 옆에 팀원 SAM(20대 후반, 안경, 커피 세 잔)이 서서 함께 모니터를 바라본다. 그래프 선이 수직 상승하며 화면 밖으로 튀어나올 기세다. 두 사람 얼굴에 환한 빛이 쏟아진다.
-**Dialogue:**
-- SAM: "DAU가 12만을 넘었어. OpenAI 덕분에 거의 광고비 제로야."
-- JAY: "이게 진짜 플랫폼 파워지."
-**Caption:** 플랫폼의 파도를 탈 때는 서퍼도 파도의 크기를 잊는다.
-
----
-
-## Panel 3
-**Scene:** 그로부터 두 달 뒤, 새벽. 슬랙 알림이 빨간 뱃지로 터진다. JAY가 반쯤 잠든 눈으로 이메일을 확인한다. 화면 중앙에 공식 메일 제목: "Important: Plugin API Rate Limit Policy Update — Effective Immediately." 배경에 창문 밖 빗소리가 들릴 것 같은 회색 도시.
-**Dialogue:**
-- JAY: "즉시 적용? 유예 기간이 없어?"
-**Caption:** OpenAI의 정책 한 줄이 6개월 치 로드맵을 폐기시켰다.
-
----
-
-## Panel 4
-**Scene:** 위기 대응 모드. 책상 위에 에너지 드링크 캔 다섯 개. 화이트보드에는 "Anthropic / Mistral / Cohere / Gemini" 로고가 붙어 있고 각각 장단점이 빼곡히 적혀 있다. JAY와 SAM이 포스트잇을 뜯었다 붙였다 반복한다. 구도는 위에서 내려다보는 하이앵글, 혼란스러운 책상 전체가 보인다.
-**Dialogue:**
-- SAM: "Anthropic Claude API는 컨텍스트 길이 좋은데 비용이..."
-- JAY: "일단 다 프로토타입 뜨자. 며칠 안에 결정해야 해."
-**Caption:** 'LLM 공급자 다변화'는 계획이 아니라 소방 훈련이 됐다.
-
----
-
-## Panel 5
-**Scene:** 사방이 유리 벽인 투자자 미팅룸. JAY가 피칭 덱 앞에 서 있다. 슬라이드 제목: "플랫폼 독립 전략 v2." 맞은편 투자자 VC(50대, 정장, 팔짱)의 얼굴은 반쯤 의심, 반쯤 흥미. JAY의 손끝이 약간 떨린다.
-**Dialogue:**
-- VC: "그래서 OpenAI 없이도 돌아가요?"
-- JAY: "돌아가는 정도가 아니라, 이게 더 빨라요. 저희가 직접 배웠거든요."
-**Caption:** 위기는 피칭 덱을 한 장 더 추가했지만, 그 한 장이 가장 설득력 있었다.
-
----
-
-## Panel 6
-**Scene:** 세 달 뒤, 리팩터링된 대시보드. 파이 차트에 "OpenAI 31% / Anthropic 38% / Mistral 21% / 자체 파인튜닝 10%"가 표시된다. JAY가 의자에 등을 기대고 팔짱을 낀 채 모니터를 바라본다. 표정은 지쳤지만 침착하다. 창밖으로 새벽빛이 들어오기 시작한다.
-**Dialogue:**
-- JAY: "이제 어느 한 곳이 정책 바꿔도 우리 서비스는 안 죽어."
-- SAM: "대신 우리가 세 배로 복잡해졌지."
-- JAY: "그게 해자야."
-**Caption:** 플랫폼은 파도다. 서퍼는 파도를 고르지 않는다 — 파도를 읽는 법을 배운다.
+<PanelStrip>
+  <Panel num={1} src="/toons/chatgpt-plugin-apocalypse/1.webp" alt="새벽 3시 원룸 사무실에서 승인 배너를 보고 환호하는 창업자 JAY" caption="JAY: “드디어. 6개월이 이 순간을 위해서였어.” — GPT 플러그인 승인은 로켓 티켓처럼 보였다." />
+  <Panel num={2} src="/toons/chatgpt-plugin-apocalypse/2.webp" alt="수직 상승하는 MAU 그래프를 함께 바라보는 JAY와 SAM" caption="SAM: “DAU가 12만을 넘었어. 광고비 거의 제로야.” JAY: “이게 진짜 플랫폼 파워지.”" />
+  <Panel num={3} src="/toons/chatgpt-plugin-apocalypse/3.webp" alt="즉시 적용 정책 메일을 확인하는 반쯤 잠든 JAY" caption="JAY: “즉시 적용? 유예 기간이 없어?” — 정책 한 줄이 6개월 로드맵을 폐기시켰다." />
+  <Panel num={4} src="/toons/chatgpt-plugin-apocalypse/4.webp" alt="여러 LLM 공급자를 비교하며 소방 훈련하듯 대응하는 두 사람" caption="SAM: “Claude API는 컨텍스트가 좋은데 비용이...” JAY: “일단 다 프로토타입 뜨자.”" />
+  <Panel num={5} src="/toons/chatgpt-plugin-apocalypse/5.webp" alt="플랫폼 독립 전략을 피칭하는 JAY와 의심하는 투자자" caption="VC: “그래서 OpenAI 없이도 돌아가요?” JAY: “더 빨라요. 저희가 직접 배웠거든요.”" />
+  <Panel num={6} src="/toons/chatgpt-plugin-apocalypse/6.webp" alt="공급자 다변화 대시보드를 바라보며 안도하는 JAY" caption="JAY: “이제 누가 정책 바꿔도 우리 서비스는 안 죽어.” SAM: “대신 세 배 복잡해졌지.” JAY: “그게 해자야.”" />
+</PanelStrip>
 
 > *본 콘텐츠는 허구이며 투자 권유가 아닙니다.*

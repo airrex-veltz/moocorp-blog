@@ -10,63 +10,21 @@ language: ko
 fiction: true
 aiGenerated: true
 author: "Moo Corp Toon Director"
+coverImage: "/toons/quantum-computing-hype-reset/1.webp"
 panelCount: 6
+stylePreset: "animagine-xl-3.1"
 ---
 
-## Panel 1
-**Scene:** Sleek startup office, Q4 2024. Floor-to-ceiling whiteboard covered in quantum circuit diagrams. Alex stands centre-frame in a crisp black turtleneck, marker in hand.
+import Panel from '../../components/mdx/Panel.astro';
+import PanelStrip from '../../components/mdx/PanelStrip.astro';
 
-**Dialogue:**
-- Alex: "By end of 2025 we will have practical quantum advantage on supply-chain optimisation. The classical computer is dead. We are the shovel-sellers in a gold rush — except the gold is already here."
-
-**Caption:** The pitch deck is forty slides. Slide one says 'The Quantum Decade Starts Now.'
-
-## Panel 2
-**Scene:** Same office, now packed with nodding VCs in identical grey quarter-zips. Alex gestures at a glowing slide showing a hockey-stick curve labelled 'Error Rate' plummeting toward zero.
-
-**Dialogue:**
-- Investor: "How close are you to fault-tolerant qubits?"
-- Alex: "Six months. Twelve at the outside. The physics is basically solved."
-
-**Caption:** The room smells of fresh term sheets and overconfidence.
-
-## Panel 3
-**Scene:** Server room, June 2025. A refrigeration unit the size of a transit van hums loudly. An exhausted engineer stares at a laptop showing a flat error-correction graph. Alex peers over her shoulder, tie loosened.
-
-**Dialogue:**
-- Engineer: "We're holding 72 physical qubits stable for about 0.3 milliseconds before decoherence wipes the state."
-- Alex: "Right. And in layman's terms?"
-- Engineer: "In layman's terms, the computer forgets everything before we ask it anything."
-
-**Caption:** Twelve months later. The physics is not basically solved.
-
-## Panel 4
-**Scene:** Cramped finance office, June 2025. Spreadsheet on monitor, red figures everywhere. Alex stands with arms crossed; CFO taps the screen with a pen.
-
-**Dialogue:**
-- CFO: "The hardware refresh is going to cost another $50 million. We have one enterprise client. They are running a demo that sorts twelve numbers."
-- Alex: "Those are very important numbers."
-- CFO: "They use Excel for the real numbers, Alex."
-
-**Caption:** Meanwhile, in accounting.
-
-## Panel 5
-**Scene:** Video call, June 2026. Enterprise Client sits at a tidy corporate desk, arms folded. Alex, visibly tired, is at a home desk. A half-eaten sandwich sits beside his laptop.
-
-**Dialogue:**
-- Enterprise Client: "We renewed last year because you said production-grade by Q2 2026. It's Q2 2026."
-- Alex: "We are redefining what 'production-grade' means in a quantum context."
-- Enterprise Client: "Does your new definition include it actually working?"
-- Alex: "...We are exploring that."
-
-**Caption:** June 2026. The one enterprise customer calls.
-
-## Panel 6
-**Scene:** Bright new office, same day. A fresh logo on the wall reads 'QuantumEdge Advisory Partners.' Alex stands in front of it wearing a suit again, smile restored, new pitch deck in hand.
-
-**Dialogue:**
-- Alex: "We are no longer building quantum computers. We are helping enterprises prepare their data pipelines, talent, and mindset for the quantum era — which is definitely still coming. Our retainer starts at $40,000 a month."
-
-**Caption:** By the end of the week, the pivot deck was ready.
+<PanelStrip>
+  <Panel num={1} src="/toons/quantum-computing-hype-reset/1.webp" alt="양자 회로 화이트보드 앞에서 자신만만하게 선 알렉스" caption="Alex: “2025년 말이면 공급망 최적화에서 양자 우위를 실현한다. 고전 컴퓨터는 죽었다.”" />
+  <Panel num={2} src="/toons/quantum-computing-hype-reset/2.webp" alt="에러율 급락 슬라이드를 가리키는 알렉스와 끄덕이는 투자자들" caption="투자자: “결함 내성 큐비트까지 얼마나?” Alex: “6개월, 길어야 12개월. 물리는 사실상 끝났어요.”" />
+  <Panel num={3} src="/toons/quantum-computing-hype-reset/3.webp" alt="결깨짐으로 멈춘 그래프를 보는 지친 엔지니어와 알렉스" caption="엔지니어: “72큐비트를 0.3밀리초 유지하면 다 날아가요.” Alex: “쉽게 말하면?” 엔지니어: “묻기도 전에 다 까먹는다고요.”" />
+  <Panel num={4} src="/toons/quantum-computing-hype-reset/4.webp" alt="적자 스프레드시트를 두고 대치하는 알렉스와 CFO" caption="CFO: “하드웨어 교체에 5천만 달러 더. 고객은 한 곳, 숫자 12개 정렬 데모 중.” Alex: “아주 중요한 숫자들이야.”" />
+  <Panel num={5} src="/toons/quantum-computing-hype-reset/5.webp" alt="양산급 납기를 추궁하는 고객과 지친 알렉스의 화상통화" caption="고객: “Q2 2026 양산급이라며 갱신했는데, 지금이 Q2 2026이에요.” Alex: “양자 맥락에서 ‘양산급’을 재정의하는 중입니다.”" />
+  <Panel num={6} src="/toons/quantum-computing-hype-reset/6.webp" alt="컨설팅 회사로 피벗해 다시 정장을 입고 미소 짓는 알렉스" caption="Alex: “이제 양자 컴퓨터를 만들지 않습니다. 양자 시대를 준비시켜 드립니다. 리테이너는 월 4만 달러부터.”" />
+</PanelStrip>
 
 > *본 콘텐츠는 허구이며 투자 권유가 아닙니다.*
