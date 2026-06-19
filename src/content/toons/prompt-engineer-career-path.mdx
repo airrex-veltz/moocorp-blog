@@ -3,7 +3,6 @@ title: "프롬프트 엔지니어의 24시간 | 4차 산업혁명 정신없음"
 description: "새내기 '프롬프트 엔지니어'가 $180K 연봉을 받았다가 API 한 번 업데이트로 모든 것을 잃는 6패널 다크코미디"
 slug: "prompt-engineer-career-path"
 publishedAt: 2026-06-18T16:03:33+09:00
-panelCount: 6
 market: GLOBAL
 tickers: []
 sectors: []
@@ -12,55 +11,21 @@ language: ko
 fiction: true
 aiGenerated: true
 author: "Moo Corp Toon Director"
+coverImage: "/toons/prompt-engineer-career-path/1.webp"
+panelCount: 6
+stylePreset: "animagine-03-anime"
 ---
 
-## Panel 1: 오픈 투 워크
+import Panel from '../../components/mdx/Panel.astro';
+import PanelStrip from '../../components/mdx/PanelStrip.astro';
 
-밝은 파란 배경, 노트북 앞에 앉은 새내기 JOON이 LinkedIn 프로필 사진을 위해 정장 셔츠를 입고 휴대폰을 치켜든다. 화면에는 굵은 글씨로 "Prompt Engineer | Seeking $180K+" 가 빛난다.
+<PanelStrip>
+  <Panel num={1} src="/toons/prompt-engineer-career-path/1.webp" alt="노트북 앞에서 LinkedIn 프로필용 셀카를 찍는 JOON" caption="'GPT한테 '이걸 잘 써줘'라고 말하는 게 직업이 됐어.' — 커리어 론칭 D-1" />
+  <Panel num={2} src="/toons/prompt-engineer-career-path/2.webp" alt="댓글과 좋아요가 폭발하는 화면을 바라보며 흐뭇해하는 JOON" caption="48시간 만에 팔로워 12명 → 선생님 6명 수강 문의." />
+  <Panel num={3} src="/toons/prompt-engineer-career-path/3.webp" alt="야경이 보이는 스타트업 사무실에서 계약서를 확인하는 JOON과 CEO" caption="연봉란에 180,000 USD. '프롬프트가 곧 경쟁력입니다.'" />
+  <Panel num={4} src="/toons/prompt-engineer-career-path/4.webp" alt="새벽 3시 슬랙 알림에 잠이 깬 JOON" caption="'[ALERT] GPT API deprecated. Effective: 03:00 UTC.' — 공지 없는 업데이트." />
+  <Panel num={5} src="/toons/prompt-engineer-career-path/5.webp" alt="비어있는 마이그레이션 계획 화이트보드 앞에 얼어붙은 JOON" caption="'그게 프롬프트 엔지니어 있는 이유 아닌가요?' / '맞습니다. (저도 방금 알았습니다.)'" />
+  <Panel num={6} src="/toons/prompt-engineer-career-path/6.webp" alt="다크서클과 빈 커피잔 세 개를 옆에 두고 새 LinkedIn 헤드라인을 올리는 JOON" caption="직함: Vibe Coder | AI Whisperer | Open To Work. 연봉 요구액: 여전히 $180K." />
+</PanelStrip>
 
-JOON: "GPT한테 '이걸 잘 써줘'라고 말하는 게 직업이 됐어. 대학원은 안 갔길 잘했다."
-
-*2026년 봄. JOON은 LinkedIn 팔로워 12명과 함께 커리어를 론칭한다.*
-
-## Panel 2: 바이럴 모멘트
-
-JOON의 노트북 화면 클로즈업. 숫자들이 폭포처럼 올라간다 — 댓글 847개, 좋아요 14K, DM 알림 뱃지가 세 자리를 넘겼다. JOON은 의자에 등을 기대며 팔짱을 끼고 천장을 바라본다. 표정은 황홀경.
-
-댓글창: "이게 실제 직업임???"
-댓글창: "포트폴리오 어떻게 만드나요 선생님"
-JOON: "선생님이라고 불리는 게 이렇게 빠를 줄은 몰랐지."
-
-*첫 포스팅 48시간 만에 컨설팅 문의가 여섯 건 들어온다.*
-
-## Panel 3: $180K의 무게
-
-스타트업 사무실. 통유리창 너머로 한강 야경이 펼쳐진다. 훤칠한 CEO가 서류를 내밀고, JOON은 계약서 숫자를 손가락으로 짚으며 미소를 숨기지 못한다. 연봉 칸에 "180,000 USD" 가 또렷하다.
-
-CEO: "우리 대언어 모델 전략의 핵심이 될 겁니다. 프롬프트가 곧 경쟁력이니까요."
-JOON (속으로): "나도 그 말이 정확히 뭔 뜻인지 모르지만, 계약서엔 사인한다."
-
-## Panel 4: 새벽 3시의 슬랙 메시지
-
-어두운 침실. JOON의 얼굴이 스마트폰 빛에 파랗게 물든다. 슬랙 알림음이 연속으로 울린다. 눈을 비비며 화면을 들여다보니 채널 #llm-infra에 붉은 경고 이모지가 줄줄이 도배되어 있다.
-
-슬랙 봇: "[ALERT] GPT API model=gpt-5-turbo-instruct deprecated. Effective: 03:00 UTC. All prompts returning 404."
-팀장 MIN: "JOON씨, 우리 프롬프트 전부 안 돌아가요. 빨리요."
-JOON: "..."
-
-*API 업데이트는 공지 없이 오전 3시에 단행됐다.*
-
-## Panel 5: 마이그레이션
-
-형광등 빛 아래 회의실. 화이트보드에는 "PROMPT v1 → v2 MIGRATION PLAN" 이라고 쓰여 있고, 그 아래 내용은 공백이다. JOON이 마커를 들고 보드 앞에 서 있지만 손은 멈춰 있다. 뒤에서 CEO와 개발팀이 팔짱을 낀 채 기다린다.
-
-개발자 SORA: "새 모델은 system prompt 구조가 바뀌어서 기존 것들이 전부 무용지물이에요."
-CEO: "그게 프롬프트 엔지니어 있는 이유 아닌가요?"
-JOON: "맞습니다. (있는 이유는 맞는데 방법은 저도 방금 알았습니다.)"
-
-## Panel 6: 다음 LinkedIn 포스팅
-
-다시 같은 파란 배경, 같은 정장 셔츠. JOON이 노트북 앞에 앉아 새 포스팅을 작성 중이다. 이번엔 눈 밑에 다크서클이 짙고, 커피잔이 세 개다. 화면에는 새 헤드라인이 빛난다 — "Vibe Coder | AI Whisperer | Open To Work"
-
-JOON: "프롬프트 엔지니어링은 예술이다. 그리고 예술가는 원래 굶는다."
-
-*직함은 바뀌었다. 연봉 요구액은 아직 $180K다.*
+> *본 콘텐츠는 허구이며 투자 권유가 아닙니다.*
