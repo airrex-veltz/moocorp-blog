@@ -1,0 +1,68 @@
+---
+// Toon detail pages had no path to any individual story: the only story link in
+// Toon.astro is gated on `sourceStorySlug`, and toons produced by the current
+// pipeline are independent topics rather than adaptations, so 17 of 88 toons —
+// including every recent one — rendered no link at all. This block fills that
+// gap by scoring the story collection against the toon's own metadata.
+//
+// Scoring mirrors RelatedPosts.astro so both surfaces rank the same way.
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  current: CollectionEntry<'toons'>;
+  limit?: number;
+}
+const { current, limit = 3 } = Astro.props;
+
+const all = await getCollection('stories', ({ data }) => !data.draft);
+
+// sourceStorySlug was recorded without the YYYY-MM-DD- filename prefix that the
+// story slugs themselves carry, so a raw equality check misses the match and the
+// source story shows up twice on the page — once as "원작 스토리 읽기", once here.
+const stripDate = (s: string) => s.replace(/^\d{4}-\d{2}-\d{2}-/, '');
+const sourceSlug = current.data.sourceStorySlug ? stripDate(current.data.sourceStorySlug) : null;
+
+function score(story: CollectionEntry<'stories'>): number {
+  // The adaptation source, when there is one, already has its own link above.
+  if (sourceSlug && stripDate(story.slug) === sourceSlug) return -1;
+  let s = 0;
+  for (const t of story.data.tickers) if (current.data.tickers.includes(t)) s += 5;
+  for (const sec of story.data.sectors) if (current.data.sectors.includes(sec)) s += 3;
+  for (const tag of story.data.tags) if (current.data.tags.includes(tag)) s += 1;
+  if (story.data.market === current.data.market) s += 1;
+  const ageDays = (Date.now() - story.data.publishedAt.valueOf()) / 86400000;
+  s += Math.max(0, 10 - ageDays) * 0.1;
+  return s;
+}
+
+const related = all
+  .map((st) => ({ story: st, score: score(st) }))
+  .filter((r) => r.score > 0)
+  .sort((a, b) => b.score - a.score)
+  .slice(0, limit)
+  .map((r) => r.story);
+
+const fmtDate = (d: Date) =>
+  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+---
+{related.length > 0 && (
+  <section class="related">
+    <h3>Related Stories · 관련 스토리</h3>
+    <div class="related-grid">
+      {related.map((story) => (
+        <a class="article-card" href={`/stories/${story.slug}`} style="border-right:0; padding:0; min-height:auto;">
+          <div class="article-genre">
+            <span style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;">{story.data.market}</span>
+          </div>
+          <h4 class="article-title" style="font-size:19px;">{story.data.title}</h4>
+          <div class="article-meta" style="margin-top:12px;">
+            <span>{story.data.author}</span>
+            <span style="color: var(--ink-4)">·</span>
+            <span>{fmtDate(story.data.publishedAt)}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+)}
