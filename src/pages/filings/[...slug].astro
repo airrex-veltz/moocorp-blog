@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import Filing from '../../layouts/Filing.astro';
+
+export async function getStaticPaths() {
+  const filings = await getCollection('filings', ({ data }) => !data.draft);
+  return filings.map((filing) => ({
+    params: { slug: filing.slug },
+    props: { filing },
+  }));
+}
+
+const { filing } = Astro.props;
+const { Content, headings } = await filing.render();
+---
+<Filing filing={filing} headings={headings}>
+  <Content />
+</Filing>

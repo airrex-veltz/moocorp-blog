@@ -1,0 +1,134 @@
+---
+// 공시자료 상세 레이아웃.
+//
+// Post.astro를 재사용하지 않는 이유는 스타일이 아니라 성격이다. 분석 레이아웃은
+// 읽는 시간, 관련 글, 장르 아이콘처럼 "읽을거리"의 장치를 두르는데, 자료 페이지에는
+// 그것들이 오히려 해가 된다. 여기서 앞세워야 하는 것은 출처, 기준 사업연도,
+// 수집 시점, 그리고 이 문서가 조언이 아니라는 고지다.
+import Base from './Base.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  filing: CollectionEntry<'filings'>;
+  headings?: { depth: number; slug: string; text: string }[];
+}
+
+const { filing } = Astro.props;
+const { data } = filing;
+
+const fmtDate = (d: Date) =>
+  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+---
+<Base
+  title={data.title}
+  description={data.description}
+  language={data.language}
+  publishedAt={data.publishedAt}
+  updatedAt={data.updatedAt}
+  schemaType="Article"
+  tickers={data.tickers}
+  tags={data.tags}
+  activeNav="filings"
+>
+  <article class="container-page page-enter filing">
+    <header class="filing-head">
+      <div class="kicker">공시자료 · Filing Data</div>
+      <h1>{data.title}</h1>
+      <p class="lede">{data.description}</p>
+
+      <dl class="filing-meta">
+        <div>
+          <dt>종목코드</dt>
+          <dd>{data.tickers.join(' · ')}</dd>
+        </div>
+        {data.fiscalYears && (
+          <div>
+            <dt>대상 사업연도</dt>
+            <dd>{data.fiscalYears}</dd>
+          </div>
+        )}
+        <div>
+          <dt>출처</dt>
+          <dd>{data.source}</dd>
+        </div>
+        {data.fetchedAt && (
+          <div>
+            <dt>수집 시점</dt>
+            <dd>{fmtDate(data.fetchedAt)}</dd>
+          </div>
+        )}
+        <div>
+          <dt>발행</dt>
+          <dd>{fmtDate(data.publishedAt)}</dd>
+        </div>
+      </dl>
+    </header>
+
+    <div class="filing-body">
+      <slot />
+    </div>
+
+    <aside class="filing-notice" aria-label="자료 성격 고지">
+      <strong>이 문서의 성격</strong>
+      <p>
+        전자공시시스템(DART)에 제출된 재무제표 수치를 옮기고, 제출된 계정 금액으로
+        비율을 계산한 자료입니다. 특정 종목의 가치나 투자판단에 관한 조언을 담지 않으며,
+        매매를 권유하지 않습니다. 원인 분석과 전망은 재무제표에 적혀 있지 않으므로
+        포함하지 않았습니다.
+      </p>
+      <p>
+        수치는 <a href="https://dart.fss.or.kr" rel="noopener noreferrer" target="_blank">DART 전자공시시스템</a>에서
+        직접 대조할 수 있습니다. 집계 과정은 자동화되어 있으며 오류 가능성이 있습니다.
+        정정 요청은 <a href="mailto:nicepark0606@gmail.com">nicepark0606@gmail.com</a>으로 보내주세요.
+        자세한 내용은 <a href="/disclaimer">면책조항</a>을 확인해 주세요.
+      </p>
+    </aside>
+
+    <nav class="filing-back">
+      <a href="/filings">← 공시자료 목록</a>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .filing-head { padding: 8px 0 28px; border-bottom: 1px solid var(--rule); }
+  .filing-head h1 { margin: 10px 0 0; text-wrap: balance; }
+  .filing-head .lede { margin-top: 12px; color: var(--ink-3); max-width: 62ch; }
+
+  .filing-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px 24px;
+    margin: 22px 0 0;
+    padding: 16px 0 0;
+    border-top: 1px dotted var(--rule);
+  }
+  .filing-meta div { margin: 0; }
+  .filing-meta dt {
+    font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ink-4); margin: 0 0 4px;
+  }
+  .filing-meta dd {
+    margin: 0; font-size: 14px; color: var(--ink-2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .filing-body { padding-top: 28px; }
+  /* 자료 페이지의 본문은 대부분 표다. 좁은 화면에서 표가 페이지를 밀지 않도록. */
+  .filing-body :global(table) { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .filing-body :global(.table-wrap), .filing-body :global(table) { overflow-x: auto; display: block; }
+  .filing-body :global(th), .filing-body :global(td) { white-space: nowrap; }
+
+  .filing-notice {
+    margin-top: 44px; padding: 18px 20px;
+    border: 1px solid var(--rule); border-radius: 4px;
+    background: var(--bg-2); font-size: 13px; line-height: 1.7; color: var(--ink-3);
+  }
+  .filing-notice strong { color: var(--ink-2); display: block; margin-bottom: 6px; }
+  .filing-notice p { margin: 0 0 8px; }
+  .filing-notice p:last-child { margin-bottom: 0; }
+  .filing-notice a { text-decoration: underline; }
+
+  .filing-back { margin-top: 28px; font-size: 14px; }
+  .filing-back a { color: var(--ink-3); }
+</style>

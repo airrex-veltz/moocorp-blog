@@ -14,7 +14,7 @@ interface Props {
   tickers?: string[];
   tags?: string[];
   showTicker?: boolean;
-  activeNav?: 'today' | 'archive' | 'stories' | 'toons' | 'tags' | 'about';
+  activeNav?: 'today' | 'archive' | 'filings' | 'stories' | 'toons' | 'tags' | 'about';
 }
 
 const SITE_NAME = 'Moo Research';
@@ -230,6 +230,7 @@ const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label
           <ul>
             <li><a href="/">Today</a></li>
             <li><a href="/archive">Archive</a></li>
+            <li><a href="/filings">공시자료</a></li>
             <li><a href="/tags">Tags</a></li>
           </ul>
         </div>

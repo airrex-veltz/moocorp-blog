@@ -1,0 +1,96 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const filings = (await getCollection('filings', ({ data }) => !data.draft))
+  .sort((a, b) => {
+    const dt = b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf();
+    return dt !== 0 ? dt : b.slug.localeCompare(a.slug);
+  });
+
+const fmtDate = (d: Date) =>
+  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+
+const marketLabel: Record<string, string> = { KR: '한국', US: '미국', GLOBAL: '글로벌' };
+---
+<Base
+  title="공시자료"
+  description="전자공시시스템(DART)에 제출된 재무제표 수치를 그대로 옮긴 자료. 투자판단에 관한 조언을 담지 않습니다."
+  activeNav="filings"
+>
+  <div class="container-page page-enter">
+    <header class="filings-head">
+      <div class="kicker">Filing Data · 공시자료</div>
+      <h1>공시에 적힌 숫자만</h1>
+      <p class="lede">
+        기업이 전자공시시스템에 제출한 재무제표를 연도순으로 옮기고, 제출된 계정 금액으로
+        비율을 계산했습니다. 해석과 전망은 담지 않습니다.
+      </p>
+    </header>
+
+    <!-- 섹션 전체 고지. 글마다 반복하는 것보다 여기 한 번 두는 편이 성격을 분명히 한다. -->
+    <aside class="filings-notice" aria-label="공시자료 성격 고지">
+      <p>
+        <strong>자료이며 조언이 아닙니다.</strong>
+        이 목록의 문서는 특정 종목의 가치나 투자판단에 관한 의견, 전망, 목표가, 매매 권유를
+        포함하지 않습니다. 수치의 원인과 향후 전망은 재무제표에 적혀 있지 않으므로 쓰지 않았습니다.
+      </p>
+      <p>
+        출처는 <a href="https://dart.fss.or.kr" rel="noopener noreferrer" target="_blank">DART 전자공시시스템</a>이며
+        누구나 같은 값을 직접 대조할 수 있습니다. 집계는 자동화되어 있어 오류 가능성이 있고,
+        정정 요청은 <a href="mailto:nicepark0606@gmail.com">nicepark0606@gmail.com</a>으로 받습니다.
+      </p>
+    </aside>
+
+    {filings.length > 0 ? (
+      <div class="row-list" style="margin-top:0;">
+        {filings.map((f, i) => (
+          <a class="row" href={`/filings/${f.slug}`}>
+            <div class="row-num">No. {String(i + 1).padStart(2, '0')}</div>
+            <div>
+              <div class="filing-tag">
+                {marketLabel[f.data.market] ?? f.data.market}
+                {f.data.fiscalYears ? ` · ${f.data.fiscalYears}` : ''}
+              </div>
+              <div class="row-title">{f.data.title}</div>
+              <div class="row-dek">{f.data.description}</div>
+            </div>
+            <div class="row-meta">
+              <div>{fmtDate(f.data.publishedAt)}</div>
+              <div style="margin-top:4px; color:var(--ink-4); font-variant-numeric:tabular-nums;">
+                {f.data.tickers.slice(0, 3).join(' · ')}
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <p style="color: var(--ink-3); padding: 64px 0; text-align: center;">아직 발행된 자료가 없습니다.</p>
+    )}
+  </div>
+</Base>
+
+<style>
+  .filings-head { padding: 8px 0 24px; }
+  .filings-head h1 { margin: 10px 0 0; text-wrap: balance; }
+  .filings-head .lede { margin-top: 12px; color: var(--ink-3); max-width: 62ch; }
+
+  .filings-notice {
+    margin: 0 0 28px;
+    padding: 16px 20px;
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--ink-3);
+    border-radius: 0 4px 4px 0;
+    background: var(--bg-2);
+    font-size: 13px; line-height: 1.7; color: var(--ink-3);
+  }
+  .filings-notice p { margin: 0 0 8px; }
+  .filings-notice p:last-child { margin-bottom: 0; }
+  .filings-notice strong { color: var(--ink-2); }
+  .filings-notice a { text-decoration: underline; }
+
+  .filing-tag {
+    font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--ink-4); margin-bottom: 6px;
+  }
+</style>
