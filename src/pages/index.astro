@@ -16,10 +16,17 @@ const allStories = (await getCollection('stories', ({ data }) => !data.draft))
     return dt !== 0 ? dt : b.slug.localeCompare(a.slug);
   });
 
+const allFilings = (await getCollection('filings', ({ data }) => !data.draft))
+  .sort((a, b) => {
+    const dt = b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf();
+    return dt !== 0 ? dt : b.slug.localeCompare(a.slug);
+  });
+
 const featured = allPosts[0];
 const todayPosts = allPosts.slice(1, 4);
 const marketPosts = allPosts.slice(4, 8);
 const storyCards = allStories.slice(0, 3);
+const filingRows = allFilings.slice(0, 4);
 
 // Derive featured stats
 const fbBody = (featured?.body ?? '').replace(/\s+/g, '').length;
@@ -174,6 +181,37 @@ const volLabel = `Vol. ${vol} · Issue ${issue}`;
       </section>
     )}
 
+    {filingRows.length > 0 && (
+      <section>
+        <div class="section-header">
+          <h2 class="section-title">공시자료 <span class="en">· Filing Data</span></h2>
+          <span class="section-meta"><a href="/filings">전체 보기 →</a></span>
+        </div>
+        {/* 분석 섹션과 붙어 있으므로 성격을 한 줄로 못박는다. 같은 화면에서
+            의견을 담은 글과 담지 않은 자료가 나란히 놓이기 때문이다. */}
+        <p class="filing-strap">
+          전자공시시스템 제출 수치를 그대로 옮긴 자료입니다. 의견·전망·투자권유를 담지 않습니다.
+        </p>
+        <div class="row-list">
+          {filingRows.map((f, i) => (
+            <a class="row" href={`/filings/${f.slug}`}>
+              <div class="row-num">No. {String(i + 1).padStart(2, '0')}</div>
+              <div>
+                <div class="row-title">{f.data.title}</div>
+                <div class="row-dek">{f.data.description}</div>
+              </div>
+              <div class="row-meta">
+                <div>{fmtDate(f.data.publishedAt)}</div>
+                <div style="margin-top:4px; color:var(--ink-4); font-variant-numeric:tabular-nums;">
+                  {f.data.tickers.slice(0, 4).join(' · ')}
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
     {storyCards.length > 0 && (
       <section>
         <div class="section-header">
@@ -213,3 +251,14 @@ const volLabel = `Vol. ${vol} · Issue ${issue}`;
     )}
   </div>
 </Base>
+
+<style>
+  .filing-strap {
+    margin: -4px 0 14px;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--ink-4);
+    border-left: 2px solid var(--rule);
+    padding-left: 10px;
+  }
+</style>
