@@ -6,7 +6,7 @@ import Base from '../layouts/Base.astro';
   <header style="margin-bottom:40px; padding-bottom:32px; border-bottom:1px solid var(--ink); max-width:var(--readable);">
     <div class="eyebrow" style="margin-bottom:16px;">Legal</div>
     <h1 style="font-family:var(--kserif); font-size:clamp(32px,4vw,48px); letter-spacing:-0.025em; font-weight:400;">개인정보처리방침</h1>
-    <p style="color: var(--ink-3); margin-top:8px; font-size:13px; font-family: var(--mono); letter-spacing:0.04em;">최종 업데이트: 2026-05-15</p>
+    <p style="color: var(--ink-3); margin-top:8px; font-size:13px; font-family: var(--mono); letter-spacing:0.04em;">최종 업데이트: 2026-10-29</p>
   </header>
 
   <div class="prose max-w-none">
@@ -14,7 +14,7 @@ import Base from '../layouts/Base.astro';
     <p>본 사이트는 별도의 회원 가입을 요구하지 않으며, 이용자로부터 직접 개인정보를 수집하지 않습니다. 다만 다음의 정보가 자동으로 수집·처리될 수 있습니다.</p>
     <ul>
       <li>접속 IP, 브라우저 종류, 운영체제, 방문 시간</li>
-      <li>방문 페이지 및 체류 시간 (Vercel Analytics)</li>
+      <li>요청한 페이지 주소, 이전 페이지 주소(리퍼러)</li>
       <li>RSS 구독 시 RSS 클라이언트 정보</li>
     </ul>
 
@@ -26,19 +26,19 @@ import Base from '../layouts/Base.astro';
     </ul>
 
     <h2>3. 보유 및 파기</h2>
-    <p>본 사이트는 이용자를 식별할 수 있는 정보를 별도로 저장하지 않습니다. 자동 수집되는 접속 로그는 호스팅 제공자(Vercel)의 보존 정책에 따라 처리됩니다.</p>
+    <p>본 사이트는 회원 정보 등 이용자를 식별하기 위한 정보를 별도로 저장하지 않습니다. 자동 수집되는 접속 로그(접속 IP 포함)는 Amazon Web Services 서울 리전에 저장되며, <strong>35일이 지나면 자동으로 파기</strong>됩니다. 접속 통계는 이 로그에서 IP 등 식별 정보를 제외한 집계치(페이지별·일별 방문 수 등)로만 보관합니다.</p>
 
     <h2>4. 처리 위탁 / 제3자 도구</h2>
     <p>다음의 서비스가 운영 또는 분석 목적으로 사용되거나 향후 사용될 수 있습니다. 각 서비스는 자체 개인정보처리방침을 따릅니다.</p>
     <ul>
-      <li><strong>Vercel</strong> — 호스팅, Vercel Analytics, Speed Insights (방문 통계)</li>
+      <li><strong>Amazon Web Services</strong> — 호스팅 및 콘텐츠 전송(EC2, CloudFront), 접속 로그 저장(S3)</li>
       <li><strong>Google AdSense / Kakao AdFit</strong> — 광고 게재 (도입 시점에 별도 고지)</li>
       <li><strong>TradingView</strong> — 차트 위젯 임베드</li>
       <li><strong>Unsplash</strong> — 이미지 호스팅</li>
     </ul>
 
     <h2>5. 쿠키 사용</h2>
-    <p>본 사이트는 테마(다크모드) 설정 등 사용자 경험 향상을 위해 자체 쿠키 및 로컬 스토리지를 사용합니다. Vercel Analytics는 쿠키 없이 익명 통계를 수집합니다. 광고 도입 시 광고 네트워크가 행태정보 처리를 위해 별도의 쿠키를 사용할 수 있으며, 도입 시점에 별도의 동의 절차를 마련합니다.</p>
+    <p>본 사이트는 테마(다크모드) 설정 등 사용자 경험 향상을 위해 자체 쿠키 및 로컬 스토리지를 사용합니다. 접속 통계는 쿠키나 추적 스크립트 없이 서버 접속 로그로만 집계합니다. 광고 도입 시 광고 네트워크가 행태정보 처리를 위해 별도의 쿠키를 사용할 수 있으며, 도입 시점에 별도의 동의 절차를 마련합니다.</p>
 
     <h2>6. 만 14세 미만 아동의 개인정보</h2>
     <p>본 사이트는 만 14세 미만 아동을 대상 이용자로 설정하지 않으며, 회원 가입이나 개인정보 직접 수집을 수행하지 않습니다.</p>
