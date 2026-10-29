@@ -1,4 +1,6 @@
 ---
+import { langOf, ui } from '../../i18n/ui';
+const L = ui[langOf(Astro.url)];
 interface Props {
   symbol: string;
   exchange?: string;
@@ -31,14 +33,14 @@ const configJson = JSON.stringify(widgetConfig);
 ---
 <div class="my-8 border border-ink-line not-prose">
   <div class="px-3 py-2 border-b border-ink-line text-xs uppercase tracking-widest text-ink-muted flex items-center justify-between">
-    <span>가격 차트</span>
+    <span>{L.chart}</span>
     <span class="font-mono text-ink">{fullSymbol}</span>
   </div>
   <div class="tradingview-widget-container" style={`height:${height}px`}>
     <div class="tradingview-widget-container__widget" style="height:100%"></div>
     <Fragment set:html={`<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>${configJson}</script>`} />
     <noscript>
-      <p class="p-4 text-sm text-ink-muted">차트를 보려면 JavaScript를 활성화하세요. (출처: TradingView)</p>
+      <p class="p-4 text-sm text-ink-muted">{L.chartNoJs}</p>
     </noscript>
   </div>
 </div>

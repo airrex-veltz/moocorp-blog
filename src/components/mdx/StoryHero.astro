@@ -1,4 +1,5 @@
 ---
+import { langOf, ui } from '../../i18n/ui';
 interface Props {
   genre: "action" | "thriller" | "romance" | "melodrama" | "humor";
   market: string;
@@ -22,13 +23,8 @@ const genreIcons = {
   humor: "mood",
 } as const;
 
-const genreLabels = {
-  action: "액션",
-  thriller: "스릴러",
-  romance: "로맨스",
-  melodrama: "멜로",
-  humor: "유머",
-} as const;
+const L = ui[langOf(Astro.url)];
+const genreLabels = L.genre;
 
 const icon = genreIcons[genre];
 const label = genreLabels[genre];
@@ -76,7 +72,7 @@ const label = genreLabels[genre];
     <span class="text-ink-line">·</span>
     <span class="inline-flex items-center gap-1">
       <span class="ms" style="font-size:14px" aria-hidden="true">schedule</span>
-      <span>{readingTime}분 읽기</span>
+      <span>{L.readMinShort(readingTime)}</span>
     </span>
     {tags.length > 0 && (
       <>

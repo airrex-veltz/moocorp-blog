@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { langOf, home, ui } from '../i18n/ui';
 
 interface Props {
   title?: string;
@@ -13,18 +14,22 @@ interface Props {
   tags?: string[];
   showTicker?: boolean;
   activeNav?: 'today' | 'archive' | 'filings' | 'stories' | 'toons' | 'tags' | 'about';
+  /** 다른 언어판의 경로. 있으면 hreflang 과 언어 전환 링크가 그곳을 가리킨다. */
+  alternate?: string;
 }
 
 const SITE_NAME = 'Moo Research';
 const SITE_URL = 'https://www.mooresearch.com';
-const DEFAULT_TITLE = 'Moo Research — 미국·한국 상장사 분석';
-const DEFAULT_DESC = '미국과 한국 상장사 동향을 매일 분석합니다. 펀더멘털, 카탈리스트, 리스크를 한 곳에.';
+const lang = langOf(Astro.url);
+const L = ui[lang];
+const DEFAULT_TITLE = L.siteTitle;
+const DEFAULT_DESC = L.siteDesc;
 
 const {
   title,
   description = DEFAULT_DESC,
   image,
-  language = 'ko',
+  language = lang,
   publishedAt,
   updatedAt,
   schemaType = publishedAt ? 'Article' : 'WebSite',
@@ -32,12 +37,18 @@ const {
   tags = [],
   showTicker = true,
   activeNav = 'today',
+  alternate,
 } = Astro.props;
 
 const fullTitle = title ? `${title} · ${SITE_NAME}` : DEFAULT_TITLE;
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 const ogImage = image ? new URL(image, Astro.site).toString() : new URL('/og-default.svg', Astro.site).toString();
 const year = new Date().getFullYear();
+// 언어 전환: 짝이 있으면 그 글로, 없으면 상대 언어판의 첫 화면으로.
+const switchHref = alternate ?? (lang === 'en' ? '/' : '/en');
+const altUrl = alternate ? new URL(alternate, Astro.site).toString() : null;
+const koUrl = lang === 'ko' ? canonical : altUrl;
+const enUrl = lang === 'en' ? canonical : altUrl;
 
 // Volume / Issue auto-derivation: site started 2024-01-01.
 // Vol = years since start (Roman numerals). Issue = ISO week of year.
@@ -69,7 +80,7 @@ const websiteSchema = {
   alternateName: 'Moo Research',
   url: SITE_URL,
   description: DEFAULT_DESC,
-  inLanguage: 'ko-KR',
+  inLanguage: lang === 'en' ? 'en-US' : 'ko-KR',
   potentialAction: {
     '@type': 'SearchAction',
     target: { '@type': 'EntryPoint', urlTemplate: `${SITE_URL}/?q={search_term_string}` },
@@ -102,7 +113,9 @@ const articleSchema = publishedAt && schemaType === 'Article' ? {
   keywords: [...tickers, ...tags].join(', '),
 } : null;
 
-const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label: string; beta?: boolean }> = [
+const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label: string; beta?: boolean }> = lang === 'en' ? [
+  { id: 'today', href: '/en', label: 'Today' },
+] : [
   { id: 'today', href: '/', label: 'Today' },
   { id: 'archive', href: '/archive', label: 'Archive' },
   { id: 'filings', href: '/filings', label: 'Filings' },
@@ -119,7 +132,14 @@ const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" type="application/rss+xml" title={SITE_NAME} href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title={SITE_NAME} href={lang === 'en' ? '/en/rss.xml' : '/rss.xml'} />
+    {koUrl && enUrl && (
+      <>
+        <link rel="alternate" hreflang="ko" href={koUrl} />
+        <link rel="alternate" hreflang="en" href={enUrl} />
+        <link rel="alternate" hreflang="x-default" href={koUrl} />
+      </>
+    )}
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <title>{fullTitle}</title>
@@ -172,13 +192,14 @@ const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label
     <header class="masthead">
       <div class="container-page masthead-inner">
         <div class="masthead-date">{dateLabel}</div>
-        <a href="/" class="masthead-logo" aria-label={SITE_NAME}>
+        <a href={home(lang)} class="masthead-logo" aria-label={SITE_NAME}>
           <span>Moo</span>
           <span class="dot"></span>
           <span style="color: var(--ink-3); font-style: italic; font-size: 16px;">Research</span>
         </a>
         <div class="masthead-actions">
-          <a class="icon-btn" href="/rss.xml" aria-label="RSS feed" title="RSS">
+          <a class="icon-btn" href={switchHref} hreflang={lang === 'en' ? 'ko' : 'en'} title={L.switchTitle} aria-label={L.switchTitle} style="width:auto; padding:0 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;">{L.switchLabel}</a>
+          <a class="icon-btn" href={lang === 'en' ? '/en/rss.xml' : '/rss.xml'} aria-label="RSS feed" title="RSS">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 11a9 9 0 0 1 9 9" />
               <path d="M4 4a16 16 0 0 1 16 16" />
@@ -219,18 +240,19 @@ const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label
       <div class="container-page footer-inner">
         <div class="footer-brand">
           <div class="footer-logo">Moo Research</div>
-          <p class="footer-tag">
-            상장사를 한 단계 더 깊이 읽기 위한 에디토리얼.<br />
-            본 사이트의 모든 분석은 AI 시스템이 자동 작성합니다.
-          </p>
+          <p class="footer-tag" set:html={L.footerTag} />
         </div>
         <div>
           <h4>Sections</h4>
           <ul>
-            <li><a href="/">Today</a></li>
-            <li><a href="/archive">Archive</a></li>
-            <li><a href="/filings">공시자료</a></li>
-            <li><a href="/tags">Tags</a></li>
+            <li><a href={home(lang)}>Today</a></li>
+            {lang === 'ko' && (
+              <>
+                <li><a href="/archive">Archive</a></li>
+                <li><a href="/filings">{L.filingsNav}</a></li>
+                <li><a href="/tags">Tags</a></li>
+              </>
+            )}
           </ul>
         </div>
         <div>
@@ -239,20 +261,20 @@ const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label
             <li><a href="/about">About</a></li>
             <li><a href="/about">Methodology</a></li>
             <li><a href="mailto:nicepark0606@gmail.com">Contact</a></li>
-            <li><a href="/rss.xml">RSS</a></li>
+            <li><a href={lang === 'en' ? '/en/rss.xml' : '/rss.xml'}>RSS</a></li>
           </ul>
         </div>
         <div>
           <h4>Legal</h4>
           <ul>
             <li><a href="/privacy">Privacy</a></li>
-            <li><a href="/disclaimer">Disclaimer</a></li>
+            <li><a href={lang === 'en' ? '/en/disclaimer' : '/disclaimer'}>Disclaimer</a></li>
           </ul>
         </div>
       </div>
       <div class="container-page footer-base">
         <span>© {year} MOO RESEARCH · ALL RIGHTS RESERVED</span>
-        <span>AI 자동 생성 · NOT INVESTMENT ADVICE · SEE DISCLAIMER</span>
+        <span>{L.footerBase}</span>
       </div>
     </footer>
 

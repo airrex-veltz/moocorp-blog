@@ -5,17 +5,27 @@ import TableOfContents from '../components/TableOfContents.astro';
 import RelatedPosts from '../components/RelatedPosts.astro';
 import GenreIcon from '../components/GenreIcon.astro';
 import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import { langOf, base, home, ui } from '../i18n/ui';
 
 interface Props {
-  post: CollectionEntry<'posts'>;
+  post: CollectionEntry<'posts'> | CollectionEntry<'posts-en'>;
   headings?: { depth: number; slug: string; text: string }[];
 }
 
 const { post, headings = [] } = Astro.props;
 const { data, body } = post;
+const lang = langOf(Astro.url);
+const L = ui[lang];
+const b = base(lang);
+const alternate = lang === 'en'
+  ? `/posts/${post.slug}`
+  : ((await getCollection('posts-en')).some((e) => e.slug === post.slug) ? `/en/posts/${post.slug}` : undefined);
 
 const wordCount = body ? body.replace(/\s+/g, '').length : 0;
-const readingTime = Math.max(1, Math.round(wordCount / 500));
+const readingTime = Math.max(1, Math.round(data.language === 'en'
+  ? (body ? body.split(/\s+/).filter(Boolean).length : 0) / 230
+  : wordCount / 500));
 
 const fmtDate = (d: Date) =>
   `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
@@ -58,6 +68,7 @@ const heroAttribution = data.heroImage?.attribution ?? '';
   tickers={data.tickers}
   tags={data.tags}
   activeNav="today"
+  alternate={alternate}
 >
   <ReadingProgress />
 
@@ -72,7 +83,7 @@ const heroAttribution = data.heroImage?.attribution ?? '';
     {/* Article */}
     <article class="post-article">
       <div class="post-eyebrow">
-        <span>{data.market} · {data.language === 'ko' ? '한국 시장' : 'Markets'}</span>
+        <span>{data.market} · {L.marketLabel}</span>
         <span class="sep">/</span>
         <span>{volLabel}</span>
       </div>
@@ -86,7 +97,7 @@ const heroAttribution = data.heroImage?.attribution ?? '';
         <span class="pipe">|</span>
         <time datetime={data.publishedAt.toISOString()}>{fmtDate(data.publishedAt)}</time>
         <span class="pipe">|</span>
-        <span>읽는 시간 {readingTime}분</span>
+        <span>{L.readMin(readingTime)}</span>
         {data.tickers.length > 0 && (
           <>
             <span class="pipe">|</span>
@@ -114,16 +125,14 @@ const heroAttribution = data.heroImage?.attribution ?? '';
         <slot />
       </div>
 
-      <aside aria-label="AI 생성 및 면책 고지" style="margin-top:40px; padding:16px 20px; border:1px solid var(--rule); border-radius:4px; background:var(--bg-2); font-size:13px; line-height:1.6; color: var(--ink-3);">
-        <strong style="color: var(--ink-2);">고지</strong> · 본 분석은 AI 시스템이 자동 작성합니다. 데이터 해석 오류·사실관계 혼동이 있을 수 있습니다. 정보 제공 목적이며 투자 권유가 아닙니다. 자세한 내용은 <a href="/disclaimer" style="text-decoration:underline;">면책조항</a>을 확인해 주세요.
-      </aside>
+      <aside aria-label={L.noticeAria} style="margin-top:40px; padding:16px 20px; border:1px solid var(--rule); border-radius:4px; background:var(--bg-2); font-size:13px; line-height:1.6; color: var(--ink-3);" set:html={L.postNotice(b)} />
 
       {data.tags.length > 0 && (
         <footer style="margin-top:48px; padding-top:24px; border-top:1px solid var(--rule);">
           <div style="font-family: var(--mono); font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color: var(--ink-4); margin-bottom:12px;">Tags</div>
           <div style="display:flex; flex-wrap:wrap; gap:8px;">
             {data.tags.map((tag) => (
-              <a href={`/tags/${tag}`} class="ticker-pill" style="text-decoration:none;">#{tag}</a>
+              <a href={lang === 'ko' ? `/tags/${tag}` : undefined} class="ticker-pill" style="text-decoration:none;">#{tag}</a>
             ))}
           </div>
         </footer>
@@ -132,9 +141,9 @@ const heroAttribution = data.heroImage?.attribution ?? '';
       <RelatedPosts current={post} />
 
       <nav style="margin-top:48px; padding-top:24px; border-top:1px solid var(--rule);">
-        <a href="/" style="font-family: var(--mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color: var(--ink-3); display:inline-flex; align-items:center; gap:8px;">
+        <a href={home(lang)} style="font-family: var(--mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color: var(--ink-3); display:inline-flex; align-items:center; gap:8px;">
           <span aria-hidden="true">←</span>
-          <span>다른 분석 보기</span>
+          <span>{L.moreAnalysis}</span>
         </a>
       </nav>
     </article>
@@ -158,7 +167,7 @@ const heroAttribution = data.heroImage?.attribution ?? '';
           <h5>Tags</h5>
           <div style="display:flex; flex-wrap:wrap; gap:6px;">
             {data.tags.map((tag) => (
-              <a href={`/tags/${tag}`} style="font-family: var(--sans); font-size:11px; padding:3px 8px; border:1px solid var(--rule); color: var(--ink-2); letter-spacing:0; text-decoration:none;">{tag}</a>
+              <a href={lang === 'ko' ? `/tags/${tag}` : undefined} style="font-family: var(--sans); font-size:11px; padding:3px 8px; border:1px solid var(--rule); color: var(--ink-2); letter-spacing:0; text-decoration:none;">{tag}</a>
             ))}
           </div>
         </div>

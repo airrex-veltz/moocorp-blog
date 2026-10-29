@@ -1,0 +1,29 @@
+---
+// 영문판 — 원문 라우트(src/pages/stories/[...slug].astro)와 같고 컬렉션만 'stories-en' 이다.
+import { getCollection } from 'astro:content';
+import Story from '../../../layouts/Story.astro';
+import SceneBreak from '../../../components/mdx/SceneBreak.astro';
+import PullQuote from '../../../components/mdx/PullQuote.astro';
+import HeroImage from '../../../components/mdx/HeroImage.astro';
+
+export async function getStaticPaths() {
+  const stories = await getCollection('stories-en', ({ data }) => !data.draft);
+  return stories.map((story) => ({
+    params: { slug: story.slug },
+    props: { story },
+  }));
+}
+
+const { story } = Astro.props;
+const { Content } = await story.render();
+
+// Auto-provide components to MDX
+const storyComponents = {
+  SceneBreak,
+  PullQuote,
+  HeroImage,
+};
+---
+<Story story={story}>
+  <Content components={storyComponents} />
+</Story>

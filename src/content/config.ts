@@ -98,4 +98,19 @@ const filings = defineCollection({
   }),
 });
 
-export const collections = { posts, stories, toons, filings };
+// 영문판 — 한국어 원문과 같은 파일명·slug 로 `<컬렉션>-en/` 에 둔다(`/en/<kind>/<slug>`).
+// 스키마는 원문과 같고 두 가지만 다르다: 영어 제목은 한국어보다 길어 상한을 넓히고,
+// language 는 en 으로 고정한다. 기존 목록 페이지는 원문 컬렉션만 읽으므로 섞이지 않는다.
+const en = (c: { schema?: unknown }) => defineCollection({
+  type: 'content',
+  schema: (c.schema as z.AnyZodObject).extend({
+    title: z.string().max(200),
+    description: z.string().max(320),
+    language: z.literal('en').default('en'),
+  }),
+});
+
+export const collections = {
+  posts, stories, toons, filings,
+  'posts-en': en(posts), 'stories-en': en(stories), 'toons-en': en(toons), 'filings-en': en(filings),
+};

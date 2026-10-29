@@ -1,0 +1,40 @@
+---
+// 영문판 — 원문 라우트(src/pages/posts/[...slug].astro)와 같고 컬렉션만 'posts-en' 이다.
+import { getCollection } from 'astro:content';
+import Post from '../../../layouts/Post.astro';
+
+import StatCard from '../../../components/mdx/StatCard.astro';
+import StatGrid from '../../../components/mdx/StatGrid.astro';
+import Callout from '../../../components/mdx/Callout.astro';
+import Chart from '../../../components/mdx/Chart.astro';
+import Quote from '../../../components/mdx/Quote.astro';
+import PullQuote from '../../../components/mdx/PullQuote.astro';
+import KeyPoints from '../../../components/mdx/KeyPoints.astro';
+import KeyTakeaways from '../../../components/mdx/KeyTakeaways.astro';
+import DataTable from '../../../components/mdx/DataTable.astro';
+import HeroImage from '../../../components/mdx/HeroImage.astro';
+import Figure from '../../../components/mdx/Figure.astro';
+import ChapterMarker from '../../../components/mdx/ChapterMarker.astro';
+import Dingbat from '../../../components/mdx/Dingbat.astro';
+import MiniChart from '../../../components/mdx/MiniChart.astro';
+import FTTable from '../../../components/mdx/FTTable.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts-en', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await post.render();
+
+const components = {
+  StatCard, StatGrid, Callout, Chart, Quote, PullQuote, KeyPoints, KeyTakeaways,
+  DataTable, HeroImage, Figure, ChapterMarker, Dingbat, MiniChart, FTTable,
+};
+---
+<Post post={post} headings={headings}>
+  <Content components={components} />
+</Post>

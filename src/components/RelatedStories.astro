@@ -8,14 +8,16 @@
 // Scoring mirrors RelatedPosts.astro so both surfaces rank the same way.
 import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
+import { langOf, base, ui } from '../i18n/ui';
 
 interface Props {
-  current: CollectionEntry<'toons'>;
+  current: CollectionEntry<'toons'> | CollectionEntry<'toons-en'>;
   limit?: number;
 }
 const { current, limit = 3 } = Astro.props;
 
-const all = await getCollection('stories', ({ data }) => !data.draft);
+const lang = langOf(Astro.url);
+const all = await getCollection(lang === 'en' ? 'stories-en' : 'stories', ({ data }) => !data.draft);
 
 // sourceStorySlug was recorded without the YYYY-MM-DD- filename prefix that the
 // story slugs themselves carry, so a raw equality check misses the match and the
@@ -23,7 +25,7 @@ const all = await getCollection('stories', ({ data }) => !data.draft);
 const stripDate = (s: string) => s.replace(/^\d{4}-\d{2}-\d{2}-/, '');
 const sourceSlug = current.data.sourceStorySlug ? stripDate(current.data.sourceStorySlug) : null;
 
-function score(story: CollectionEntry<'stories'>): number {
+function score(story: (typeof all)[number]): number {
   // The adaptation source, when there is one, already has its own link above.
   if (sourceSlug && stripDate(story.slug) === sourceSlug) return -1;
   let s = 0;
@@ -48,10 +50,10 @@ const fmtDate = (d: Date) =>
 ---
 {related.length > 0 && (
   <section class="related">
-    <h3>Related Stories · 관련 스토리</h3>
+    <h3>{ui[lang].relatedStories}</h3>
     <div class="related-grid">
       {related.map((story) => (
-        <a class="article-card" href={`/stories/${story.slug}`} style="border-right:0; padding:0; min-height:auto;">
+        <a class="article-card" href={`${base(lang)}/stories/${story.slug}`} style="border-right:0; padding:0; min-height:auto;">
           <div class="article-genre">
             <span style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;">{story.data.market}</span>
           </div>

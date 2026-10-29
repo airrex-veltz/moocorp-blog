@@ -2,13 +2,21 @@
 import Base from './Base.astro';
 import RelatedStories from '../components/RelatedStories.astro';
 import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import { langOf, base, home, ui } from '../i18n/ui';
 
 interface Props {
-  toon: CollectionEntry<'toons'>;
+  toon: CollectionEntry<'toons'> | CollectionEntry<'toons-en'>;
 }
 
 const { toon } = Astro.props;
 const { data } = toon;
+const lang = langOf(Astro.url);
+const L = ui[lang];
+const b = base(lang);
+const alternate = lang === 'en'
+  ? `/toons/${toon.slug}`
+  : ((await getCollection('toons-en')).some((e) => e.slug === toon.slug) ? `/en/toons/${toon.slug}` : undefined);
 
 const dateString = data.publishedAt.toLocaleDateString(data.language === 'ko' ? 'ko-KR' : 'en-US', {
   year: 'numeric',
@@ -26,6 +34,7 @@ const dateString = data.publishedAt.toLocaleDateString(data.language === 'ko' ? 
   tickers={data.tickers}
   tags={data.tags}
   activeNav="toons"
+  alternate={alternate}
 >
   <div class="container-page page-enter" style="padding-top:48px; padding-bottom:48px; max-width: 880px;">
     <article>
@@ -47,7 +56,7 @@ const dateString = data.publishedAt.toLocaleDateString(data.language === 'ko' ? 
 
       <div class="toon-beta-bar" role="note" style="max-width:720px; margin-left:auto; margin-right:auto;">
         <strong>Beta</strong>
-        <span>일러스트는 AI로 생성되었습니다. 캐릭터·화풍 일관성은 점진적으로 개선됩니다.</span>
+        <span>{L.toonBeta}</span>
       </div>
 
       <div class="prose prose-story" style="max-width:720px; margin:0 auto;">
@@ -56,8 +65,8 @@ const dateString = data.publishedAt.toLocaleDateString(data.language === 'ko' ? 
 
       {data.sourceStorySlug && (
         <div style="margin-top:48px; padding-top:24px; border-top:1px solid var(--rule); text-align:center;">
-          <a href={`/stories/${data.sourceStorySlug}`} style="font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent);">
-            원작 스토리 읽기 →
+          <a href={`${b}/stories/${data.sourceStorySlug}`} style="font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent);">
+            {L.sourceStory}
           </a>
         </div>
       )}
@@ -65,17 +74,15 @@ const dateString = data.publishedAt.toLocaleDateString(data.language === 'ko' ? 
       <RelatedStories current={toon} />
 
       <footer style="margin-top:64px; padding-top:32px; border-top:1px solid var(--rule);">
-        <p style="font-size:13px; color: var(--ink-3); line-height:1.7; text-align:center;">
-          <strong style="color: var(--ink-2);">픽션 고지</strong> · 본 일러스트와 내러티브는 AI 시스템이 자동 생성한 <strong>창작물(픽션)</strong>입니다. 등장하는 형상은 실존 인물의 실제 외모, 발언, 행위를 재현하지 않으며, 어떠한 사실 단정이나 평가도 아닙니다. 투자 판단의 근거로 사용되어서는 안 됩니다. 정정·삭제 요청은 <a href="mailto:nicepark0606@gmail.com" style="text-decoration:underline;">nicepark0606@gmail.com</a>으로 보내주세요. 자세한 내용은 <a href="/disclaimer" style="text-decoration:underline;">면책조항</a>.
-        </p>
+        <p style="font-size:13px; color: var(--ink-3); line-height:1.7; text-align:center;" set:html={L.toonNotice(b)} />
       </footer>
 
       <nav style="margin-top:48px; padding-top:24px; border-top:1px solid var(--rule); display:flex; justify-content:space-between; font-family: var(--mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase;">
-        <a href="/toons" style="color: var(--ink-3); display:inline-flex; align-items:center; gap:8px;">
+        <a href={lang === 'ko' ? '/toons' : home(lang)} style="color: var(--ink-3); display:inline-flex; align-items:center; gap:8px;">
           <span aria-hidden="true">←</span>
-          <span>다른 툰</span>
+          <span>{L.moreToons}</span>
         </a>
-        <a href="/stories" style="color: var(--ink-3);">스토리 →</a>
+        <a href={lang === 'ko' ? '/stories' : home(lang)} style="color: var(--ink-3);">{L.toStories}</a>
       </nav>
     </article>
   </div>

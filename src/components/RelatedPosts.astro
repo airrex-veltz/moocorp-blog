@@ -1,16 +1,19 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
+import { langOf, base, ui } from '../i18n/ui';
 
 interface Props {
-  current: CollectionEntry<'posts'>;
+  current: CollectionEntry<'posts'> | CollectionEntry<'posts-en'>;
   limit?: number;
 }
 const { current, limit = 3 } = Astro.props;
 
-const all = await getCollection('posts', ({ data }) => !data.draft);
+// 같은 언어판 안에서만 추천한다 — 영문 글 밑에 한국어 글을 걸지 않는다.
+const lang = langOf(Astro.url);
+const all = await getCollection(lang === 'en' ? 'posts-en' : 'posts', ({ data }) => !data.draft);
 
-function score(post: CollectionEntry<'posts'>): number {
+function score(post: (typeof all)[number]): number {
   if (post.slug === current.slug) return -1;
   let s = 0;
   for (const t of post.data.tickers) if (current.data.tickers.includes(t)) s += 5;
@@ -34,10 +37,10 @@ const fmtDate = (d: Date) =>
 ---
 {related.length > 0 && (
   <section class="related">
-    <h3>Related Reading · 관련 분석</h3>
+    <h3>{ui[lang].related}</h3>
     <div class="related-grid">
       {related.map((post) => (
-        <a class="article-card" href={`/posts/${post.slug}`} style="border-right:0; padding:0; min-height:auto;">
+        <a class="article-card" href={`${base(lang)}/posts/${post.slug}`} style="border-right:0; padding:0; min-height:auto;">
           <div class="article-genre">
             <span style="font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;">{post.data.market}</span>
           </div>

@@ -5,16 +5,26 @@ import StoryHero from '../components/mdx/StoryHero.astro';
 import StoryEnd from '../components/mdx/StoryEnd.astro';
 import HeroImage from '../components/mdx/HeroImage.astro';
 import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import { langOf, base, home, ui } from '../i18n/ui';
 
 interface Props {
-  story: CollectionEntry<'stories'>;
+  story: CollectionEntry<'stories'> | CollectionEntry<'stories-en'>;
 }
 
 const { story } = Astro.props;
 const { data, body } = story;
+const lang = langOf(Astro.url);
+const L = ui[lang];
+const b = base(lang);
+const alternate = lang === 'en'
+  ? `/stories/${story.slug}`
+  : ((await getCollection('stories-en')).some((e) => e.slug === story.slug) ? `/en/stories/${story.slug}` : undefined);
 
 const wordCount = body ? body.replace(/\s+/g, '').length : 0;
-const readingTime = Math.max(1, Math.round(wordCount / 600));
+const readingTime = Math.max(1, Math.round(data.language === 'en'
+  ? (body ? body.split(/\s+/).filter(Boolean).length : 0) / 230
+  : wordCount / 600));
 
 const marketLabel = { US: 'US', KR: 'KR', GLOBAL: 'GLOBAL' }[data.market];
 const dateString = data.publishedAt.toLocaleDateString(data.language === 'ko' ? 'ko-KR' : 'en-US', {
@@ -50,6 +60,7 @@ const genre = getGenreFromTags(data.tags);
   tickers={data.tickers}
   tags={data.tags}
   activeNav="stories"
+  alternate={alternate}
 >
   <ReadingProgress />
 
@@ -85,17 +96,15 @@ const genre = getGenreFromTags(data.tags);
       </div>
 
       <footer style="margin-top:64px; padding-top:32px; border-top:1px solid var(--rule);">
-        <p style="font-size:13px; color: var(--ink-3); line-height:1.7;">
-          <strong style="color: var(--ink-2);">픽션 고지</strong> · 본 스토리는 공개된 자료를 바탕으로 AI 시스템이 자동 생성한 <strong>창작 서사(픽션)</strong>입니다. 등장 인물의 발언, 내심, 행위는 실제 사실과 다른 가공된 묘사이며, 실존 인물과 기업에 대한 평가, 비방, 사실 단정이 아닙니다. 투자 권유나 기업 평가가 아닙니다. 정정·삭제 요청은 <a href="mailto:nicepark0606@gmail.com" style="text-decoration:underline;">nicepark0606@gmail.com</a>으로 보내주세요. 자세한 내용은 <a href="/disclaimer" style="text-decoration:underline;">면책조항</a>.
-        </p>
+        <p style="font-size:13px; color: var(--ink-3); line-height:1.7;" set:html={L.storyNotice(b)} />
       </footer>
 
       <nav style="margin-top:48px; padding-top:24px; border-top:1px solid var(--rule); display:flex; justify-content:space-between; font-family: var(--mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase;">
-        <a href="/stories" style="color: var(--ink-3); display:inline-flex; align-items:center; gap:8px;">
+        <a href={lang === 'ko' ? '/stories' : home(lang)} style="color: var(--ink-3); display:inline-flex; align-items:center; gap:8px;">
           <span aria-hidden="true">←</span>
-          <span>다른 스토리</span>
+          <span>{L.moreStories}</span>
         </a>
-        <a href="/" style="color: var(--ink-3);">홈 →</a>
+        <a href={home(lang)} style="color: var(--ink-3);">{L.toHome}</a>
       </nav>
     </article>
   </div>

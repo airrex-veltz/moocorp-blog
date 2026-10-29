@@ -1,11 +1,12 @@
 ---
+import { langOf, ui } from '../i18n/ui';
 interface Props {
   headings: { depth: number; slug: string; text: string }[];
 }
 const { headings } = Astro.props;
 const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
 ---
-<aside class="post-toc" aria-label="목차">
+<aside class="post-toc" aria-label={ui[langOf(Astro.url)].toc}>
   <h5>Contents</h5>
   {items.length > 0 ? (
     <ol>

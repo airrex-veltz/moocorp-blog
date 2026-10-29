@@ -1,0 +1,19 @@
+---
+// 영문판 — 원문 라우트(src/pages/filings/[...slug].astro)와 같고 컬렉션만 'filings-en' 이다.
+import { getCollection } from 'astro:content';
+import Filing from '../../../layouts/Filing.astro';
+
+export async function getStaticPaths() {
+  const filings = await getCollection('filings-en', ({ data }) => !data.draft);
+  return filings.map((filing) => ({
+    params: { slug: filing.slug },
+    props: { filing },
+  }));
+}
+
+const { filing } = Astro.props;
+const { Content, headings } = await filing.render();
+---
+<Filing filing={filing} headings={headings}>
+  <Content />
+</Filing>
