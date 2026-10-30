@@ -1,0 +1,102 @@
+---
+// 공시자료는 번역하지 않는다(모델이 재무 자료를 쓰지 않는다는 것이 이 계통의 근거).
+// 영문 템플릿이 생기기 전까지 이 페이지는 한국어 목록으로 안내한다.
+import Base from '../../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const filings = (await getCollection('filings-en', ({ data }) => !data.draft))
+  .sort((a, b) => {
+    const dt = b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf();
+    return dt !== 0 ? dt : b.slug.localeCompare(a.slug);
+  });
+const koCount = (await getCollection('filings', ({ data }) => !data.draft)).length;
+
+const fmtDate = (d: Date) =>
+  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+
+const marketLabel: Record<string, string> = { KR: 'Korea', US: 'United States', GLOBAL: 'Global' };
+---
+<Base
+  title="Filing Data"
+  description="Financial statement figures as filed with Korea's DART disclosure system. No investment advice."
+  activeNav="filings"
+  alternate="/filings"
+>
+  <div class="container-page page-enter">
+    <header class="filings-head">
+      <div class="kicker">Filing Data</div>
+      <h1>Only the Numbers in the Filings</h1>
+      <p class="lede">
+        Financial statements that companies filed with the DART electronic disclosure system, laid out by year,
+        with ratios computed from the filed account amounts. No interpretation and no outlook.
+      </p>
+    </header>
+
+    <aside class="filings-notice" aria-label="Nature of this section">
+      <p>
+        <strong>Data, not advice.</strong>
+        The documents in this list contain no opinion, outlook, price target or recommendation on the value of any
+        stock or on any investment decision. Causes and outlooks are not stated in financial statements, so we do not write them.
+      </p>
+      <p>
+        Source: <a href="https://dart.fss.or.kr" rel="noopener noreferrer" target="_blank">DART</a>. Anyone can check the same
+        figures directly. Aggregation is automated and may contain errors; correction requests go to
+        <a href="mailto:nicepark0606@gmail.com">nicepark0606@gmail.com</a>.
+      </p>
+    </aside>
+
+    {filings.length > 0 ? (
+      <div class="row-list" style="margin-top:0;">
+        {filings.map((f, i) => (
+          <a class="row" href={`/en/filings/${f.slug}`}>
+            <div class="row-num">No. {String(i + 1).padStart(2, '0')}</div>
+            <div>
+              <div class="filing-tag">
+                {marketLabel[f.data.market] ?? f.data.market}
+                {f.data.fiscalYears ? ` · ${f.data.fiscalYears}` : ''}
+              </div>
+              <div class="row-title">{f.data.title}</div>
+              <div class="row-dek">{f.data.description}</div>
+            </div>
+            <div class="row-meta">
+              <div>{fmtDate(f.data.publishedAt)}</div>
+              <div style="margin-top:4px; color:var(--ink-4); font-variant-numeric:tabular-nums;">
+                {f.data.tickers.slice(0, 3).join(' · ')}
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <p style="color: var(--ink-3); padding: 64px 0; text-align: center;">
+        Filing data is published in Korean only for now. <a href="/filings" style="text-decoration:underline;">Browse {koCount} filings in Korean</a>
+        — the tables of figures read the same in any language.
+      </p>
+    )}
+  </div>
+</Base>
+
+<style>
+  .filings-head { padding: 8px 0 24px; }
+  .filings-head h1 { margin: 10px 0 0; text-wrap: balance; }
+  .filings-head .lede { margin-top: 12px; color: var(--ink-3); max-width: 62ch; }
+
+  .filings-notice {
+    margin: 0 0 28px;
+    padding: 16px 20px;
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--ink-3);
+    border-radius: 0 4px 4px 0;
+    background: var(--bg-2);
+    font-size: 13px; line-height: 1.7; color: var(--ink-3);
+  }
+  .filings-notice p { margin: 0 0 8px; }
+  .filings-notice p:last-child { margin-bottom: 0; }
+  .filings-notice strong { color: var(--ink-2); }
+  .filings-notice a { text-decoration: underline; }
+
+  .filing-tag {
+    font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--ink-4); margin-bottom: 6px;
+  }
+</style>

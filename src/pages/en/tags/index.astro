@@ -1,0 +1,39 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('posts-en', ({ data }) => !data.draft);
+const tagCounts = new Map<string, number>();
+for (const post of posts) {
+  for (const tag of post.data.tags) {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  }
+}
+const tags = Array.from(tagCounts.entries()).sort((a, b) => b[1] - a[1]);
+---
+<Base title="Tags" activeNav="tags" alternate="/tags">
+  <div class="container-page page-enter">
+    <header class="stories-head">
+      <div class="kicker">All Tags</div>
+      <h1>Tags</h1>
+      <p class="lede">{tags.length} tags across {posts.length} translated analyses.</p>
+    </header>
+
+    {tags.length === 0 ? (
+      <p style="color: var(--ink-3); padding: 64px 0;">No tags yet. <a href="/en/archive" style="text-decoration:underline;">Browse the archive</a>.</p>
+    ) : (
+      <ul style="display: flex; flex-wrap: wrap; gap: 10px; padding: 48px 0; list-style: none; margin: 0;">
+        {tags.map(([tag, count]) => (
+          <li>
+            <a href={`/en/tags/${tag}`} style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border:1px solid var(--rule); color:var(--ink-2); text-decoration:none; font-family:var(--mono); font-size:12px; letter-spacing:0.02em; transition: border-color 150ms ease, color 150ms ease, background 150ms ease;"
+              onmouseover="this.style.background='var(--accent-tint)'; this.style.borderColor='var(--accent)'; this.style.color='var(--accent)';"
+              onmouseout="this.style.background=''; this.style.borderColor='var(--rule)'; this.style.color='var(--ink-2)';">
+              <span>#{tag}</span>
+              <span style="color: var(--ink-4); font-size:10px;">{count}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</Base>

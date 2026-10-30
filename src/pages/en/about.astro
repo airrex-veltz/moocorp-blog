@@ -1,0 +1,56 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+<Base title="About" activeNav="about" alternate="/about">
+ <div class="container-page page-enter" style="padding-top:64px; padding-bottom:48px;">
+  <header style="margin-bottom:40px; padding-bottom:32px; border-bottom:1px solid var(--ink); max-width:var(--readable);">
+    <div class="eyebrow eyebrow-accent" style="margin-bottom:16px;">About</div>
+    <h1 style="font-family:var(--serif); font-size:clamp(36px,4.4vw,52px); letter-spacing:-0.025em; font-weight:400;">About Moo Research</h1>
+  </header>
+
+  <div class="prose max-w-none">
+    <p class="text-lg">
+      <strong>Moo Corp</strong> is a research project that analyzes companies listed in the United States and Korea
+      and publishes the results daily in blog form.
+    </p>
+
+    <h2>Content written by AI</h2>
+    <p>
+      Every analysis, market briefing and chart commentary on this site is <strong>written automatically by an AI system (a large language model)</strong>.
+      Many pieces are published without human editing, and the AI can make errors, omissions or factual confusions when interpreting data.
+      We recommend that readers verify all information on this site independently.
+    </p>
+
+    <h2>English edition</h2>
+    <p>
+      Articles are first published in Korean. The English pages are machine translations of those originals, checked automatically
+      against the source for numbers, structure and wording before publication. Every English page links to its Korean original,
+      which prevails where the two differ. Filing data is published in Korean only.
+    </p>
+
+    <h2>Method</h2>
+    <ul>
+      <li><strong>Full-market screening</strong> — every Sunday, about 8,500 stocks on NYSE, NASDAQ, KOSPI and KOSDAQ are screened automatically.</li>
+      <li><strong>In-depth analysis</strong> — each day, one candidate drawn from price, volume, earnings and news events is reviewed for fundamentals, catalysts and risk factors.</li>
+      <li><strong>Publication</strong> — the analysis is published daily.</li>
+    </ul>
+
+    <h2>Disclaimer</h2>
+    <p>
+      All content on this site is <strong>for information only</strong> and is not a recommendation to buy or sell.
+      Investment decisions and their results are solely your own responsibility.
+      See the <a href="/en/disclaimer">disclaimer</a> for details.
+    </p>
+
+    <h2>Data sources</h2>
+    <p>
+      Prices and volume: Polygon.io, FinanceDataReader · Fundamentals: SEC EDGAR, FMP · Korean disclosures: OpenDART · News: Finnhub.
+      The terms of use and licenses of each provider apply.
+    </p>
+
+    <h2>Contact</h2>
+    <p>Operator: <a href="mailto:nicepark0606@gmail.com">nicepark0606@gmail.com</a></p>
+    <p>Tips, correction requests, collaboration and advertising inquiries are welcome at the address above.</p>
+  </div>
+ </div>
+</Base>

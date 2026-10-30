@@ -1,4 +1,6 @@
 ---
+import { langOf, ui } from '../i18n/ui';
+
 interface Props {
   genre: "action" | "thriller" | "romance" | "melodrama" | "humor";
   size?: "sm" | "md" | "lg";
@@ -6,6 +8,7 @@ interface Props {
 }
 
 const { genre, size = "md", showLabel = true } = Astro.props;
+const L = ui[langOf(Astro.url)];
 
 // Genre configuration mapping
 const genreConfig = {
@@ -68,7 +71,7 @@ const sizing = sizeConfig[size];
 <div
   class={`inline-flex items-center gap-2 ${sizing.padding} ${config.borderClass} ${config.shadow ? 'shadow-sm' : ''}`}
   role="img"
-  aria-label={`장르: ${config.label}`}
+  aria-label={`${L.genreAria}: ${L.genre[genre]}`}
 >
   <span
     class="ms flex-shrink-0"
@@ -79,7 +82,7 @@ const sizing = sizeConfig[size];
   </span>
   {showLabel && (
     <span class={`${config.textClass} ${sizing.textSize} whitespace-nowrap`}>
-      {config.label}
+      {L.genre[genre]}
     </span>
   )}
 </div>

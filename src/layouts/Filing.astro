@@ -84,7 +84,7 @@ const fmtDate = (d: Date) =>
     </aside>
 
     <nav class="filing-back">
-      <a href={lang === 'ko' ? '/filings' : home(lang)}>{L.filing.back}</a>
+      <a href={`${base(lang)}/filings`}>{L.filing.back}</a>
     </nav>
   </article>
 </Base>

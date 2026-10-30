@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { langOf, home, ui } from '../i18n/ui';
+import { langOf, home, base, ui } from '../i18n/ui';
 
 interface Props {
   title?: string;
@@ -113,16 +113,16 @@ const articleSchema = publishedAt && schemaType === 'Article' ? {
   keywords: [...tickers, ...tags].join(', '),
 } : null;
 
-const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label: string; beta?: boolean }> = lang === 'en' ? [
-  { id: 'today', href: '/en', label: 'Today' },
-] : [
-  { id: 'today', href: '/', label: 'Today' },
-  { id: 'archive', href: '/archive', label: 'Archive' },
-  { id: 'filings', href: '/filings', label: 'Filings' },
-  { id: 'stories', href: '/stories', label: 'Fiction' },
-  { id: 'toons', href: '/toons', label: 'Toons', beta: true },
-  { id: 'tags', href: '/tags', label: 'Tags' },
-  { id: 'about', href: '/about', label: 'About' },
+// 두 판의 메뉴는 같다. 영문판은 같은 경로에 /en 을 붙인다.
+const B = base(lang);
+const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label: string; beta?: boolean }> = [
+  { id: 'today', href: home(lang), label: 'Today' },
+  { id: 'archive', href: `${B}/archive`, label: 'Archive' },
+  { id: 'filings', href: `${B}/filings`, label: 'Filings' },
+  { id: 'stories', href: `${B}/stories`, label: 'Fiction' },
+  { id: 'toons', href: `${B}/toons`, label: 'Toons', beta: true },
+  { id: 'tags', href: `${B}/tags`, label: 'Tags' },
+  { id: 'about', href: `${B}/about`, label: 'About' },
 ];
 ---
 <!doctype html>
@@ -215,7 +215,7 @@ const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label
               <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" />
             </svg>
           </button>
-          <a href="#" class="subscribe-btn" onclick="event.preventDefault();alert('구독 — placeholder');return false;">Subscribe</a>
+          <a href="#" class="subscribe-btn" onclick={`event.preventDefault();alert('${lang === 'en' ? 'Subscribe — coming soon' : '구독 — placeholder'}');return false;`}>Subscribe</a>
         </div>
       </div>
       <div class="container-page subnav">
@@ -246,20 +246,16 @@ const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label
           <h4>Sections</h4>
           <ul>
             <li><a href={home(lang)}>Today</a></li>
-            {lang === 'ko' && (
-              <>
-                <li><a href="/archive">Archive</a></li>
-                <li><a href="/filings">{L.filingsNav}</a></li>
-                <li><a href="/tags">Tags</a></li>
-              </>
-            )}
+            <li><a href={`${B}/archive`}>Archive</a></li>
+            <li><a href={`${B}/filings`}>{L.filingsNav}</a></li>
+            <li><a href={`${B}/tags`}>Tags</a></li>
           </ul>
         </div>
         <div>
           <h4>About</h4>
           <ul>
-            <li><a href="/about">About</a></li>
-            <li><a href="/about">Methodology</a></li>
+            <li><a href={`${B}/about`}>About</a></li>
+            <li><a href={`${B}/about`}>Methodology</a></li>
             <li><a href="mailto:nicepark0606@gmail.com">Contact</a></li>
             <li><a href={lang === 'en' ? '/en/rss.xml' : '/rss.xml'}>RSS</a></li>
           </ul>
@@ -267,7 +263,7 @@ const navLinks: Array<{ id: NonNullable<Props['activeNav']>; href: string; label
         <div>
           <h4>Legal</h4>
           <ul>
-            <li><a href="/privacy">Privacy</a></li>
+            <li><a href={`${B}/privacy`}>Privacy</a></li>
             <li><a href={lang === 'en' ? '/en/disclaimer' : '/disclaimer'}>Disclaimer</a></li>
           </ul>
         </div>

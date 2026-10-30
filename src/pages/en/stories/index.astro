@@ -1,0 +1,60 @@
+---
+import Base from '../../../layouts/Base.astro';
+import GenreBadge from '../../../components/GenreBadge.astro';
+import { getCollection } from 'astro:content';
+
+const stories = (await getCollection('stories-en', ({ data }) => !data.draft))
+  .sort((a, b) => {
+    const dt = b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf();
+    return dt !== 0 ? dt : b.slug.localeCompare(a.slug);
+  });
+
+type Genre = 'action' | 'thriller' | 'romance' | 'melodrama' | 'humor';
+const GENRES: Genre[] = ['action', 'thriller', 'romance', 'melodrama', 'humor'];
+const genreOf = (tags: string[]): Genre | null =>
+  (tags.map((t) => t.toLowerCase()).find((t) => (GENRES as string[]).includes(t)) as Genre) ?? null;
+
+const fmtDate = (d: Date) =>
+  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+---
+<Base title="Fiction" description="The histories of US and Korean listed companies, told as fiction." activeNav="stories" alternate="/stories">
+  <div class="container-page page-enter">
+    <header class="stories-head">
+      <div class="kicker">Moo Stories · Fiction</div>
+      <h1>Stories Companies Tell</h1>
+      <p class="lede">
+        Fiction built on the histories of listed companies, in five genres: action, thriller, romance, melodrama and humor. Translated from the Korean originals.
+      </p>
+    </header>
+
+    {stories.length > 0 ? (
+      <div class="row-list" style="margin-top:0; border-top:0;">
+        {stories.map((story, i) => {
+          const genre = genreOf(story.data.tags);
+          return (
+            <a class="row" href={`/en/stories/${story.slug}`}>
+              <div class="row-num">No. {String(i + 1).padStart(2, '0')}</div>
+              <div>
+                {genre && (
+                  <div style="margin-bottom: 8px; display: inline-block;">
+                    <GenreBadge genre={genre} size="sm" showLabel={true} />
+                  </div>
+                )}
+                <div class="row-title">{story.data.title}</div>
+                <div class="row-dek">{story.data.description}</div>
+              </div>
+              <div class="row-meta">
+                <div>{fmtDate(story.data.publishedAt)}</div>
+                {story.data.tickers.length > 0 && (
+                  <div style="margin-top:4px; color:var(--ink-4);">{story.data.tickers.slice(0, 3).join(' · ')}</div>
+                )}
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    ) : (
+      <p style="color: var(--ink-3); padding: 64px 0; text-align: center;">English translations of the stories are on their way. <a href="/stories" style="text-decoration:underline;">Read them in Korean</a>.</p>
+    )}
+  </div>
+</Base>

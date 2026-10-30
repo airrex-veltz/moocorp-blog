@@ -1,0 +1,77 @@
+---
+import Base from '../../../layouts/Base.astro';
+import GenreBadge from '../../../components/GenreBadge.astro';
+import { getCollection } from 'astro:content';
+
+const toons = (await getCollection('toons-en', ({ data }) => !data.draft))
+  .sort((a, b) => {
+    const dt = b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf();
+    return dt !== 0 ? dt : b.slug.localeCompare(a.slug);
+  });
+
+type Genre = 'action' | 'thriller' | 'romance' | 'melodrama' | 'humor';
+const GENRES: Genre[] = ['action', 'thriller', 'romance', 'melodrama', 'humor'];
+// 원문 제목 끝의 "(장르)" 는 번역에서 "(Humor)" 처럼 옮겨진다.
+function extractGenre(title: string): { title: string; genre: Genre | null } {
+  const m = title.match(/\s*\(([^)]+)\)$/);
+  if (!m) return { title, genre: null };
+  const g = m[1].toLowerCase();
+  return { title: title.slice(0, m.index), genre: (GENRES as string[]).includes(g) ? (g as Genre) : null };
+}
+
+const fmtDate = (d: Date) =>
+  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+---
+<Base title="Toons (Beta)" description="Beta series re-telling our stories as illustrated webtoons." activeNav="toons" alternate="/toons">
+  <div class="container-page page-enter">
+    <header class="stories-head">
+      <div class="kicker">Moo Toons · Illustrated Fiction (Beta)</div>
+      <h1>Stories, Read Again in Pictures</h1>
+      <p class="lede">
+        A beta series that re-tells Moo Stories with AI illustrations. Translated from the Korean originals.
+      </p>
+    </header>
+
+    <div class="toon-beta-bar" role="note">
+      <strong>Beta</strong>
+      <span>We are still refining illustration consistency and style. Characters and staging may vary between panels.</span>
+    </div>
+
+    {toons.length > 0 ? (
+      <div class="toon-grid">
+        {toons.map((toon) => {
+          const { title: cleanTitle, genre } = extractGenre(toon.data.title);
+          return (
+            <a class="toon-card" href={`/en/toons/${toon.slug}`}>
+              <div class="toon-card-cover">
+                {toon.data.coverImage ? (
+                  <img src={toon.data.coverImage} alt={cleanTitle} loading="lazy" decoding="async" width={300} height={400}
+                    style="width: 100%; height: 100%; object-fit: cover;" />
+                ) : (
+                  <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--ink-4); font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase;">No cover</div>
+                )}
+              </div>
+              <div class="toon-card-body">
+                {genre && (
+                  <div style="margin-bottom: 8px; display: inline-block;">
+                    <GenreBadge genre={genre} size="sm" showLabel={true} />
+                  </div>
+                )}
+                <div class="toon-card-title">{cleanTitle}</div>
+                <div class="toon-card-dek">{toon.data.description}</div>
+                <div style="margin-top:12px; font-family:var(--mono); font-size:10px; letter-spacing:0.08em; color:var(--ink-4); text-transform:uppercase;">
+                  {fmtDate(toon.data.publishedAt)}
+                  {toon.data.panelCount && <span style="margin-left:8px;">· {toon.data.panelCount} panels</span>}
+                </div>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    ) : (
+      <p style="color: var(--ink-3); padding: 64px 0; text-align: center;">
+        English translations of the toons are on their way. <a href="/toons" style="text-decoration:underline;">Read them in Korean</a>.
+      </p>
+    )}
+  </div>
+</Base>

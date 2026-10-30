@@ -100,7 +100,7 @@ const genre = getGenreFromTags(data.tags);
       </footer>
 
       <nav style="margin-top:48px; padding-top:24px; border-top:1px solid var(--rule); display:flex; justify-content:space-between; font-family: var(--mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase;">
-        <a href={lang === 'ko' ? '/stories' : home(lang)} style="color: var(--ink-3); display:inline-flex; align-items:center; gap:8px;">
+        <a href={`${base(lang)}/stories`} style="color: var(--ink-3); display:inline-flex; align-items:center; gap:8px;">
           <span aria-hidden="true">←</span>
           <span>{L.moreStories}</span>
         </a>
