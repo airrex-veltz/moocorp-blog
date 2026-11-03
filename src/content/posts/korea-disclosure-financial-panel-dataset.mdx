@@ -2,6 +2,7 @@
 title: "한국 공시대상회사 재무 패널 데이터셋 공개"
 description: "OpenDART 정기보고서에서 2,866개사 15,510개 연도행을 정규화해 JSON·CSV 로 공개한다. 의견과 전망은 담지 않는다."
 publishedAt: 2026-11-03T16:07:45+09:00
+updatedAt: 2026-11-03T17:16:58+09:00
 market: KR
 tickers: []
 sectors: []
@@ -16,12 +17,16 @@ OpenDART(금융감독원 전자공시시스템)이고, 우리가 한 일은 회�
 
 ## 무엇이 들어 있나
 
+{/* MOO:DATA-STATS:BEGIN — 수치는 export-dataset.py 가 다시 쓴다. 손으로 고치지 마라 */}
 | | |
 |---|---|
 | 회사 | 2,866개사 |
 | 연도행 | 15,510건 |
+| 회계연도 | 2020~2025 |
 | 기준일 | 2026-11-03 |
 | 형식 | JSON(5.6MB, 회사별 중첩) · CSV(2.2MB, 한 회사-한 연도가 한 줄) |
+| 재무제표가 없어 빠진 회사 | 1,132건 |
+{/* MOO:DATA-STATS:END */}
 
 - [screener-latest.json](/data/screener-latest.json)
 - [screener-latest.csv](/data/screener-latest.csv)
@@ -55,8 +60,8 @@ OpenDART(금융감독원 전자공시시스템)이고, 우리가 한 일은 회�
 이름과 지분율을 기계 판독 가능한 한 파일로 묶어 내려받게 하는 것은 다른 행위다.
 개별 공시를 다룬 글에는 그대로 있고, 이 데이터셋에만 없다.
 
-**재무제표가 없는 회사가 빠졌다.** 기업인수목적회사(SPAC)나 보고서가 없는 회사
-1,132건이다. 코드가 빠진 것이 재무 상태를 뜻하지는 않는다.
+**재무제표가 없는 회사가 빠졌다.** 기업인수목적회사(SPAC)나 보고서가 없는 회사다
+(건수는 위 표에 있다). 코드가 빠진 것이 재무 상태를 뜻하지는 않는다.
 
 ## 쓰는 방법과 조건
 
@@ -75,7 +80,7 @@ OpenDART(금융감독원 전자공시시스템)이고, 우리가 한 일은 회�
 
 > *본 글은 정보 제공 목적이며 투자 권유가 아닙니다.*
 
-{/* 기계 독자용 구조화 데이터. 사람에게는 보이지 않는다 — 이 글의 산문이 아니라 위 데이터 파일 세 개를 가리킨다. */}
+{/* MOO:DATA-LD:BEGIN — 기계 독자용. export-dataset.py 가 다시 쓴다 */}
 <script type="application/ld+json">{`
 {
  "@context": "https://schema.org",
@@ -206,3 +211,4 @@ OpenDART(금융감독원 전자공시시스템)이고, 우리가 한 일은 회�
  "creditText": "출처: OpenDART (금융감독원 전자공시시스템). 정규화: Moo Research."
 }
 `}</script>
+{/* MOO:DATA-LD:END */}
