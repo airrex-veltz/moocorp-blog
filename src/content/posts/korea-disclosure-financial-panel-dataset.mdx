@@ -74,3 +74,135 @@ OpenDART(금융감독원 전자공시시스템)이고, 우리가 한 일은 회�
 투자 판단과 그 결과는 이용자에게 속한다.
 
 > *본 글은 정보 제공 목적이며 투자 권유가 아닙니다.*
+
+{/* 기계 독자용 구조화 데이터. 사람에게는 보이지 않는다 — 이 글의 산문이 아니라 위 데이터 파일 세 개를 가리킨다. */}
+<script type="application/ld+json">{`
+{
+ "@context": "https://schema.org",
+ "@type": "Dataset",
+ "name": "한국 공시대상회사 재무 패널",
+ "alternateName": "Korea Disclosure Financial Panel",
+ "description": "OpenDART(금융감독원 전자공시시스템) 정기보고서 재무정보에서 2,866개사 15,510개 연도행을 추출해 하나의 패널로 정규화한 데이터셋. 매출액·영업이익·당기순이익·자산·자본·부채·영업활동현금흐름과 계산된 비율 4종을 담는다. 투자 의견·전망·점수·순위는 담지 않는다.",
+ "url": "https://www.mooresearch.com/posts/korea-disclosure-financial-panel-dataset/",
+ "keywords": [
+  "한국 기업 재무제표",
+  "OpenDART",
+  "공시",
+  "financial statements",
+  "Korea",
+  "corporate disclosure",
+  "open data"
+ ],
+ "license": "https://www.data.go.kr/data/15060626/openapi.do",
+ "conditionsOfAccess": "출처 표기 조건. 「공공데이터의 제공 및 이용 활성화에 관한 법률」에 따른 공공데이터이며 이용허락범위 제한이 없다. 공시정보는 공시제출인의 책임 하에 작성된 것이며, 금융감독원도 Moo Corp 도 그 정확성과 완전성을 보장하지 않습니다. 이 데이터셋은 사실 데이터이며 투자 의견·전망·추천을 담지 않습니다.",
+ "isAccessibleForFree": true,
+ "creator": {
+  "@type": "Organization",
+  "name": "Moo Research",
+  "url": "https://www.mooresearch.com"
+ },
+ "sourceOrganization": {
+  "@type": "GovernmentOrganization",
+  "name": "금융감독원 전자공시시스템 (OpenDART)",
+  "url": "https://opendart.fss.or.kr"
+ },
+ "spatialCoverage": {
+  "@type": "Country",
+  "name": "South Korea"
+ },
+ "temporalCoverage": "2020/2025",
+ "dateModified": "2026-11-03",
+ "inLanguage": "ko",
+ "measurementTechnique": "OpenDART 단일회사 전체재무제표 API 수집 후 회사-연도 패널로 정규화. 비율은 공시 수치로 계산.",
+ "variableMeasured": [
+  {
+   "@type": "PropertyValue",
+   "name": "fy",
+   "description": "회계연도"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "fs_div",
+   "description": "연결/별도 구분 (CFS/OFS)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "revenue",
+   "description": "매출액 (원)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "operating_income",
+   "description": "영업이익 (원)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "net_income",
+   "description": "당기순이익 (원)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "assets",
+   "description": "자산총계 (원)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "equity",
+   "description": "자본총계 (원)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "liabilities",
+   "description": "부채총계 (원)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "cf_operating",
+   "description": "영업활동현금흐름 (원)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "debt_ratio",
+   "description": "부채비율 (%)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "roe",
+   "description": "ROE (%)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "roa",
+   "description": "ROA (%)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "cfo_to_ni",
+   "description": "영업활동현금흐름/당기순이익 (배)"
+  }
+ ],
+ "distribution": [
+  {
+   "@type": "DataDownload",
+   "encodingFormat": "application/json",
+   "contentUrl": "https://www.mooresearch.com/data/screener-latest.json",
+   "contentSize": "5870162",
+   "name": "회사별 중첩 JSON"
+  },
+  {
+   "@type": "DataDownload",
+   "encodingFormat": "text/csv",
+   "contentUrl": "https://www.mooresearch.com/data/screener-latest.csv",
+   "contentSize": "2266546",
+   "name": "long format CSV — 한 회사-한 연도가 한 줄"
+  },
+  {
+   "@type": "DataDownload",
+   "encodingFormat": "application/json",
+   "contentUrl": "https://www.mooresearch.com/data/schema.json",
+   "name": "필드 정의와 계산식"
+  }
+ ],
+ "creditText": "출처: OpenDART (금융감독원 전자공시시스템). 정규화: Moo Research."
+}
+`}</script>
