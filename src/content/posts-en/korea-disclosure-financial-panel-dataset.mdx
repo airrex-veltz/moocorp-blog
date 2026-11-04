@@ -1,0 +1,194 @@
+---
+title: "Korea Disclosure Financial Panel Dataset Released"
+description: "We normalize 2,866 company fiscal year records from OpenDART periodic reports into JSON and CSV. Contains only facts, no opinions or forecasts."
+publishedAt: 2026-11-03T16:07:45+09:00
+updatedAt: 2026-11-03T17:23:15+09:00
+market: KR
+tickers: []
+sectors: []
+tags: ["Dataset","Disclosure","OpenDART","Open Data"]
+language: en
+author: "Moo Corp Research"
+---
+
+We release in a single file the annual financial facts of Korea's disclosure-subject companies. The source is OpenDART (Financial Services Commission E-Disclosure System), and our work consists solely of **normalizing dispersed periodic report financial information, company by company, into one panel**.
+
+## What's Included
+
+{/* MOO:DATA-STATS:BEGIN — figures are rewritten by export-dataset.py. Do not edit by hand */}
+| | |
+|---|---|
+| Companies | 2,866 |
+| Fiscal year rows | 15,510 |
+| Fiscal years | 2020–2025 |
+| As of | 2026-11-03 |
+| Format | JSON (5.6 MB, nested by company) · CSV (2.2 MB, one company-year per row) |
+| Companies omitted (no financial statements) | 1,132 |
+{/* MOO:DATA-STATS:END */}
+
+- [screener-latest.json](/data/screener-latest.json)
+- [screener-latest.csv](/data/screener-latest.csv)
+- [schema.json](/data/schema.json) — field definitions and calculation formulas
+
+The dataset spans fifteen columns: stock code, company name, fiscal year, consolidated/separate filing flag (`fs_div`), revenue, operating income, net income, total assets, total equity, total liabilities, operating cash flow, and four calculated ratios (debt-to-equity, ROE, ROA, operating cash flow-to-net income).
+
+## Two Cautions When Reading
+
+**Check `fs_div` first.** CFS denotes consolidated; OFS denotes separate. The same company's year-to-year basis sometimes mixes, so comparing revenue side-by-side without checking this column produces lies.
+
+**`null` is not zero.** It means the disclosure omitted that field. For example, a bank's revenue cell is empty—financial statements lack the field—not that revenue is zero. Filling it with zero corrupts all aggregates.
+
+## What's Not Included
+
+**No opinions or forecasts.** No scores, rankings, or recommendations. This is by design, not laziness. The legal basis for how we handle data is "contains no opinions or forecasts." The generation script **enumerates** which fields are allowed and discards everything else, however much present in the source. A denylist approach risks silently passing new source fields through.
+
+One boundary exclusion: internally we create mechanical notations like "loss years: 2024, 2025," facts in form but **which fact to highlight is editorial emphasis**, read as warning signal by readers. Facts alone don't qualify for inclusion. We excluded them.
+
+**No largest shareholder data.** Writing a single disclosure's largest shareholder into that company's article is different from bundling thousands of names and ownership stakes into one machine-readable file for download. The individual disclosure articles retain it; this dataset alone omits it.
+
+**Companies without financial statements are omitted.** Special acquisition purpose companies (SPACs) or unreporting firms (count above). Missing code doesn't denote financial condition.
+
+## Usage Terms and Conditions
+
+Attribution of source alone permits all use, including commercial. This is public data under Korea's "Public Data Provision and Use Activation Act," with no restrictions in the portal's terms.
+
+Real-time query API is not provided. OpenDART's terms prohibit third parties using authentication keys, so relaying external requests via our key is impossible. What we can do is deliver processed output as static files—hence the links here point to files.
+
+## Disclaimer
+
+Disclosure information is prepared under the responsibility of the disclosure filers. The Financial Services Commission and Moo Corp make no guarantees regarding its accuracy or completeness. This file is factual data and contains no investment opinions, forecasts, or recommendations. Investment decisions and their consequences are the user's responsibility.
+
+> *This article is for informational purposes and does not constitute investment advice.*
+
+{/* MOO:DATA-LD:BEGIN — for machines. rewritten by export-dataset.py */}
+<script type="application/ld+json">{`
+{
+ "@context": "https://schema.org",
+ "@type": "Dataset",
+ "name": "Korea Disclosure Financial Panel",
+ "alternateName": "Korea Disclosure Financial Panel",
+ "description": "A dataset normalizing 2,866 companies and 15,510 fiscal year rows extracted from OpenDART (Financial Services Commission E-Disclosure System) periodic report financial information into a single panel. Contains revenue, operating income, net income, assets, equity, liabilities, operating cash flow, and four calculated ratios. Does not contain investment opinions, forecasts, scores, or rankings.",
+ "url": "https://www.mooresearch.com/posts/korea-disclosure-financial-panel-dataset/",
+ "keywords": [
+  "Korean corporate financial statements",
+  "OpenDART",
+  "corporate disclosure",
+  "financial statements",
+  "Korea",
+  "open data",
+  "disclosure"
+ ],
+ "license": "https://www.data.go.kr/data/15060626/openapi.do",
+ "conditionsOfAccess": "Attribution of source required. Public data under Korea's Public Data Provision and Use Activation Act with no usage restrictions. Disclosure information is prepared under the responsibility of disclosure filers. The Financial Services Commission and Moo Corp make no guarantees of accuracy or completeness. This dataset contains factual data only and contains no investment opinions, forecasts, or recommendations.",
+ "isAccessibleForFree": true,
+ "creator": {
+  "@type": "Organization",
+  "name": "Moo Research",
+  "url": "https://www.mooresearch.com"
+ },
+ "sourceOrganization": {
+  "@type": "GovernmentOrganization",
+  "name": "Financial Services Commission E-Disclosure System (OpenDART)",
+  "url": "https://opendart.fss.or.kr"
+ },
+ "spatialCoverage": {
+  "@type": "Country",
+  "name": "South Korea"
+ },
+ "temporalCoverage": "2020/2025",
+ "dateModified": "2026-11-03",
+ "inLanguage": "en",
+ "measurementTechnique": "Collected via OpenDART single company full financial statements API, normalized into company-year panel. Ratios calculated from disclosure figures.",
+ "variableMeasured": [
+  {
+   "@type": "PropertyValue",
+   "name": "fy",
+   "description": "Fiscal year"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "fs_div",
+   "description": "Consolidated/Separate filing (CFS/OFS)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "revenue",
+   "description": "Revenue (KRW)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "operating_income",
+   "description": "Operating income (KRW)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "net_income",
+   "description": "Net income (KRW)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "assets",
+   "description": "Total assets (KRW)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "equity",
+   "description": "Total equity (KRW)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "liabilities",
+   "description": "Total liabilities (KRW)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "cf_operating",
+   "description": "Operating cash flow (KRW)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "debt_ratio",
+   "description": "Debt ratio (%)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "roe",
+   "description": "ROE (%)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "roa",
+   "description": "ROA (%)"
+  },
+  {
+   "@type": "PropertyValue",
+   "name": "cfo_to_ni",
+   "description": "Operating cash flow / Net income (x)"
+  }
+ ],
+ "distribution": [
+  {
+   "@type": "DataDownload",
+   "encodingFormat": "application/json",
+   "contentUrl": "https://www.mooresearch.com/data/screener-latest.json",
+   "contentSize": "5870162",
+   "name": "JSON nested by company"
+  },
+  {
+   "@type": "DataDownload",
+   "encodingFormat": "text/csv",
+   "contentUrl": "https://www.mooresearch.com/data/screener-latest.csv",
+   "contentSize": "2266546",
+   "name": "long format CSV — one company-year per row"
+  },
+  {
+   "@type": "DataDownload",
+   "encodingFormat": "application/json",
+   "contentUrl": "https://www.mooresearch.com/data/schema.json",
+   "name": "field definitions and calculation formulas"
+  }
+ ],
+ "creditText": "Source: OpenDART (Financial Services Commission E-Disclosure System). Normalization: Moo Research."
+}
+`}</script>
+{/* MOO:DATA-LD:END */}
