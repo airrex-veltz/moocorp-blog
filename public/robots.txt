@@ -1,34 +1,45 @@
+# 한 크롤러는 자기에게 맞는 **가장 구체적인 그룹 하나만** 읽는다. 아래 이름난
+# 그룹들이 있으므로 `User-agent: *` 에만 규칙을 적어도 그들에게는 닿지 않는다.
+# 그래서 Disallow 가 그룹마다 반복된다 — 중복이 아니라 그렇게 해야 적용된다.
+#
+# Disallow 를 Allow 보다 먼저 둔다. 규칙 우선순위가 파서마다 다르다(Google 은
+# 가장 긴 일치, 일부 파서는 첫 일치). 이 순서면 양쪽에서 같은 결과가 나온다.
+
 User-agent: *
+Disallow: /admin
 Allow: /
 
 # Search engines
 User-agent: Googlebot
+Disallow: /admin
 Allow: /
 Crawl-delay: 0
 
 User-agent: Yeti
+Disallow: /admin
 Allow: /
 Crawl-delay: 0
 
 User-agent: Bingbot
+Disallow: /admin
 Allow: /
 Crawl-delay: 0
 
 User-agent: DuckDuckBot
+Disallow: /admin
 Allow: /
 
 # AI crawlers (allow indexing for visibility)
 User-agent: GPTBot
+Disallow: /admin
 Allow: /
 
 User-agent: ClaudeBot
+Disallow: /admin
 Allow: /
 
 User-agent: PerplexityBot
+Disallow: /admin
 Allow: /
-
-# Disallow admin/build paths
-Disallow: /_astro/
-Disallow: /_vercel/
 
 Sitemap: https://www.mooresearch.com/sitemap-index.xml
