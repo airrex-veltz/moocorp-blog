@@ -1,0 +1,102 @@
+---
+title: "GS Global Corp. financial statements, 6 years: Back to a profit in 2021 after a net loss of KRW 82.1bn in 2020"
+description: "Consolidated financial statements for 2020–2025 and the 2026 third-quarter report that GS Global Corp. filed with DART, laid out by year. No interpretation or outlook."
+slug: "gs-global-2025-filing-reading"
+publishedAt: 2026-11-14T03:30:36+09:00
+market: KR
+tickers: ["001250"]
+sectors: []
+tags: ["Filing Data"]
+language: en
+author: "Moo Corp Research"
+source: "OpenDART (Financial Supervisory Service electronic disclosure system)"
+corpName: "GS Global Corp."
+fiscalYears: "2020~2025 + 2026 Q3"
+fetchedAt: 2026-11-14
+---
+
+## GS Global Corp. financial statements, 6 years: Back to a profit in 2021 after a net loss of KRW 82.1bn in 2020
+
+The consolidated financial statements in the 2020–2025 annual reports that GS Global Corp. (001250) filed with Korea's DART electronic disclosure system, laid out by year. Figures from the 2026 third-quarter report cover a different period and are shown separately. **Every figure below is taken as filed in the DART submissions; there is no interpretation or outlook.** Amounts are in Korean won (KRW; bn = billion, tn = trillion).
+
+### 1. Income statement — the sign of net income changed in 2021
+
+| Fiscal year | Revenue | Revenue change | Operating income | Op. income change | Operating margin | Net income |
+|---|---|---|---|---|---|---|
+| 2020 | 2.82tn | — | 32.3bn | — | 1.1% | −82.1bn |
+| 2021 | 3.85tn | +36.73% | 38.8bn | +20.27% | 1.0% | 22.0bn |
+| 2022 | 5.07tn | +31.75% | 70.5bn | +81.40% | 1.4% | 68.1bn |
+| 2023 | 3.92tn | −22.77% | 76.5bn | +8.59% | 1.9% | 26.1bn |
+| 2024 | 4.07tn | +3.83% | 77.9bn | +1.78% | 1.9% | 56.1bn |
+| 2025 | 4.11tn | +1.05% | 52.3bn | −32.84% | 1.3% | 13.9bn |
+
+Revenue was largest in 2022 at KRW 5.07tn and smallest in 2020 at KRW 2.82tn among the six years. It fell from the previous year once: 2023 (−22.77%).
+
+Operating income was largest in 2024 at KRW 77.9bn and smallest in 2020 at KRW 32.3bn. The operating margin was highest in 2023 at 1.9%.
+
+**Net income was largest in 2022 at KRW 68.1bn and smallest in 2020 at KRW −82.1bn.**
+
+### 2. Financial position — equity became 1.91x
+
+| Fiscal year | Total assets | Total equity | Debt ratio | Current ratio |
+|---|---|---|---|---|
+| 2020 | 956.8bn | 299.0bn | 220.0% | 103.8% |
+| 2021 | 1.44tn | 342.5bn | 321.2% | 112.1% |
+| 2022 | 1.42tn | 406.7bn | 249.0% | 125.0% |
+| 2023 | 1.40tn | 448.0bn | 212.8% | 125.7% |
+| 2024 | 1.44tn | 567.1bn | 153.9% | 140.7% |
+| 2025 | 1.45tn | 570.4bn | 154.6% | 146.2% |
+
+The debt ratio was highest in 2021 at 321.2% and lowest in 2024 at 153.9%.
+
+Over the same period total assets went from KRW 956.8bn to KRW 1.45tn (1.52x), and **total equity went from KRW 299.0bn to KRW 570.4bn and became 1.91x.**
+
+The current ratio was above 100% in all six years, ranging from 103.8% to 146.2%.
+
+### 3. Cash flow — negative in 2 years
+
+| Fiscal year | Operating cash flow | Net income | ROE |
+|---|---|---|---|
+| 2020 | 120.2bn | −82.1bn | −27.5% |
+| 2021 | −344.3bn | 22.0bn | 6.4% |
+| 2022 | 204.8bn | 68.1bn | 16.7% |
+| 2023 | 241.9bn | 26.1bn | 5.8% |
+| 2024 | −21.7bn | 56.1bn | 9.9% |
+| 2025 | 64.9bn | 13.9bn | 2.4% |
+
+Operating cash flow was negative in 2021 and 2024. It was largest in 2023 at KRW 241.9bn.
+
+ROE was highest in 2022 at 16.7% and lowest in 2020 at −27.5%.
+
+### 4. Latest third-quarter report (end of Q3, 76th fiscal period, consolidated basis)
+
+**The period differs, so these figures cannot be compared directly with the annual tables above.** Only cumulative figures for the same period of the previous year are compared.
+
+| Item | 2026 cumulative | Same period last year | Change |
+|---|---|---|---|
+| Revenue | 3.31tn | 3.04tn | +8.88% |
+| Operating income | 28.5bn | 42.2bn | −32.46% |
+| Net income | 14.0bn | 19.7bn | −28.82% |
+| Finance income | 12.6bn | 3.6bn | +247.84% |
+| Operating cash flow | 7.4bn | 48.4bn | −84.61% |
+
+At the end of the period, total assets were KRW 1.62tn, total liabilities KRW 1.04tn and total equity KRW 582.9bn.
+
+The cumulative operating margin was 0.9%.
+
+### 5. Ownership, dividends and staff (as of the 2025 annual report)
+
+- Largest shareholder: 지에스 (name as filed), stake 50.70%
+- Cash dividend per share KRW 25, payout ratio 14.90%, dividend yield 1.10%
+- Employees: 271, average pay per employee KRW 105m
+
+### How to read this
+
+This page lays out the filed figures by year and nothing more. Financial statements do not say why the numbers moved, so neither do we.
+
+The order of publication follows revenue in the latest fiscal year and has nothing to do with the content.
+
+To check the same figures, search for the company on [DART](https://dart.fss.or.kr) and open the consolidated financial statements in its annual reports. Every number here was computed from the 2020–2025 annual reports and the interim report downloaded through the OpenDART API on 2026-11-14; ratios divide the filed account amounts.
+
+> *This article is for information only and is not investment advice.*
+
