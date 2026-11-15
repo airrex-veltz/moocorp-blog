@@ -1,0 +1,31 @@
+---
+title: "Security Budget 30% Cut, One Month Later"
+description: "After cutting security costs, a single hack wiped out a year's worth of savings."
+slug: "security-budget-cut-breach"
+publishedAt: 2026-11-15T01:13:39+09:00
+market: GLOBAL
+tickers: []
+sectors: []
+tags: ["toon","thriller"]
+language: en
+fiction: true
+aiGenerated: true
+author: "Moo Corp Toon Director"
+coverImage: "/toons/security-budget-cut-breach/1.webp"
+panelCount: 6
+stylePreset: "animagine-01-realistic"
+---
+
+import Panel from '../../components/mdx/Panel.astro';
+import PanelStrip from '../../components/mdx/PanelStrip.astro';
+
+<PanelStrip>
+  <Panel num={1} src="/toons/security-budget-cut-breach/1.webp" alt="CFO-K announcing the budget cut in the boardroom" caption="D-30. The decision is made." />
+  <Panel num={2} src="/toons/security-budget-cut-breach/2.webp" alt="SERA's warnings ignored" caption="The warning is on record. No one read it." />
+  <Panel num={3} src="/toons/security-budget-cut-breach/3.webp" alt="SERA discovering security breach alert at 3:17 a.m." caption="3:17 a.m." />
+  <Panel num={4} src="/toons/security-budget-cut-breach/4.webp" alt="Server room with firewall breached where costs were cut" caption="The breach came through where they saved money." />
+  <Panel num={5} src="/toons/security-budget-cut-breach/5.webp" alt="SERA and CEO-MIN in emergency response as it's too late" caption="Stock price crashes 17% before market opens." />
+  <Panel num={6} src="/toons/security-budget-cut-breach/6.webp" alt="CFO-K holding savings and damages side by side" caption="24 years of savings erased in 48 hours." />
+</PanelStrip>
+
+> *This content is fictional and is not investment advice.*
