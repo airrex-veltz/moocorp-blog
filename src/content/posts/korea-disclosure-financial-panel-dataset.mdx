@@ -1,8 +1,8 @@
 ---
 title: "한국 공시대상회사 재무 패널 데이터셋 공개"
-description: "OpenDART 정기보고서에서 2,866개사 15,510개 연도행을 정규화해 JSON·CSV 로 공개한다. 의견과 전망은 담지 않는다."
+description: "OpenDART 정기보고서에서 2,867개사 15,513개 연도행을 정규화해 JSON·CSV 로 공개한다. 의견과 전망은 담지 않는다."
 publishedAt: 2026-11-03T16:07:45+09:00
-updatedAt: 2026-11-09T07:15:15+09:00
+updatedAt: 2026-11-16T07:15:03+09:00
 market: KR
 tickers: []
 sectors: []
@@ -20,12 +20,12 @@ OpenDART(금융감독원 전자공시시스템)이고, 우리가 한 일은 회�
 {/* MOO:DATA-STATS:BEGIN — 수치는 export-dataset.py 가 다시 쓴다. 손으로 고치지 마라 */}
 | | |
 |---|---|
-| 회사 | 2,866개사 |
-| 연도행 | 15,510건 |
+| 회사 | 2,867개사 |
+| 연도행 | 15,513건 |
 | 회계연도 | 2020~2025 |
-| 기준일 | 2026-11-09 |
+| 기준일 | 2026-11-16 |
 | 형식 | JSON(5.6MB, 회사별 중첩) · CSV(2.2MB, 한 회사-한 연도가 한 줄) |
-| 재무제표가 없어 빠진 회사 | 1,132건 |
+| 재무제표가 없어 빠진 회사 | 1,149건 |
 {/* MOO:DATA-STATS:END */}
 
 - [screener-latest.json](/data/screener-latest.json)
@@ -87,7 +87,7 @@ OpenDART(금융감독원 전자공시시스템)이고, 우리가 한 일은 회�
  "@type": "Dataset",
  "name": "한국 공시대상회사 재무 패널",
  "alternateName": "Korea Disclosure Financial Panel",
- "description": "OpenDART(금융감독원 전자공시시스템) 정기보고서 재무정보에서 2,866개사 15,510개 연도행을 추출해 하나의 패널로 정규화한 데이터셋. 매출액·영업이익·당기순이익·자산·자본·부채·영업활동현금흐름과 계산된 비율 4종을 담는다. 투자 의견·전망·점수·순위는 담지 않는다.",
+ "description": "OpenDART(금융감독원 전자공시시스템) 정기보고서 재무정보에서 2,867개사 15,513개 연도행을 추출해 하나의 패널로 정규화한 데이터셋. 매출액·영업이익·당기순이익·자산·자본·부채·영업활동현금흐름과 계산된 비율 4종을 담는다. 투자 의견·전망·점수·순위는 담지 않는다.",
  "url": "https://www.mooresearch.com/posts/korea-disclosure-financial-panel-dataset/",
  "keywords": [
   "한국 기업 재무제표",
@@ -116,7 +116,7 @@ OpenDART(금융감독원 전자공시시스템)이고, 우리가 한 일은 회�
   "name": "South Korea"
  },
  "temporalCoverage": "2020/2025",
- "dateModified": "2026-11-09",
+ "dateModified": "2026-11-16",
  "inLanguage": "ko",
  "measurementTechnique": "OpenDART 단일회사 전체재무제표 API 수집 후 회사-연도 패널로 정규화. 비율은 공시 수치로 계산.",
  "variableMeasured": [
@@ -191,14 +191,14 @@ OpenDART(금융감독원 전자공시시스템)이고, 우리가 한 일은 회�
    "@type": "DataDownload",
    "encodingFormat": "application/json",
    "contentUrl": "https://www.mooresearch.com/data/screener-latest.json",
-   "contentSize": "5870162",
+   "contentSize": "5871308",
    "name": "회사별 중첩 JSON"
   },
   {
    "@type": "DataDownload",
    "encodingFormat": "text/csv",
    "contentUrl": "https://www.mooresearch.com/data/screener-latest.csv",
-   "contentSize": "2266546",
+   "contentSize": "2266959",
    "name": "long format CSV — 한 회사-한 연도가 한 줄"
   },
   {

@@ -4,10 +4,10 @@
  "source": "OpenDART (금융감독원 전자공시시스템)",
  "source_url": "https://opendart.fss.or.kr",
  "license": "데이터 출처 표기 조건. 「공공데이터의 제공 및 이용 활성화에 관한 법률」에 따른 공공데이터이며 이용허락범위 제한이 없다.",
- "generated_at": "2026-11-09T07:15:15+09:00",
- "data_asof": "2026-11-09T05:30:39+09:00",
- "companies": 2866,
- "year_rows": 15510,
+ "generated_at": "2026-11-16T07:15:03+09:00",
+ "data_asof": "2026-11-16T05:30:48+09:00",
+ "companies": 2867,
+ "year_rows": 15513,
  "excluded_fields": [
   "major_holder (개인정보 — REVENUE-STRATEGY 부록 A-3)",
   "flags (편집적 강조)",
@@ -31590,6 +31590,57 @@
      "roe": -23.33,
      "roa": -15.89,
      "cfo_to_ni": -0.14
+    }
+   ]
+  },
+  {
+   "stock_code": "0077H0",
+   "name": "(주)모비콘텐츠테크",
+   "years": [
+    {
+     "fy": 2023,
+     "fs_div": "CFS",
+     "revenue": 9541622664,
+     "operating_income": 214059475,
+     "net_income": 274982216,
+     "assets": 35845398262,
+     "equity": 30263289206,
+     "liabilities": 5582109056,
+     "cf_operating": null,
+     "debt_ratio": 18.45,
+     "roe": 0.91,
+     "roa": 0.77,
+     "cfo_to_ni": null
+    },
+    {
+     "fy": 2024,
+     "fs_div": "CFS",
+     "revenue": 21953393098,
+     "operating_income": 1012898219,
+     "net_income": 1488142454,
+     "assets": 36522806889,
+     "equity": 31795939790,
+     "liabilities": 4726867099,
+     "cf_operating": 274461837,
+     "debt_ratio": 14.87,
+     "roe": 4.68,
+     "roa": 4.07,
+     "cfo_to_ni": 0.18
+    },
+    {
+     "fy": 2025,
+     "fs_div": "CFS",
+     "revenue": 28644364808,
+     "operating_income": 412188551,
+     "net_income": 401384044,
+     "assets": 40308932909,
+     "equity": 32181929825,
+     "liabilities": 8127003084,
+     "cf_operating": 526631007,
+     "debt_ratio": 25.25,
+     "roe": 1.25,
+     "roa": 1.0,
+     "cfo_to_ni": 1.31
     }
    ]
   },
