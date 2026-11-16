@@ -1,0 +1,91 @@
+---
+title: "Design System — Monochrome + Material Symbols + MDX Components"
+description: "Visual design guide for Moo Corp blog. Examples of chart, stat card, and callout box usage."
+publishedAt: 2026-05-04
+market: GLOBAL
+tickers: []
+sectors: []
+tags: [meta, design]
+language: en
+heroImage:
+  url: "/images/library/21-green-sustainability.webp"
+  alt: "Green sustainability"
+  attribution: "Moo Corp Library"
+  sourceUrl: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=1080"
+  colorTreatment: "color"
+---
+
+This article showcases visual components provided by Moo Corp blog. All analysis articles follow monochrome design, and emphasis or visualization is handled through Material Symbols icons and MDX components.
+
+## Key Summary Box
+
+<KeyPoints>
+- Reduced visual noise with a monochrome color palette
+- Indicate meaning through Material Symbols icons
+- Embed charts, statistics, and callouts in the body through MDX components
+- Ad slots are automatically placed at the top and bottom of the body
+</KeyPoints>
+
+## Statistics Cards (StatGrid + StatCard)
+
+Shows key company metrics at a glance in the first section of a stock analysis article.
+
+<StatGrid cols={3}>
+  <StatCard label="Market Cap" value="$4.85T" trend="up" context="Down 4.6% vs. previous day" />
+  <StatCard label="ROE" value="104%" context="Top in industry" />
+  <StatCard label="Net Margin" value="55.6%" trend="up" />
+</StatGrid>
+
+## Callout
+
+Separates and emphasizes risks or catalysts from the body flow.
+
+<Callout type="catalyst" title="Upcoming Catalyst">
+Q2 earnings announcement on May 20. Market consensus: EPS $1.79, revenue $80B.
+</Callout>
+
+<Callout type="risk">
+ROE of 104% includes some inflation from buybacks. Should be viewed separately from actual profitability.
+</Callout>
+
+## Quote
+
+Separates key sentences from the body to provide visual rest.
+
+<Quote cite="Jensen Huang, NVIDIA CEO">
+AI infrastructure investment is just beginning. Over the next four years, approximately 1 trillion dollars in data center upgrades will take place.
+</Quote>
+
+## Chart (TradingView Embed)
+
+Price charts are automatically embedded in stock articles.
+
+<Chart symbol="NVDA" exchange="NASDAQ" height={400} />
+
+## Data Table (DataTable)
+
+Used for quarterly results or comparative analysis.
+
+<DataTable caption="NVIDIA Quarterly Revenue (in billions USD)" source="NVIDIA IR, FMP">
+| Quarter | Revenue | Year-over-year Growth |
+|---|---|---|
+| Q4 2025 | 39.3 | +78% |
+| Q1 2026 | 44.0 | +69% |
+| Q2 2026 (E) | 48.5 | +56% |
+</DataTable>
+
+## General Markdown
+
+All standard markdown elements are rendered to match monochrome design.
+
+- List item 1
+- List item 2
+- List item 3
+
+> Blockquotes are displayed with monochrome borders. They connect naturally with the body flow.
+
+The body text uses Pretendard Variable font optimized for readability, with line spacing of 1.85 and word breaks configured for optimal settings.
+
+## Conclusion
+
+This design system prioritizes analysis readability. Rather than using color or emoji for emphasis, it establishes information hierarchy through typography and structural components.
